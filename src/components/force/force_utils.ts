@@ -1,5 +1,3 @@
-import Vector from 'p5'
-
 /**
  * Get size of visualised class based on its count
  * @param {Object} cls must contain .count property
@@ -16,7 +14,7 @@ function getClassRadius(cls: any) {
  * @param {URI} uri
  * @returns {String} extracted label
  */
-function getLabelFromURI(uri: URL) {
+function getLabelFromURI(uri: string) {
   const slashLast = uri.split('/').slice(-1)[0] // get last element inplace
   const hashLast = uri.split('#').slice(-1)[0]
   return slashLast.length < hashLast.length ? slashLast : hashLast
@@ -29,7 +27,7 @@ function getLabelFromURI(uri: URL) {
  * @param {Number} dy
  * @returns {String} the modified string
  */
-function moveTransformString(transform, dx, dy) {
+function moveTransformString(transform: string, dx: number, dy: string) {
   const translatePos = transform.indexOf('translate(') + 10
   const translateEnd = transform.indexOf(')', translatePos) // bind position to match correct ()
   const original = transform.substring(translatePos, translateEnd).split(',')
@@ -48,7 +46,7 @@ function moveTransformString(transform, dx, dy) {
  * @param {Number} newScale
  * @returns {String} the modified string
  */
-function zoomTransformString(transform, newScale) {
+function zoomTransformString(transform: string, newScale: number) {
   const scalePos = transform.indexOf('scale(') + 6
   const scaleEnd = transform.indexOf(')', scalePos) // bind position to match correct ()
   const newTransform = transform.replace(

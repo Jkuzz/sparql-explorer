@@ -1,6 +1,7 @@
 import QueryHandler from '@/components/force/queryHandler'
+import { devQueryClasses } from '@/components/force/dev'
 
-function getClassesQuery(offset: number) {
+export function getClassesQuery(offset: number) {
   return `
     SELECT DISTINCT ?class (COUNT(*) AS ?instanceCount)
     WHERE {
@@ -11,7 +12,7 @@ function getClassesQuery(offset: number) {
     OFFSET ${offset}`
 }
 
-function getClassPropertiesQuery(classURI: string) {
+export function getClassPropertiesQuery(classURI: string) {
   return `
     SELECT DISTINCT ?property ?targetClass (COUNT(1) AS ?instanceCount)
     WHERE {
@@ -24,7 +25,8 @@ function getClassPropertiesQuery(classURI: string) {
     `
 }
 
-function getClassLinksQuery(class1URI: string, class2URI: string) {
+// export function getClassLinksQuery(class1URI: string, class2URI: string) {
+export function getClassLinksQuery() {
   return `
     SELECT DISTINCT ?property (COUNT(*) AS ?instanceCount)
     WHERE {
@@ -56,15 +58,15 @@ export function main() {
  * @param query
  * @returns JSON response content promise
  */
-async function queryEndpoint(endpoint: URL, query: string) {
+export async function queryEndpoint(endpoint: URL, query: string) {
   let queryURL = endpoint + '?query=' + encodeURIComponent(query)
   queryURL += '&format=application%2Fsparql-results%2Bjson'
 
   return fetch(queryURL).then((data) => data.json())
 }
 
-async function updateVisGraph(visData) {
-  const copyVisData = { ...visData }
-  updateForceVis(copyVisData)
-  return visData
-}
+// async function updateVisGraph(visData) {
+//   const copyVisData = { ...visData }
+//   updateForceVis(copyVisData)
+//   return visData
+// }

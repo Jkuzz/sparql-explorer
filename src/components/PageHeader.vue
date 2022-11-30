@@ -17,7 +17,7 @@ const links = [
 
 <template>
   <header>
-    <nav class="bg-fuchsia-800 text-gray-200 space-x-6 p-3">
+    <nav class="bg-slate-900 text-gray-200 p-3 space-x-10 flex flex-row justify-end">
       <RouterLink
         v-for="link in links"
         :key="link.to"
