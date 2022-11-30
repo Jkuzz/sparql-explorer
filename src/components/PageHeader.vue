@@ -1,11 +1,31 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const links = [
+  {
+    to: '/',
+    title: 'Home',
+  },
+  {
+    to: '/about',
+    title: 'About',
+  },
+  {
+    to: '/vis',
+    title: 'Visualisation',
+  },
+]
+</script>
 
 <template>
   <header>
-    <nav class="bg-gray-700 text-gray-200 space-x-4 p-2">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-      <RouterLink to="/vis">Visualisation</RouterLink>
+    <nav class="bg-fuchsia-800 text-gray-200 space-x-6 p-3">
+      <RouterLink
+        v-for="link in links"
+        :key="link.to"
+        :to="link.to"
+        class="transition-all hover:font-bold"
+      >
+        {{ link.title }}
+      </RouterLink>
     </nav>
   </header>
 </template>
