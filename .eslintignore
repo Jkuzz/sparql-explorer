@@ -1,0 +1,5 @@
+*.config.js
+*.d.ts
+dist/
+src/openapiSchema.ts
+coverage/
