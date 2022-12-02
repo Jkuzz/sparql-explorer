@@ -2,15 +2,15 @@ import * as d3 from 'd3'
 
 const svg = d3.select('#visSvg')
 
-const width = svg.style('width').slice(0, -2) // remove 'px' from the end
-const height = svg.style('height').slice(0, -2)
+const width = parseInt(svg.style('width').slice(0, -2)) // remove 'px' from the end
+const height = parseInt(svg.style('height').slice(0, -2))
 
 const svgWrapper = svg
   .append('g')
   .classed('wrapper', true)
   .attr('transform', 'translate(0, 0) scale(1)')
 
-const link = svgWrapper
+let link = svgWrapper
   .append('g')
   .attr('id', 'linkContainer')
   .attr('stroke-opacity', 1)
@@ -20,7 +20,7 @@ const link = svgWrapper
   .attr('fill', 'none')
   .selectAll('path')
 
-const node = svgWrapper
+let node = svgWrapper
   .append('g')
   .attr('id', 'nodeContainer')
   .attr('stroke', '#449')
@@ -28,7 +28,7 @@ const node = svgWrapper
   .attr('fill', '#77b')
   .selectAll('.node')
 
-const linkLabel = svgWrapper
+let linkLabel = svgWrapper
   .append('g')
   .attr('id', 'linkLabelContainer')
   .attr('stroke', '#999')
@@ -63,23 +63,23 @@ function ticked() {
 }
 
 svg.call(drag(simulation))
-svg.call(
-  d3.zoom().on('zoom', (event) => {
-    const originalTransform = svgWrapper.attr('transform')
-    svgWrapper.attr('transform', zoomTransformString(originalTransform, event.transform.k))
-  })
-)
+// svg.call(
+//   d3.zoom().on('zoom', (event) => {
+//     const originalTransform = svgWrapper.attr('transform')
+//     svgWrapper.attr('transform', zoomTransformString(originalTransform, event.transform.k))
+//   })
+// )
 
-const mainPathColour = 'hsl(336, 100%, 55%)'
-const secondaryPathColour = 'hsl(336, 100%, 75%)'
-document.querySelector('#arrowHeadMain').setAttribute('fill', mainPathColour)
-document.querySelector('#arrowHeadSecondary').setAttribute('fill', secondaryPathColour)
+// const mainPathColour = 'hsl(336, 100%, 55%)'
+// const secondaryPathColour = 'hsl(336, 100%, 75%)'
+// document.querySelector('#arrowHeadMain').setAttribute('fill', mainPathColour)
+// document.querySelector('#arrowHeadSecondary').setAttribute('fill', secondaryPathColour)
 
 const nodeClickManager = new NodeClickManager()
 
 function updateForceVis(visData) {
-  const linksData = 'links' in visData ? Object.values(visData.links) : []
-  const classesData = 'classes' in visData ? Object.values(visData.classes) : []
+  let linksData = 'links' in visData ? Object.values(visData.links) : []
+  let classesData = 'classes' in visData ? Object.values(visData.classes) : []
 
   // Make a shallow copy to protect against mutation, while
   // recycling old nodes to preserve position and velocity.

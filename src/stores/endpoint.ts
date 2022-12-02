@@ -1,12 +1,15 @@
-import { ref, computed } from 'vue'
+import { ref, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useEndpointStore = defineStore('endpoint', () => {
-  const count = ref(0)
-  const doubleCount = computed(() => count.value * 2)
-  function increment() {
-    count.value++
+  const nodes: Ref<Array<Object>> = ref([])
+
+  function fetchNode() {
+    nodes.value.push({
+      title: 'Hello',
+      id: nodes.value.length,
+    })
   }
 
-  return { count, doubleCount, increment }
+  return { nodes, fetchNode }
 })
