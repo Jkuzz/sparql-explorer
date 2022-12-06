@@ -2,7 +2,7 @@
  * Get size of visualised class based on its count
  * @param {Object} cls must contain .count property
  */
-function getClassRadius(cls: any) {
+export function getClassRadius(cls: any) {
   if (!cls['count']) {
     return 1
   }

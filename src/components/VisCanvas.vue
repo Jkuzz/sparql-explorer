@@ -7,6 +7,9 @@ const endpointStore = useEndpointStore()
 // const nodes = endpointStore.nodes
 const nodes: Ref<Array<any>> = ref([])
 
+let svg = d3.select('#visSvg')
+let nodeSelect = svg.selectAll('.node')
+
 const simulation = d3
   .forceSimulation()
   .force('charge', d3.forceManyBody().strength(-10))
@@ -21,17 +24,8 @@ const simulation = d3
 endpointStore.$subscribe((mutation, state) => {
   // Copy the state stored nodes
   const newState = JSON.parse(JSON.stringify(state.nodes))
-  for (let node of newState) {
-    if (!nodes.value.find((n) => n.id === node.id)) {
-      nodes.value.push(node)
-      console.log('🚀 ~ file: VisCanvas.vue:27 ~ endpointStore.$subscribe ~ node', node)
-    }
-  }
-  updateForceVis(nodes.value)
+  updateNodes(newState)
 })
-
-let svg = d3.select('#visSvg')
-let nodeSelect = svg.selectAll('.node')
 
 function ticked() {
   svg
@@ -40,11 +34,21 @@ function ticked() {
     .attr('transform', (d) => `translate(${d.x}, ${d.y})`)
 }
 
+function updateNodes(newNodes: Array<any>) {
+  for (let node of newNodes) {
+    if (!nodes.value.find((n) => n.id === node.id)) {
+      nodes.value.push(node)
+      console.log('🚀 ~ file: VisCanvas.vue:27 ~ endpointStore.$subscribe ~ node', node)
+    }
+  }
+  updateForceVis(nodes.value)
+}
+
 onMounted(() => {
   svg = d3.select('#visSvg')
   nodeSelect = svg.selectAll('.node')
   simulation.on('tick', ticked)
-  updateForceVis(nodes.value)
+  updateNodes(JSON.parse(JSON.stringify(endpointStore.nodes)))
 })
 
 /**
