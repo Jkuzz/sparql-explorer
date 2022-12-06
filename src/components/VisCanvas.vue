@@ -9,14 +9,24 @@ const nodes: Ref<Array<any>> = ref([])
 
 const simulation = d3
   .forceSimulation()
-  .force('charge', d3.forceManyBody().strength(-50))
+  .force('charge', d3.forceManyBody().strength(-10))
   .force('collide', d3.forceCollide().radius(20))
   .force('center', d3.forceCenter(0, 0))
 
+/**
+ * Hack Pinia modeling by manually updating changes to the store.
+ * Changes are mirrored into `nodes`
+ * currently only additions are handled
+ */
 endpointStore.$subscribe((mutation, state) => {
-  // nodes.value = JSON.parse(JSON.stringify(state.nodes))
-  // nodes.value.push({ index: nodes.value.length })
-  nodes.value.push({ id: nodes.value.length })
+  // Copy the state stored nodes
+  const newState = JSON.parse(JSON.stringify(state.nodes))
+  for (let node of newState) {
+    if (!nodes.value.find((n) => n.id === node.id)) {
+      nodes.value.push(node)
+      console.log('🚀 ~ file: VisCanvas.vue:27 ~ endpointStore.$subscribe ~ node', node)
+    }
+  }
   updateForceVis(nodes.value)
 })
 
@@ -37,17 +47,17 @@ onMounted(() => {
   updateForceVis(nodes.value)
 })
 
+/**
+ * Update the force visualisation modeled data
+ * @param visData data to base the nodes off
+ */
 function updateForceVis(visData: any) {
-  // let classesData = 'classes' in visData ? Object.values(visData.classes) : []
-  let classesData = JSON.parse(JSON.stringify(visData))
-  console.log('🚀 ~ file: VisCanvas.vue:43 ~ updateForceVis ~ visData', classesData)
+  let classesData = [...visData]
 
   // Make a shallow copy to protect against mutation, while
   // recycling old nodes to preserve position and velocity.
-  const oldNodes = new Map(nodeSelect.data().map((d: any) => [d.id, d]))
-  console.log('🚀 ~ file: VisCanvas.vue:48 ~ updateForceVis ~ oldNodes', oldNodes)
-  classesData = classesData.map((d: any) => Object.assign(oldNodes.get(d.id) || {}, d))
-  console.log(classesData)
+  // const oldNodes = new Map(nodeSelect.data().map((d: any) => [d.id, d]))
+  // classesData = classesData.map((d: any) => Object.assign(oldNodes.get(d.id) || {}, d))
 
   nodeSelect = nodeSelect.data(classesData).join((enter) => {
     const nodeContainer = enter
@@ -76,16 +86,6 @@ function updateForceVis(visData: any) {
       width="100%"
       height="100%"
       viewBox="-500 -500 1000 1000"
-    >
-      <!-- <g
-        class="node"
-        v-for="(node, i) in nodes"
-        :key="i"
-      >
-        <circle
-          r="20"
-        ></circle>
-      </g> -->
-    </svg>
+    ></svg>
   </div>
 </template>
