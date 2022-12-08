@@ -12,6 +12,10 @@ const links = [
     to: '/vis',
     title: 'Visualisation',
   },
+  {
+    to: '/test',
+    title: 'Testing',
+  },
 ]
 </script>
 
