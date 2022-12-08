@@ -81,7 +81,7 @@ function updateForceVis(visData: any) {
 
 <template>
   <div
-    class="bg-slate-900 p-2"
+    class="bg-blue-900 p-2"
     id="canvas"
   >
     <svg

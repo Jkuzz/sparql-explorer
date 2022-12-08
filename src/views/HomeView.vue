@@ -1,9 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <main class="bg-slate-900 text-gray-200 p-8 flex flex-col items-center space-y-20">
+  <main class="bg-blue-900 text-gray-200 p-8 flex flex-col items-center space-y-20">
     <h1 class="text-4xl font-semibold">Hello World!</h1>
-    <div class="p-4 bg-slate-800 rounded-lg max-w-xl">
+    <div class="p-4 bg-blue-700 rounded-lg max-w-xl">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
       labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
       laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
