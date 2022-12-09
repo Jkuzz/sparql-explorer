@@ -4,7 +4,7 @@ import { getClassesQuery, queryEndpoint } from '@/components/force/sparql'
 
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes: Ref<Array<Object>> = ref([])
-  const endpointURL = ref('https://data.gov.cz/sparql')
+  const endpointURL = ref('https://dbpedia.org/sparql')
 
   const query = getClassesQuery(0)
   const res = queryEndpoint(new URL(endpointURL.value), query)

@@ -6,6 +6,6 @@ import VisCanvas from '@/components/VisCanvas.vue'
 <template>
   <div class="flex flex-row">
     <VisSidebar />
-    <VisCanvas class="flex-grow" />
+    <VisCanvas class="flex-grow overflow-hidden" />
   </div>
 </template>
