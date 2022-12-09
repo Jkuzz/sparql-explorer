@@ -15,6 +15,8 @@ function handleChangeButtonClick() {
     } catch (_e) {
       return
     }
+  } else {
+    newEndpoint.value = endpointStore.endpointURL.toString()
   }
   changing.value = !changing.value
 }
