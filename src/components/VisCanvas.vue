@@ -13,7 +13,7 @@ let nodeSelect = svg.selectAll('.node')
 const simulation = d3
   .forceSimulation()
   .force('charge', d3.forceManyBody().strength(-5))
-  .force('collide', d3.forceCollide().radius(20))
+  .force('collide', d3.forceCollide().radius(35))
   .force('center', d3.forceCenter(0, 0))
 
 /**
@@ -75,6 +75,7 @@ function updateForceVis(visData: any) {
       .text((d) => getLabelFromURI(d.node?.class.value))
       .attr('text-anchor', 'middle')
       .classed('select-none', true)
+    nodeContainer.call(drag(simulation))
     return nodeContainer
   })
 

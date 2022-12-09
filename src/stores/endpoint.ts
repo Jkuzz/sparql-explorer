@@ -28,5 +28,17 @@ export const useEndpointStore = defineStore('endpoint', () => {
     })
   }
 
-  return { nodes, fetchNode }
+  function changeEndpoint(newEndpoint: URL) {
+    console.log(newEndpoint)
+    clearNodes()
+  }
+
+  /**
+   * Reset the stored endpoint nodes
+   */
+  function clearNodes() {
+    nodes.value.splice(0, nodes.value.length)
+  }
+
+  return { nodes, fetchNode, endpointURL, changeEndpoint }
 })
