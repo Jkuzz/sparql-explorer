@@ -4,16 +4,10 @@ import { getClassesQuery, queryEndpoint } from '@/components/force/sparql'
 
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes: Ref<Array<Object>> = ref([])
-  const endpointURL = ref('https://dbpedia.org/sparql')
+  const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
 
   const query = getClassesQuery(0)
-  const res = queryEndpoint(new URL(endpointURL.value), query)
-  res.then((r) => {
-    r.results.bindings.forEach((node: any) => {
-      nodes.value.push({ id: getNextId(), node: node })
-    })
-    console.log(nodes.value)
-  })
+  fetchInitNodes()
 
   let nextId = 0
   function getNextId() {
@@ -28,9 +22,20 @@ export const useEndpointStore = defineStore('endpoint', () => {
     })
   }
 
+  function fetchInitNodes() {
+    queryEndpoint(endpointURL.value, query).then((r) => {
+      r.results.bindings.forEach((node: any) => {
+        nodes.value.push({ id: getNextId(), ...node })
+      })
+      console.log(nodes.value)
+    })
+  }
+
   function changeEndpoint(newEndpoint: URL) {
     console.log(newEndpoint)
+    endpointURL.value = newEndpoint
     clearNodes()
+    fetchInitNodes()
   }
 
   /**

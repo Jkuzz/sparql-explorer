@@ -36,11 +36,15 @@ function ticked() {
 
 function updateNodes(newNodes: Array<any>) {
   for (let node of newNodes) {
-    if (!nodes.value.find((n) => n.id === node.id)) {
+    // Only add nodes with a unique class URI
+    if (!nodes.value.find((n) => n.class?.value == node.class?.value)) {
       nodes.value.push(node)
       console.log('🚀 ~ file: VisCanvas.vue:27 ~ endpointStore.$subscribe ~ node', node)
     }
   }
+  nodes.value = nodes.value.filter((node) =>
+    newNodes.find((newNode) => node.class?.value == newNode.class?.value)
+  )
   updateForceVis(nodes.value)
 }
 
@@ -72,7 +76,7 @@ function updateForceVis(visData: any) {
     nodeContainer.append('circle').attr('r', 30).attr('stroke', 'black').attr('fill', 'white')
     nodeContainer
       .append('text')
-      .text((d) => getLabelFromURI(d.node?.class.value))
+      .text((d) => getLabelFromURI(d.class?.value))
       .attr('text-anchor', 'middle')
       .classed('select-none', true)
     nodeContainer.call(drag(simulation))
