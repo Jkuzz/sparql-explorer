@@ -32,10 +32,13 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function makeNodeObject(node: any) {
+    console.log(node)
     return {
       position: { x: getRandomInt(100, 1000), y: getRandomInt(50, 400) },
       id: getNextId(),
-      ...node,
+      label: 'Hello',
+      type: 'custom',
+      data: node,
     }
   }
 
