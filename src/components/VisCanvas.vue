@@ -4,7 +4,6 @@ import * as d3 from 'd3'
 import { onMounted, ref, type Ref } from 'vue'
 
 const endpointStore = useEndpointStore()
-// const nodes = endpointStore.nodes
 const nodes: Ref<Array<any>> = ref([])
 
 let svg = d3.select('#visSvg')

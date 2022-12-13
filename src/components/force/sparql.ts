@@ -8,7 +8,7 @@ export function getClassesQuery(offset: number) {
         ?s a ?class
     }
     ORDER BY DESC(?instanceCount)
-    LIMIT 20
+    LIMIT 10
     OFFSET ${offset}`
 }
 

@@ -20,9 +20,9 @@ const router = createRouter({
       component: () => import('@/views/VisView.vue'),
     },
     {
-      path: '/test',
-      name: 'testing',
-      component: () => import('@/views/TestView.vue'),
+      path: '/flow',
+      name: 'flow',
+      component: () => import('@/views/FlowView.vue'),
     },
   ],
 })

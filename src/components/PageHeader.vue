@@ -13,8 +13,8 @@ const links = [
     title: 'Visualisation',
   },
   {
-    to: '/test',
-    title: 'Testing',
+    to: '/flow',
+    title: 'Flow',
   },
 ]
 </script>
