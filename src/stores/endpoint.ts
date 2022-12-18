@@ -1,13 +1,15 @@
-import { ref, type Ref } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getClassesQuery, queryEndpoint } from '@/components/force/sparql'
+import { getClassesQuery, getClassLinksQuery, queryEndpoint } from '@/components/force/sparql'
+
+const ATTRIBUTE_MINIMUM_FACTOR = 0.01
 
 export const useEndpointStore = defineStore('endpoint', () => {
-  const nodes: Ref<Array<any>> = ref([])
+  const nodes = ref<Array<any>>([])
+  const links = ref<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
 
-  const query = getClassesQuery(0)
-  fetchInitNodes()
+  queryClasses()
 
   let nextId = 0
   function getNextId() {
@@ -22,13 +24,27 @@ export const useEndpointStore = defineStore('endpoint', () => {
     })
   }
 
-  function fetchInitNodes() {
+  async function queryClasses(offset = 0) {
+    const query = getClassesQuery(offset)
     queryEndpoint(endpointURL.value, query).then((r) => {
       r.results.bindings.forEach((node: any) => {
         nodes.value.push(makeNodeObject(node))
       })
-      console.log(nodes.value)
     })
+  }
+
+  async function queryClassLinks() {
+    const node0 = nodes.value[0].data
+    const node1 = nodes.value[2].data
+
+    const linksQuery = getClassLinksQuery(node0.class.value, node1.class.value)
+    const linksResponse = (
+      await queryEndpoint(endpointURL.value, linksQuery)
+    ).results.bindings.filter(
+      (binding: { instanceCount: { value: number } }) =>
+        binding.instanceCount.value > +node0.instanceCount.value * ATTRIBUTE_MINIMUM_FACTOR
+    )
+    console.log(linksResponse)
   }
 
   function makeNodeObject(node: any) {
@@ -36,9 +52,17 @@ export const useEndpointStore = defineStore('endpoint', () => {
     return {
       position: { x: getRandomInt(100, 1000), y: getRandomInt(50, 400) },
       id: getNextId(),
-      label: 'Hello',
       type: 'custom',
       data: node,
+    }
+  }
+
+  function makeLinkObject(link: any) {
+    console.log(link)
+    return {
+      id: getNextId(),
+      type: 'custom',
+      data: link,
     }
   }
 
@@ -46,7 +70,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     console.log(newEndpoint)
     endpointURL.value = newEndpoint
     clearNodes()
-    fetchInitNodes()
+    queryClasses()
   }
 
   /**
@@ -56,7 +80,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     nodes.value.splice(0, nodes.value.length)
   }
 
-  return { nodes, fetchNode, endpointURL, changeEndpoint }
+  return { nodes, fetchNode, endpointURL, changeEndpoint, queryClassLinks }
 })
 
 function getRandomInt(min: number, max: number) {

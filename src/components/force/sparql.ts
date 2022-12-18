@@ -25,17 +25,26 @@ export function getClassPropertiesQuery(classURI: string) {
     `
 }
 
-// export function getClassLinksQuery(class1URI: string, class2URI: string) {
-export function getClassLinksQuery() {
+export function getClassLinksQuery(class1URI: string, class2URI: string) {
   return `
     SELECT DISTINCT ?property (COUNT(*) AS ?instanceCount)
     WHERE {
-        ?class1 a <http://www.w3.org/ns/dqv#QualityMeasurement> .
-        ?class2 a <http://www.w3.org/ns/dcat#Distribution> .
+        ?class1 a <${class1URI}> .
+        ?class2 a <${class2URI}> .
         ?class2 ?property ?class1 .
     }
     `
 }
+// export function getClassLinksQuery() {
+//   return `
+//     SELECT DISTINCT ?property (COUNT(*) AS ?instanceCount)
+//     WHERE {
+//         ?class1 a <http://www.w3.org/ns/dqv#QualityMeasurement> .
+//         ?class2 a <http://www.w3.org/ns/dcat#Distribution> .
+//         ?class2 ?property ?class1 .
+//     }
+//     `
+// }
 
 const queryHandler = new QueryHandler()
 let queriedClasses = 0

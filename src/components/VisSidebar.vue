@@ -12,5 +12,6 @@ const endpointStore = useEndpointStore()
   >
     <EndpointSelector />
     <ButtonGeneric @click="endpointStore.fetchNode"> Add node </ButtonGeneric>
+    <ButtonGeneric @click="endpointStore.queryClassLinks"> Test link </ButtonGeneric>
   </aside>
 </template>
