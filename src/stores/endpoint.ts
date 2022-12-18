@@ -6,7 +6,7 @@ const ATTRIBUTE_MINIMUM_FACTOR = 0.01
 
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = ref<Array<any>>([])
-  const links = ref<Array<any>>([])
+  const edges = ref<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
 
   queryClasses()
@@ -33,9 +33,9 @@ export const useEndpointStore = defineStore('endpoint', () => {
     })
   }
 
-  async function queryClassLinks() {
-    const node0 = nodes.value[0].data
-    const node1 = nodes.value[2].data
+  async function queryClassEdges() {
+    const node0 = nodes.value[1].data
+    const node1 = nodes.value[3].data
 
     const linksQuery = getClassLinksQuery(node0.class.value, node1.class.value)
     const linksResponse = (
@@ -57,12 +57,12 @@ export const useEndpointStore = defineStore('endpoint', () => {
     }
   }
 
-  function makeLinkObject(link: any) {
-    console.log(link)
+  function makeEdgeObject(edge: any) {
+    console.log(edge)
     return {
       id: getNextId(),
       type: 'custom',
-      data: link,
+      data: edge,
     }
   }
 
@@ -74,13 +74,14 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   /**
-   * Reset the stored endpoint nodes
+   * Reset the stored endpoint data
    */
   function clearNodes() {
     nodes.value.splice(0, nodes.value.length)
+    edges.value.splice(0, edges.value.length)
   }
 
-  return { nodes, fetchNode, endpointURL, changeEndpoint, queryClassLinks }
+  return { nodes, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
 })
 
 function getRandomInt(min: number, max: number) {
