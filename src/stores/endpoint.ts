@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { getClassesQuery, getClassLinksQuery, queryEndpoint } from '@/components/force/sparql'
+import QueryQueue from '@/stores/queryQueue'
 
 const ATTRIBUTE_MINIMUM_FACTOR = 0.01
 
@@ -8,6 +9,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = ref<Array<any>>([])
   const edges = ref<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
+  const queryQueue = new QueryQueue(endpointURL.value)
 
   queryClasses()
 
@@ -26,10 +28,12 @@ export const useEndpointStore = defineStore('endpoint', () => {
 
   async function queryClasses(offset = 0) {
     const query = getClassesQuery(offset)
-    queryEndpoint(endpointURL.value, query).then((r) => {
-      r.results.bindings.forEach((node: any) => {
-        nodes.value.push(makeNodeObject(node))
-      })
+    queryQueue.query(query, classQueryCallback)
+  }
+
+  function classQueryCallback(res: any) {
+    res.results.bindings.forEach((node: unknown) => {
+      nodes.value.push(makeNodeObject(node))
     })
   }
 
@@ -46,6 +50,13 @@ export const useEndpointStore = defineStore('endpoint', () => {
     )
     console.log(linksResponse)
   }
+
+  // function edgeQueryCallback(res: any) {
+  //   res.results.bindings.filter(
+  //     (binding: { instanceCount: { value: number } }) =>
+  //       binding.instanceCount.value > +node0.instanceCount.value * ATTRIBUTE_MINIMUM_FACTOR
+  //   )
+  // }
 
   function makeNodeObject(node: any) {
     console.log(node)
