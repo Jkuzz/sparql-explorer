@@ -35,7 +35,7 @@ export default class QueryQueue {
       this.executeQuery(next)
       next = this.queue.shift()
     }
-    this.queriesRunning = true
+    this.queriesRunning = false
   }
 
   /**

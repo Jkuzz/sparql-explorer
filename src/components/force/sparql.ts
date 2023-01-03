@@ -31,7 +31,7 @@ export function getClassLinksQuery(class1URI: string, class2URI: string) {
     WHERE {
         ?class1 a <${class1URI}> .
         ?class2 a <${class2URI}> .
-        ?class2 ?property ?class1 .
+        ?class1 ?property ?class2 .
     }
     `
 }
