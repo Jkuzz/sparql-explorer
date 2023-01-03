@@ -5,6 +5,16 @@ import QueryQueue from '@/stores/queryQueue'
 
 const ATTRIBUTE_MINIMUM_FACTOR = 0.01
 
+export type node = {
+  position: {
+    x: number
+    y: number
+  }
+  id: number
+  type: string
+  data: unknown
+}
+
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = ref<Array<any>>([])
   const edges = ref<Array<any>>([])
