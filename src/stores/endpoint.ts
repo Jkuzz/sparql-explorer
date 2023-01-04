@@ -57,16 +57,16 @@ export const useEndpointStore = defineStore('endpoint', () => {
       const nodeObject = makeNodeObject(node)
       if (nodes.find((n) => n.id == nodeObject.id)) return undefined
       nodes.push(nodeObject)
+      queryClassEdges(nodeObject)
     })
   }
 
-  async function queryClassEdges(node00: unknown, node10: unknown) {
-    const node0 = nodes[3].data
-    console.log('🚀 ~ file: endpoint.ts:52 ~ queryClassEdges ~ node0', node0)
-    const node1 = nodes[1].data
-    console.log('🚀 ~ file: endpoint.ts:54 ~ queryClassEdges ~ node1', node1)
-
-    await askEdgeExists(node0.class.value, node1.class.value, node0.instanceCount.value)
+  function queryClassEdges(newNode: unknown) {
+    console.log('🚀 ~ file: endpoint.ts:65 ~ queryClassEdges ~ newNode', newNode)
+    nodes.forEach((n) => {
+      if (n.id === newNode.id) return
+      askEdgeExists(newNode.data.class.value, n.data.class.value, newNode.data.instanceCount.value)
+    })
   }
 
   /**
