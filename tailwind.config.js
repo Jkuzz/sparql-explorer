@@ -8,7 +8,7 @@ module.exports = {
     extend: {
       fontFamily: {
         // https://tailwindcss.com/docs/font-family#customizing-the-default-font
-        sans: ['Inter', ...defaultTheme.fontFamily.sans],
+        sans: ['Raleway', ...defaultTheme.fontFamily.sans],
       },},
   },
   plugins: [],
