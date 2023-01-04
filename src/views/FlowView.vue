@@ -19,8 +19,7 @@ onConnect((params) => addEdges([params]))
       <div class="h-screen w-full border">
         <VueFlow
           :nodes="endpointStore.nodes"
-          :edges="endpointStore.edges"
-          :edges-updatable="true"
+          :edges="endpointStore.renderEdges"
           :fit-view-on-init="true"
         >
           <template #node-custom="props">

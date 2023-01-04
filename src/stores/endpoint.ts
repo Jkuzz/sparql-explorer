@@ -29,6 +29,7 @@ export type Edge = {
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = reactive<Array<any>>([])
   const edges = reactive<Array<any>>([])
+  const renderEdges = reactive<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
   const queryQueue = new QueryQueue(endpointURL.value)
 
@@ -61,7 +62,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     })
   }
 
-  function queryClassEdges(newNode: unknown) {
+  function queryClassEdges(newNode: any) {
     console.log('🚀 ~ file: endpoint.ts:65 ~ queryClassEdges ~ newNode', newNode)
     nodes.forEach((n) => {
       if (n.id === newNode.id) return
@@ -89,10 +90,22 @@ export const useEndpointStore = defineStore('endpoint', () => {
           const edgeObject = makeEdgeObject(edge, sourceClass, targetClass)
           if (edges.find((n) => n.id == edgeObject.id)) return undefined
           edges.push(edgeObject)
+          addRenderEdge(edgeObject)
         })
     }
 
     queryQueue.query(linksQuery, callbackFunc)
+  }
+
+  function addRenderEdge(newEdge: Edge) {
+    const existingEdge = renderEdges.find(
+      (e) => e.source == newEdge.source && e.target == newEdge.target
+    )
+    if (existingEdge) {
+      renderEdges.splice(edges.indexOf(existingEdge), 1, newEdge)
+    } else {
+      renderEdges.push(newEdge)
+    }
   }
 
   function makeNodeObject(node: any) {
@@ -131,7 +144,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     edges.splice(0, edges.length)
   }
 
-  return { nodes, edges, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
+  return { nodes, edges, renderEdges, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
 })
 
 function getRandomInt(min: number, max: number) {
