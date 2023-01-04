@@ -18,7 +18,9 @@ onConnect((params) => addEdges([params]))
       <h1 class="text-4xl font-semibold">Testing flow view</h1>
       <div class="h-screen w-full border">
         <VueFlow
-          v-model="endpointStore.nodes"
+          :nodes="endpointStore.nodes"
+          :edges="endpointStore.edges"
+          :edges-updatable="true"
           :fit-view-on-init="true"
         >
           <template #node-custom="props">

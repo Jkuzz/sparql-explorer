@@ -87,8 +87,8 @@ export const useEndpointStore = defineStore('endpoint', () => {
         )
         .forEach((edge: unknown) => {
           const edgeObject = makeEdgeObject(edge, sourceClass, targetClass)
-          if (nodes.find((n) => n.id == edgeObject.id)) return undefined
-          nodes.push(edgeObject)
+          if (edges.find((n) => n.id == edgeObject.id)) return undefined
+          edges.push(edgeObject)
         })
     }
 
@@ -131,7 +131,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     edges.splice(0, edges.length)
   }
 
-  return { nodes, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
+  return { nodes, edges, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
 })
 
 function getRandomInt(min: number, max: number) {
