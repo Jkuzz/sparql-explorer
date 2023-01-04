@@ -1,7 +1,8 @@
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { getClassesQuery, getClassLinksQuery } from '@/components/force/sparql'
 import QueryQueue from '@/stores/queryQueue'
+import { MarkerType } from '@vue-flow/core'
 
 const ATTRIBUTE_MINIMUM_FACTOR = 0.01
 
@@ -20,6 +21,9 @@ export type Edge = {
   source: string
   target: string
   data: unknown
+  type?: string
+  label?: string
+  markerEnd?: MarkerType
 }
 
 export const useEndpointStore = defineStore('endpoint', () => {
@@ -27,10 +31,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
   const edges = reactive<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
   const queryQueue = new QueryQueue(endpointURL.value)
-
-  const elements = computed(() => {
-    return nodes.concat(edges)
-  })
 
   queryClasses()
 
@@ -53,8 +53,10 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function classQueryCallback(res: any) {
-    res.results.bindings.forEach((node: unknown) => {
-      nodes.push(makeNodeObject(node))
+    res.results.bindings.forEach((node: any) => {
+      const nodeObject = makeNodeObject(node)
+      if (nodes.find((n) => n.id == nodeObject.id)) return undefined
+      nodes.push(nodeObject)
     })
   }
 
@@ -84,7 +86,9 @@ export const useEndpointStore = defineStore('endpoint', () => {
             binding.instanceCount.value > originCount * ATTRIBUTE_MINIMUM_FACTOR
         )
         .forEach((edge: unknown) => {
-          edges.push(makeEdgeObject(edge, sourceClass, targetClass))
+          const edgeObject = makeEdgeObject(edge, sourceClass, targetClass)
+          if (nodes.find((n) => n.id == edgeObject.id)) return undefined
+          nodes.push(edgeObject)
         })
     }
 
@@ -94,7 +98,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   function makeNodeObject(node: any) {
     console.log(node)
     return {
-      position: { x: getRandomInt(100, 1000), y: getRandomInt(50, 400) },
+      position: { x: getRandomInt(0, 600), y: getRandomInt(0, 400) },
       id: node?.class.value || '' + getNextId(),
       type: 'custom',
       data: node,
@@ -108,6 +112,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
       source: sourceClass,
       target: targetClass,
       data: edge,
+      markerEnd: MarkerType.ArrowClosed,
     } satisfies Edge
   }
 
@@ -126,7 +131,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     edges.splice(0, edges.length)
   }
 
-  return { nodes, edges, elements, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
+  return { nodes, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
 })
 
 function getRandomInt(min: number, max: number) {
