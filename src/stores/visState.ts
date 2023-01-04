@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Node } from '@/stores/endpoint'
+import type { StoreNode } from '@/stores/endpoint'
 
 export const usevisStateStore = defineStore('visState', () => {
-  const selectedNode = ref<Node>()
+  const selectedNode = ref<StoreNode>()
   return { selectedNode }
 })

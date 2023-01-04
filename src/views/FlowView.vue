@@ -14,12 +14,12 @@ onConnect((params) => addEdges([params]))
   <div class="bg-blue-900 text-gray-200 flex flex-row">
     <VisSidebar />
 
-    <div class="p-8 flex-grow flex flex-col items-center justify-items-stretch space-y-10">
-      <h1 class="text-4xl font-semibold">Testing flow view</h1>
+    <div class="p-8 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
+      <h1 class="text-4xl font-semibold">Flow 🌊</h1>
       <div class="h-screen w-full border">
         <VueFlow
-          :nodes="endpointStore.nodes"
-          :edges="endpointStore.renderEdges"
+          v-model:nodes="endpointStore.nodes"
+          v-model:edges="endpointStore.renderEdges"
           :fit-view-on-init="true"
         >
           <template #node-custom="props">

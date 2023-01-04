@@ -6,7 +6,7 @@ import { MarkerType } from '@vue-flow/core'
 
 const ATTRIBUTE_MINIMUM_FACTOR = 0.01
 
-export type Node = {
+export type StoreNode = {
   position: {
     x: number
     y: number
@@ -16,7 +16,7 @@ export type Node = {
   data: unknown
 }
 
-export type Edge = {
+export type StoreEdge = {
   id: string
   source: string
   target: string
@@ -97,12 +97,12 @@ export const useEndpointStore = defineStore('endpoint', () => {
     queryQueue.query(linksQuery, callbackFunc)
   }
 
-  function addRenderEdge(newEdge: Edge) {
+  function addRenderEdge(newEdge: StoreEdge) {
     const existingEdge = renderEdges.find(
       (e) => e.source == newEdge.source && e.target == newEdge.target
     )
     if (existingEdge) {
-      renderEdges.splice(edges.indexOf(existingEdge), 1, newEdge)
+      renderEdges.splice(renderEdges.indexOf(existingEdge), 1, newEdge)
     } else {
       renderEdges.push(newEdge)
     }
@@ -115,7 +115,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
       id: node?.class.value || '' + getNextId(),
       type: 'custom',
       data: node,
-    } satisfies Node
+    } satisfies StoreNode
   }
 
   function makeEdgeObject(edge: any, sourceClass: string, targetClass: string) {
@@ -126,7 +126,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
       target: targetClass,
       data: edge,
       markerEnd: MarkerType.ArrowClosed,
-    } satisfies Edge
+    } satisfies StoreEdge
   }
 
   function changeEndpoint(newEndpoint: URL) {
@@ -144,7 +144,15 @@ export const useEndpointStore = defineStore('endpoint', () => {
     edges.splice(0, edges.length)
   }
 
-  return { nodes, edges, renderEdges, fetchNode, endpointURL, changeEndpoint, queryClassEdges }
+  return {
+    nodes,
+    edges,
+    renderEdges,
+    fetchNode,
+    endpointURL,
+    changeEndpoint,
+    queryClassEdges,
+  }
 })
 
 function getRandomInt(min: number, max: number) {
