@@ -20,17 +20,26 @@ function handleClick() {
 
 <template>
   <div
-    class="p-2 rounded-md border-2 border-black text-black group"
-    :class="[selected ? 'bg-purple-300' : 'bg-blue-200']"
+    class="rounded-md text-black group bg-blue-100 shadow"
     @click="handleClick"
   >
-    <div>{{ data.data.class.value }}</div>
+    <div
+      :class="[
+        selected ? 'bg-blue-600' : 'bg-blue-100',
+        selected ? 'text-blue-100' : 'text-black',
+        { 'group-hover:rounded-b-none': selected },
+      ]"
+      class="p-1 rounded"
+    >
+      {{ data.data.class.value }}
+    </div>
     <ul
       class="hidden group-hover:block"
+      :class="{}"
       v-if="selected"
     >
-      <li>Hello</li>
-      <li>World</li>
+      <li>- Hello</li>
+      <li>- World</li>
     </ul>
   </div>
 </template>

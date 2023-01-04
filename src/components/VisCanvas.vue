@@ -72,11 +72,12 @@ function updateForceVis(visData: any) {
       .append('g')
       .classed('node', true)
       .attr('transform', `translate(0, 0)`)
-    nodeContainer.append('circle').attr('r', 30).attr('stroke', 'black').attr('fill', 'white')
+    nodeContainer.append('circle').attr('r', 30).attr('stroke', 'white').attr('fill', 'transparent')
     nodeContainer
       .append('text')
       .text((d) => getLabelFromURI(d.data.class?.value))
       .attr('text-anchor', 'middle')
+      .attr('stroke', 'white')
       .classed('select-none', true)
     nodeContainer.call(drag(simulation))
     return nodeContainer
@@ -141,7 +142,7 @@ function moveTransformString(transform: string, dx: number, dy: string) {
 
 <template>
   <div
-    class="bg-blue-900 p-2"
+    class="bg-neutral-800 p-2"
     id="canvas"
   >
     <svg

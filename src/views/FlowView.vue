@@ -11,12 +11,12 @@ onConnect((params) => addEdges([params]))
 </script>
 
 <template>
-  <div class="bg-blue-900 text-gray-200 flex flex-row">
+  <div class="bg-neutral-800 text-gray-200 flex flex-row">
     <VisSidebar />
 
-    <div class="p-8 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
+    <div class="pt-2 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
       <h1 class="text-4xl font-bold">Flow 🌊</h1>
-      <div class="h-screen w-full border">
+      <div class="h-screen w-full">
         <VueFlow
           v-model:nodes="endpointStore.nodes"
           v-model:edges="endpointStore.renderEdges"
