@@ -29,7 +29,7 @@ export type StoreEdge = {
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = reactive<Array<any>>([])
   const edges = reactive<Array<any>>([])
-  const renderEdges = reactive<Array<any>>([])
+  const renderEdges = ref<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
   const queryQueue = new QueryQueue(endpointURL.value)
 
@@ -98,13 +98,13 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function addRenderEdge(newEdge: StoreEdge) {
-    const existingEdge = renderEdges.find(
+    const existingEdge = renderEdges.value.find(
       (e) => e.source == newEdge.source && e.target == newEdge.target
     )
     if (existingEdge) {
-      renderEdges.splice(renderEdges.indexOf(existingEdge), 1, newEdge)
+      renderEdges.value.splice(renderEdges.value.indexOf(existingEdge), 1, newEdge)
     } else {
-      renderEdges.push(newEdge)
+      renderEdges.value.push(newEdge)
     }
   }
 

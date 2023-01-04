@@ -15,7 +15,7 @@ onConnect((params) => addEdges([params]))
     <VisSidebar />
 
     <div class="p-8 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
-      <h1 class="text-4xl font-semibold">Flow 🌊</h1>
+      <h1 class="text-4xl font-bold">Flow 🌊</h1>
       <div class="h-screen w-full border">
         <VueFlow
           v-model:nodes="endpointStore.nodes"
