@@ -15,7 +15,7 @@ const visStateStore = useVisStateStore()
         v-for="node in visStateStore.selectedNodes"
         :key="node.id"
       >
-        {{ node.id }}
+        {{ node }}
       </div>
     </div>
   </div>

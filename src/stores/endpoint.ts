@@ -15,7 +15,6 @@ export type StoreNode = {
     x: number
     y: number
   }
-  label?: string
   id: string
   type: string
   data: any
@@ -27,12 +26,11 @@ export type StoreEdge = {
   target: string
   data: unknown
   type?: string
-  label?: string
   markerEnd?: MarkerType
 }
 
 export const useEndpointStore = defineStore('endpoint', () => {
-  const nodes = reactive<Array<any>>([])
+  const nodes = reactive<Array<StoreNode>>([])
   const edges = reactive<Array<any>>([])
   const renderEdges = ref<Array<any>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
@@ -44,13 +42,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
   function getNextId() {
     nextId += 1
     return nextId - 1
-  }
-
-  function fetchNode() {
-    nodes.push({
-      title: 'Hello',
-      id: getNextId(),
-    })
   }
 
   /**
@@ -86,8 +77,8 @@ export const useEndpointStore = defineStore('endpoint', () => {
     const callback = (res: any) => {
       res.results?.bindings?.forEach((prop: any) => {
         if (prop?.property?.value === 'http://www.w3.org/2000/01/rdf-schema#label') {
-          newNode.label = prop?.value?.value
-          console.log('🚀 ~ file: endpoint.ts:77 ~ classPropertyCallback ~ prop', prop)
+          if (!newNode.data.labels) newNode.data.labels = []
+          newNode.data.labels.push(prop)
         }
       })
     }
@@ -95,7 +86,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function queryClassEdges(newNode: StoreNode) {
-    console.log('🚀 ~ file: endpoint.ts:65 ~ queryClassEdges ~ newNode', newNode)
     nodes.forEach((n) => {
       if (n.id === newNode.id) return
       askEdgeExists(newNode.data.class.value, n.data.class.value, newNode.data.instanceCount.value)
@@ -186,7 +176,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
     nodes,
     edges,
     renderEdges,
-    fetchNode,
     endpointURL,
     changeEndpoint,
     queryClassEdges,

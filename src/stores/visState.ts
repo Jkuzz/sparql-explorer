@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import type { StoreNode } from '@/stores/endpoint'
+import { useEndpointStore } from '@/stores/endpoint'
+
+const endpointStore = useEndpointStore()
 
 export const useVisStateStore = defineStore('visState', () => {
   /**
@@ -10,19 +13,22 @@ export const useVisStateStore = defineStore('visState', () => {
   /**
    * Nodes that have been highlited -- export these
    */
-  const selectedNodes = ref<StoreNode[]>([])
+  const selectedNodes = reactive<StoreNode[]>([])
 
-  function selectNode(node: StoreNode) {
-    console.log('🚀 ~ file: visState.ts:16 ~ selectNode ~ node', node)
-    highlightedNode.value = node
-    if (!selectedNodes.value.find((n) => n.id === node.id)) {
-      selectedNodes.value.push(node)
-    }
+  function selectNode(nodeId: string) {
+    if (selectedNodes.find((n: StoreNode) => n.id === nodeId)) return
+    const nodeToSelect = endpointStore.nodes.find((n) => n.id === nodeId)
+    if (!nodeToSelect) return
+
+    highlightedNode.value = nodeToSelect
+    selectedNodes.push(nodeToSelect)
+    console.log('🚀 ~ file: visState.ts:20 ~ selectNode ~ node', nodeToSelect)
   }
 
-  function deselectNode(node: StoreNode) {
-    console.log('🚀 ~ file: visState.ts:24 ~ deselectNode ~ node', node)
-    selectedNodes.value.splice(selectedNodes.value.indexOf(node), 1)
+  function deselectNode(nodeId: string) {
+    const nodeToRemove = endpointStore.nodes.find((n) => n.id === nodeId)
+    if (!nodeToRemove) return
+    selectedNodes.splice(selectedNodes.indexOf(nodeToRemove), 1)
   }
 
   /**
@@ -30,7 +36,7 @@ export const useVisStateStore = defineStore('visState', () => {
    * @param node node to check
    */
   function isSelected(node: StoreNode) {
-    const foundNode = selectedNodes.value.find((n) => n.id === node.id)
+    const foundNode = selectedNodes.find((n) => n.id === node.id)
     return foundNode !== undefined
   }
 

@@ -1,26 +1,39 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useVisStateStore } from '@/stores/visState'
 import type { StoreNode } from '@/stores/endpoint'
 
 const visStateStore = useVisStateStore()
-const props = defineProps<{ data: StoreNode & any }>()
+const props = defineProps<{
+  data: any
+}>()
 const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
+
+const getClassLabel = computed(() => {
+  const labels = props.data.data.labels
+  if (!labels) return undefined
+
+  const englishLabel = labels.find((lbl: any) => lbl.value['xml:lang'] == 'en')
+  if (!englishLabel) return undefined
+
+  const englishLabelValue = englishLabel.value.value
+  return englishLabelValue.charAt(0).toUpperCase() + englishLabelValue.slice(1)
+})
 
 function handleClick() {
   if (selected.value) {
-    visStateStore.deselectNode(props.data satisfies StoreNode)
+    visStateStore.deselectNode(props.data.id)
   } else {
-    visStateStore.selectNode(props.data satisfies StoreNode)
+    visStateStore.selectNode(props.data.id)
   }
   selected.value = !selected.value
-  console.log(props.data.data)
+  console.log(props.data)
 }
 </script>
 
 <template>
   <div
-    class="rounded-md text-black group bg-blue-100 shadow-lg"
+    class="rounded-md text-black group bg-blue-100 shadow-lg transition-all"
     @click="handleClick"
   >
     <div
@@ -31,16 +44,14 @@ function handleClick() {
       ]"
       class="p-1 rounded"
     >
-      {{ data.data.class.value }}
+      {{ getClassLabel || `<${data.id}>` }}
     </div>
     <ul
       class="hidden group-hover:block px-2"
-      :class="{}"
       v-if="selected"
     >
-      <li>- Hello</li>
-      <li>- World</li>
-      <li>- {{ data }}</li>
+      <li>[{{ getClassLabel }}]</li>
+      <!-- <li>- {{ data.data }}</li> -->
     </ul>
   </div>
 </template>

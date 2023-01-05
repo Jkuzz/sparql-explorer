@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import { useEndpointStore } from '@/stores/endpoint'
-import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import EndpointSelector from '@/components/EndpointSelector.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
 
-const endpointStore = useEndpointStore()
 </script>
 
 <template>
@@ -16,7 +13,6 @@ const endpointStore = useEndpointStore()
     ]"
   >
     <EndpointSelector />
-    <ButtonGeneric @click="endpointStore.fetchNode"> Add node </ButtonGeneric>
     <ShoppingCart />
   </aside>
 </template>

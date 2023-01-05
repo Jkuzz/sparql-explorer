@@ -3,8 +3,12 @@ import { VueFlow, useVueFlow } from '@vue-flow/core'
 import { useEndpointStore } from '@/stores/endpoint'
 import VisSidebar from '@/components/VisSidebar.vue'
 import CustomNode from '@/components/CustomNode.vue'
+// import { markRaw } from 'vue'
 
 const endpointStore = useEndpointStore()
+// const nodeTypes = {
+//   custom: markRaw(CustomNode),
+// }
 
 const { onConnect, addEdges } = useVueFlow()
 onConnect((params) => addEdges([params]))
@@ -20,10 +24,10 @@ onConnect((params) => addEdges([params]))
         <VueFlow
           v-model:nodes="endpointStore.nodes"
           v-model:edges="endpointStore.renderEdges"
-          :fit-view-on-init="true"
+          fit-view-on-init
         >
           <template #node-custom="props">
-            <CustomNode :data="props"></CustomNode>
+            <CustomNode :data="props" />
           </template>
         </VueFlow>
       </div>
