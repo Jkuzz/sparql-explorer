@@ -1,6 +1,10 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import { getClassesQuery, getClassLinksQuery } from '@/components/force/sparql'
+import {
+  getClassesQuery,
+  getClassLinksQuery,
+  getClassPropertiesQuery,
+} from '@/components/force/sparql'
 import QueryQueue from '@/stores/queryQueue'
 import { MarkerType } from '@vue-flow/core'
 
@@ -11,9 +15,10 @@ export type StoreNode = {
     x: number
     y: number
   }
+  label?: string
   id: string
   type: string
-  data: unknown
+  data: any
 }
 
 export type StoreEdge = {
@@ -48,21 +53,48 @@ export const useEndpointStore = defineStore('endpoint', () => {
     })
   }
 
+  /**
+   * Get the top 10 + offset most numerous classes from the endpoint
+   * @param offset from most numerous class
+   */
   async function queryClasses(offset = 0) {
     const query = getClassesQuery(offset)
     queryQueue.query(query, classQueryCallback)
   }
 
+  /**
+   * Process the classes query response into objects
+   * and perform followup actions and queue followup queries
+   * @param res Classes query response
+   */
   function classQueryCallback(res: any) {
     res.results.bindings.forEach((node: any) => {
       const nodeObject = makeNodeObject(node)
       if (nodes.find((n) => n.id == nodeObject.id)) return undefined
       nodes.push(nodeObject)
       queryClassEdges(nodeObject)
+      queryClassProperties(nodeObject)
     })
   }
 
-  function queryClassEdges(newNode: any) {
+  /**
+   * Get the node's properties from the endpoint
+   * @param newNode for whose properties to query
+   */
+  function queryClassProperties(newNode: StoreNode) {
+    const query = getClassPropertiesQuery(newNode.id)
+    const callback = (res: any) => {
+      res.results?.bindings?.forEach((prop: any) => {
+        if (prop?.property?.value === 'http://www.w3.org/2000/01/rdf-schema#label') {
+          newNode.label = prop?.value?.value
+          console.log('🚀 ~ file: endpoint.ts:77 ~ classPropertyCallback ~ prop', prop)
+        }
+      })
+    }
+    queryQueue.query(query, callback)
+  }
+
+  function queryClassEdges(newNode: StoreNode) {
     console.log('🚀 ~ file: endpoint.ts:65 ~ queryClassEdges ~ newNode', newNode)
     nodes.forEach((n) => {
       if (n.id === newNode.id) return
@@ -108,6 +140,12 @@ export const useEndpointStore = defineStore('endpoint', () => {
     }
   }
 
+  /**
+   * Convert the repsonse to the known type
+   * TODO: beter validation: zod?
+   * @param node Response object
+   * @returns the node converted to a known type
+   */
   function makeNodeObject(node: any) {
     console.log(node)
     return {

@@ -12,7 +12,7 @@ export function getClassesQuery(offset: number) {
     OFFSET ${offset}`
 }
 
-export function getClassPropertiesQuery(classURI: string) {
+export function getClassInstancesPropertiesQuery(classURI: string) {
   return `
     SELECT DISTINCT ?property ?targetClass (COUNT(1) AS ?instanceCount)
     WHERE {
@@ -21,6 +21,16 @@ export function getClassPropertiesQuery(classURI: string) {
         ?class ?property ?target
     }
     ORDER BY DESC(?instanceCount)
+    LIMIT 20
+    `
+}
+
+export function getClassPropertiesQuery(classURI: string) {
+  return `
+    SELECT DISTINCT ?property ?value
+    WHERE {
+      <${classURI}> ?property ?value 
+    }
     LIMIT 20
     `
 }

@@ -4,7 +4,7 @@ import { useVisStateStore } from '@/stores/visState'
 import type { StoreNode } from '@/stores/endpoint'
 
 const visStateStore = useVisStateStore()
-const props = defineProps<{ data: any }>()
+const props = defineProps<{ data: StoreNode & any }>()
 const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
 
 function handleClick() {
@@ -40,6 +40,7 @@ function handleClick() {
     >
       <li>- Hello</li>
       <li>- World</li>
+      <li>- {{ data }}</li>
     </ul>
   </div>
 </template>
