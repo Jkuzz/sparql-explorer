@@ -25,7 +25,7 @@ function handleClick() {
   >
     <div
       :class="[
-        selected ? 'bg-blue-600' : 'bg-blue-100',
+        selected ? 'bg-blue-700' : 'bg-blue-100',
         selected ? 'text-blue-100' : 'text-black',
         { 'group-hover:rounded-b-none': selected },
       ]"
@@ -34,7 +34,7 @@ function handleClick() {
       {{ data.data.class.value }}
     </div>
     <ul
-      class="hidden group-hover:block"
+      class="hidden group-hover:block px-2"
       :class="{}"
       v-if="selected"
     >
