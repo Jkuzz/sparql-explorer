@@ -20,7 +20,7 @@ function handleClick() {
 
 <template>
   <div
-    class="rounded-md text-black group bg-blue-100 shadow"
+    class="rounded-md text-black group bg-blue-100 shadow-lg"
     @click="handleClick"
   >
     <div

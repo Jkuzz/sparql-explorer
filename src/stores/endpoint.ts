@@ -119,7 +119,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function makeEdgeObject(edge: any, sourceClass: string, targetClass: string) {
-    console.log(edge)
+    // console.log(edge)
     return {
       id: `e-[${sourceClass}]-[${edge?.property.value}]-[${targetClass}]`,
       source: sourceClass,
@@ -130,7 +130,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function changeEndpoint(newEndpoint: URL) {
-    console.log(newEndpoint)
+    // console.log(newEndpoint)
     endpointURL.value = newEndpoint
     clearNodes()
     queryClasses()
