@@ -5,7 +5,7 @@ import type { StoreNode } from '@/stores/endpoint'
 
 const visStateStore = useVisStateStore()
 const props = defineProps<{ data: any }>()
-const selected = ref(false)
+const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
 
 function handleClick() {
   if (selected.value) {

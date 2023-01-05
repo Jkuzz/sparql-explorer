@@ -25,5 +25,14 @@ export const useVisStateStore = defineStore('visState', () => {
     selectedNodes.value.splice(selectedNodes.value.indexOf(node), 1)
   }
 
-  return { selectedNodes, highlightedNode, selectNode, deselectNode }
+  /**
+   * See whether the selected nodes contain a specific one by comparing ids
+   * @param node node to check
+   */
+  function isSelected(node: StoreNode) {
+    const foundNode = selectedNodes.value.find((n) => n.id === node.id)
+    return foundNode !== undefined
+  }
+
+  return { selectedNodes, highlightedNode, selectNode, deselectNode, isSelected }
 })
