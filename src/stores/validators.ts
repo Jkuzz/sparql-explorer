@@ -4,7 +4,7 @@ import { z } from 'zod'
 const InstanceCount = z.object({
   type: z.string(),
   datatype: z.string().url(),
-  value: z.number().nonnegative(),
+  value: z.string(), // This is a numeric string :(
 })
 
 const Property = z.object({
@@ -12,17 +12,23 @@ const Property = z.object({
   value: z.string(),
 })
 
-const ClassPropertyBinding = z.object({
-  property: Property,
-  instanceCount: InstanceCount,
-})
-
 const Class = z.object({
   type: z.string(),
   value: z.string().url(),
 })
 
+const ClassPropertyBinding = z.object({
+  property: Property,
+  instanceCount: InstanceCount,
+})
+
 const NodeBinding = z.object({
+  class: Class,
+  instanceCount: InstanceCount,
+  labels: z.optional(Property.array()),
+})
+
+const EdgeBinding = z.object({
   class: Class,
   instanceCount: InstanceCount,
   labels: z.optional(Property.array()),
@@ -32,6 +38,15 @@ export const NodeResponse = z.object({
   // ignoring head
   results: z.object({
     bindings: NodeBinding.array(),
+    distinct: z.boolean(),
+    ordered: z.boolean(),
+  }),
+})
+
+export const EdgeResponse = z.object({
+  // ignoring head
+  results: z.object({
+    bindings: EdgeBinding.array(),
     distinct: z.boolean(),
     ordered: z.boolean(),
   }),

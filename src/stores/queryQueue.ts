@@ -1,10 +1,12 @@
 import { queryEndpoint } from '@/components/force/sparql'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { MarkerType } from '@vue-flow/core'
+import type { z } from 'zod'
 
 interface QueryRecord {
   query: string
   callback: (data: any) => void
+  validator?: z.AnyZodObject
 }
 
 export default class QueryQueue {
@@ -23,8 +25,8 @@ export default class QueryQueue {
    * @param query SPARQL query to perform
    * @param callback to be called with the query data on completion
    */
-  public query(query: string, callback: (data: unknown) => void) {
-    this.queue.push({ query, callback })
+  public query(query: string, callback: (data: unknown) => void, validator?: z.AnyZodObject) {
+    this.queue.push({ query, callback, validator })
     this.lockedQueryLoop()
   }
 
@@ -52,8 +54,11 @@ export default class QueryQueue {
 
   private async executeQuery(queryToExecute: QueryRecord) {
     const response = await queryEndpoint(this.endpointURL, queryToExecute.query)
-    console.log('🚀 ~ file: queryQueue.ts:58 ~ QueryQueue ~ executeQuery ~ response', response)
-    queryToExecute.callback(response)
+    if (queryToExecute.validator) {
+      queryToExecute.callback(queryToExecute.validator.parse(response))
+    } else {
+      queryToExecute.callback(response)
+    }
   }
 }
 

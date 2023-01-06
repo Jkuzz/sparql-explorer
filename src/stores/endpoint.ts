@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
-import type { StoreNode, StoreEdge } from '@/stores/validators'
+import { type StoreNode, type StoreEdge, NodeResponse, type EdgeResponse } from '@/stores/validators'
 import QueryQueue from '@/stores/queryQueue'
 import {
   getClassesQuery,
@@ -63,7 +63,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
    */
   function queryClasses(offset = 0) {
     const query = getClassesQuery(offset)
-    queryQueue.query(query, classQueryCallback)
+    queryQueue.query(query, classQueryCallback, NodeResponse)
   }
 
   /**
