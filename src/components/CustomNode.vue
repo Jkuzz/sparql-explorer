@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { computedEager } from '@vueuse/core'
 import { useVisStateStore } from '@/stores/visState'
 import { useEndpointStore } from '@/stores/endpoint'
 import type { StoreNode } from '@/stores/validators'
@@ -13,7 +12,8 @@ const props = defineProps<{
 const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
 const myNodeData = endpointStore.nodes.find((n) => n.id === props.data.id)
 
-const classLabel = computedEager(() => {
+// For whatever reason making this computed() does not call reactive recomputes
+function getClassLabel() {
   const labels = myNodeData?.data.labels
   if (!labels) return ''
 
@@ -23,7 +23,7 @@ const classLabel = computedEager(() => {
   // return englishLabel.value
   const englishLabelValue = englishLabel.value.value
   return englishLabelValue.charAt(0).toUpperCase() + englishLabelValue.slice(1)
-})
+}
 
 function handleClick() {
   if (selected.value) {
@@ -49,14 +49,16 @@ function handleClick() {
       ]"
       class="p-1 rounded"
     >
-      {{ classLabel || `<${data.id}>` }}
+      {{ getClassLabel() || `<${data.id}>` }}
     </div>
     <ul
       class="hidden group-hover:block px-2"
       v-if="selected"
     >
-      <li>[{{ classLabel }}]</li>
-      <li>[{{ myNodeData }}]</li>
+      <li v-if="getClassLabel()">
+        {{ `<${data.id}>` }}
+      </li>
+      <!-- <li>[{{ myNodeData }}]</li> -->
     </ul>
   </div>
 </template>
