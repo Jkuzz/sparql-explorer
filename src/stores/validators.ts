@@ -46,6 +46,12 @@ const EdgeBinding = z.object({
   instanceCount: InstanceCount,
 })
 
+const ClassInstancesPropertyBinding = z.object({
+  property: Property,
+  targetClass: Class,
+  instanceCount: InstanceCount,
+})
+
 export const NodeResponse = z.object({
   // ignoring head
   results: z.object({
@@ -59,6 +65,15 @@ export const EdgeResponse = z.object({
   // ignoring head
   results: z.object({
     bindings: EdgeBinding.array(),
+    distinct: z.boolean(),
+    ordered: z.boolean(),
+  }),
+})
+
+export const ClassInstancesPropertiesResponse = z.object({
+  // ignoring head
+  results: z.object({
+    bindings: ClassInstancesPropertyBinding.array(),
     distinct: z.boolean(),
     ordered: z.boolean(),
   }),
