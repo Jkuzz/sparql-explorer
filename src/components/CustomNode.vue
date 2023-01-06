@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
+import { computedEager } from '@vueuse/core'
 import { useVisStateStore } from '@/stores/visState'
 import { useEndpointStore } from '@/stores/endpoint'
 import type { StoreNode } from '@/stores/validators'
@@ -12,13 +13,14 @@ const props = defineProps<{
 const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
 const myNodeData = endpointStore.nodes.find((n) => n.id === props.data.id)
 
-const classLabel = computed(() => {
+const classLabel = computedEager(() => {
   const labels = myNodeData?.data.labels
   if (!labels) return ''
 
   const englishLabel = labels.find((lbl: any) => lbl.value['xml:lang'] == 'en')
   if (!englishLabel) return ''
 
+  // return englishLabel.value
   const englishLabelValue = englishLabel.value.value
   return englishLabelValue.charAt(0).toUpperCase() + englishLabelValue.slice(1)
 })

@@ -1,7 +1,10 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import type { z } from 'zod'
 import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
-import { type StoreNode, type StoreEdge, NodeResponse, type EdgeResponse } from '@/stores/validators'
+import type { StoreNode, StoreEdge } from '@/stores/validators'
+import { NodeResponse, EdgeResponse } from '@/stores/validators'
+
 import QueryQueue from '@/stores/queryQueue'
 import {
   getClassesQuery,
@@ -71,8 +74,8 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * and perform followup actions and queue followup queries
    * @param res Classes query response
    */
-  function classQueryCallback(res: any) {
-    res.results.bindings.forEach((node: any) => {
+  function classQueryCallback(res: z.infer<typeof NodeResponse>) {
+    res.results.bindings.forEach((node) => {
       const nodeObject = makeNodeObject(node)
       if (addNode(nodeObject)) {
         queryClassEdges(nodeObject)
@@ -101,7 +104,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   function queryClassEdges(newNode: StoreNode) {
     nodes.forEach((n) => {
       if (n.id === newNode.id) return
-      askEdgeExists(newNode.data.class.value, n.data.class.value, newNode.data.instanceCount.value)
+      askEdgeExists(newNode.data.class.value, n.data.class.value, +newNode.data.instanceCount.value)
     })
   }
 
@@ -115,19 +118,16 @@ export const useEndpointStore = defineStore('endpoint', () => {
     const linksQuery = getClassLinksQuery(sourceClass, targetClass)
 
     // Create closure around the callback, binding the class data
-    const callbackFunc = (res: any) => {
+    const callbackFunc = (res: z.infer<typeof EdgeResponse>) => {
       res.results.bindings
-        .filter(
-          (binding: { instanceCount: { value: number } }) =>
-            binding.instanceCount.value > originCount * ATTRIBUTE_MINIMUM_FACTOR
-        )
-        .forEach((edge: unknown) => {
+        .filter((binding) => +binding.instanceCount.value > originCount * ATTRIBUTE_MINIMUM_FACTOR)
+        .forEach((edge) => {
           const edgeObject = makeEdgeObject(edge, sourceClass, targetClass)
           addEdge(edgeObject)
         })
     }
 
-    queryQueue.query(linksQuery, callbackFunc)
+    queryQueue.query(linksQuery, callbackFunc, EdgeResponse)
   }
 
   return {

@@ -25,7 +25,7 @@ export default class QueryQueue {
    * @param query SPARQL query to perform
    * @param callback to be called with the query data on completion
    */
-  public query(query: string, callback: (data: unknown) => void, validator?: z.AnyZodObject) {
+  public query(query: string, callback: (data: any) => void, validator?: z.AnyZodObject) {
     this.queue.push({ query, callback, validator })
     this.lockedQueryLoop()
   }
@@ -54,6 +54,7 @@ export default class QueryQueue {
 
   private async executeQuery(queryToExecute: QueryRecord) {
     const response = await queryEndpoint(this.endpointURL, queryToExecute.query)
+    console.log('🚀 ~ file: queryQueue.ts:57 ~ QueryQueue ~ executeQuery ~ response', response)
     if (queryToExecute.validator) {
       queryToExecute.callback(queryToExecute.validator.parse(response))
     } else {

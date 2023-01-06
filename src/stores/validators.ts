@@ -17,6 +17,12 @@ const Class = z.object({
   value: z.string().url(),
 })
 
+const Label = z.object({
+  type: z.string(),
+  'xml:lang': z.string(),
+  value: z.string(),
+})
+
 const ClassPropertyBinding = z.object({
   property: Property,
   instanceCount: InstanceCount,
@@ -25,13 +31,19 @@ const ClassPropertyBinding = z.object({
 const NodeBinding = z.object({
   class: Class,
   instanceCount: InstanceCount,
-  labels: z.optional(Property.array()),
+  labels: z.optional(
+    z
+      .object({
+        property: Property,
+        value: Label,
+      })
+      .array()
+  ),
 })
 
 const EdgeBinding = z.object({
-  class: Class,
+  property: Property,
   instanceCount: InstanceCount,
-  labels: z.optional(Property.array()),
 })
 
 export const NodeResponse = z.object({
