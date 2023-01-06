@@ -1,20 +1,23 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useVisStateStore } from '@/stores/visState'
+import { useEndpointStore } from '@/stores/endpoint'
 import type { StoreNode } from '@/stores/endpoint'
 
 const visStateStore = useVisStateStore()
+const endpointStore = useEndpointStore()
 const props = defineProps<{
   data: any
 }>()
 const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
+const myNodeData = endpointStore.nodes.find((n) => n.id === props.data.id)
 
-const getClassLabel = computed(() => {
-  const labels = props.data.data.labels
-  if (!labels) return undefined
+const classLabel = computed(() => {
+  const labels = myNodeData?.data.labels
+  if (!labels) return ''
 
   const englishLabel = labels.find((lbl: any) => lbl.value['xml:lang'] == 'en')
-  if (!englishLabel) return undefined
+  if (!englishLabel) return ''
 
   const englishLabelValue = englishLabel.value.value
   return englishLabelValue.charAt(0).toUpperCase() + englishLabelValue.slice(1)
@@ -44,14 +47,14 @@ function handleClick() {
       ]"
       class="p-1 rounded"
     >
-      {{ getClassLabel || `<${data.id}>` }}
+      {{ classLabel || `<${data.id}>` }}
     </div>
     <ul
       class="hidden group-hover:block px-2"
       v-if="selected"
     >
-      <li>[{{ getClassLabel }}]</li>
-      <!-- <li>- {{ data.data }}</li> -->
+      <li>[{{ classLabel }}]</li>
+      <li>[{{ myNodeData }}]</li>
     </ul>
   </div>
 </template>
