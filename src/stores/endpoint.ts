@@ -1,7 +1,7 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
-import { makeNodeObject, makeEdgeObject } from '@/stores/queryHandler'
-import type { MarkerType } from '@vue-flow/core'
+import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
+import type { StoreNode, StoreEdge } from '@/stores/validators'
 import QueryQueue from '@/stores/queryQueue'
 import {
   getClassesQuery,
@@ -10,25 +10,6 @@ import {
 } from '@/components/force/sparql'
 
 const ATTRIBUTE_MINIMUM_FACTOR = 0.01
-
-export type StoreNode = {
-  position: {
-    x: number
-    y: number
-  }
-  id: string
-  type: string
-  data: any
-}
-
-export type StoreEdge = {
-  id: string
-  source: string
-  target: string
-  data: unknown
-  type?: string
-  markerEnd?: MarkerType
-}
 
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = reactive<Array<StoreNode>>([])

@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useVisStateStore } from '@/stores/visState'
 import { useEndpointStore } from '@/stores/endpoint'
-import type { StoreNode } from '@/stores/endpoint'
+import type { StoreNode } from '@/stores/validators'
 
 const visStateStore = useVisStateStore()
 const endpointStore = useEndpointStore()
