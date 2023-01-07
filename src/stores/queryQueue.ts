@@ -54,7 +54,7 @@ export default class QueryQueue {
 
   private async executeQuery(queryToExecute: QueryRecord) {
     const response = await queryEndpoint(this.endpointURL, queryToExecute.query)
-    console.log('🚀 ~ file: queryQueue.ts:57 ~ QueryQueue ~ executeQuery ~ response', response)
+    // console.log('🚀 ~ file: queryQueue.ts:57 ~ QueryQueue ~ executeQuery ~ response', response)
     if (queryToExecute.validator) {
       queryToExecute.callback(queryToExecute.validator.parse(response))
     } else {
@@ -80,7 +80,7 @@ export function makeNodeObject(node: any) {
     position: { x: getRandomInt(0, 600), y: getRandomInt(0, 400) },
     id: node?.class.value || '' + getNextId(),
     type: 'custom',
-    data: node,
+    data: { node, labels: [], attributes: [] },
   } satisfies StoreNode
 }
 
@@ -89,7 +89,7 @@ export function makeEdgeObject(edge: any, sourceClass: string, targetClass: stri
     id: `e-[${sourceClass}]-[${edge?.property.value}]-[${targetClass}]`,
     source: sourceClass,
     target: targetClass,
-    data: edge,
+    data: { edge },
     markerEnd: MarkerType.ArrowClosed,
   } satisfies StoreEdge
 }

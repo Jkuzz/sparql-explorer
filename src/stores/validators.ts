@@ -23,6 +23,13 @@ const Label = z.object({
   value: z.string(),
 })
 
+const Labels = z.array(
+  z.object({
+    property: Property,
+    value: Label,
+  })
+)
+
 const ClassPropertyBinding = z.object({
   property: Property,
   instanceCount: InstanceCount,
@@ -31,14 +38,6 @@ const ClassPropertyBinding = z.object({
 const NodeBinding = z.object({
   class: Class,
   instanceCount: InstanceCount,
-  labels: z.optional(
-    z
-      .object({
-        property: Property,
-        value: Label,
-      })
-      .array()
-  ),
 })
 
 const EdgeBinding = z.object({
@@ -46,11 +45,13 @@ const EdgeBinding = z.object({
   instanceCount: InstanceCount,
 })
 
-const ClassInstancesPropertyBinding = z.object({
-  property: Property,
+const AttributeBinding = z.object({
+  attribute: Property,
   targetClass: Class,
   instanceCount: InstanceCount,
 })
+
+const AttributeBindingArr = AttributeBinding.array()
 
 export const NodeResponse = z.object({
   // ignoring head
@@ -70,10 +71,10 @@ export const EdgeResponse = z.object({
   }),
 })
 
-export const ClassInstancesPropertiesResponse = z.object({
+export const AttributesResponse = z.object({
   // ignoring head
   results: z.object({
-    bindings: ClassInstancesPropertyBinding.array(),
+    bindings: AttributeBinding.array(),
     distinct: z.boolean(),
     ordered: z.boolean(),
   }),
@@ -86,7 +87,11 @@ export type StoreNode = {
   }
   id: string
   type: string
-  data: z.infer<typeof NodeBinding>
+  data: {
+    node: z.infer<typeof NodeBinding>
+    labels: z.infer<typeof Labels>
+    attributes: z.infer<typeof AttributeBindingArr>
+  }
 }
 
 export type StoreEdge = {

@@ -5,23 +5,22 @@ export function getClassesQuery(offset: number) {
   return `
     SELECT DISTINCT ?class (COUNT(*) AS ?instanceCount)
     WHERE {
-        ?s a ?class
+      ?s a ?class
     }
     ORDER BY DESC(?instanceCount)
     LIMIT 10
     OFFSET ${offset}`
 }
 
-export function getClassInstancesPropertiesQuery(classURI: string) {
+export function getAttributesQuery(classURI: string) {
   return `
-    SELECT DISTINCT ?property ?targetClass (COUNT(1) AS ?instanceCount)
-    WHERE {
-        ?class a <${classURI}> .
-        ?target a ?targetClass .
-        ?class ?property ?target
+    select DISTINCT ?attribute (COUNT(1) AS ?instanceCount)
+    where {
+      ?instance
+          a <${classURI}> ;
+        ?attribute ?targetLiteral
+      FILTER isLiteral(?targetLiteral)
     }
-    ORDER BY DESC(?instanceCount)
-    LIMIT 20
     `
 }
 
@@ -32,19 +31,41 @@ export function getClassPropertiesQuery(classURI: string) {
       <${classURI}> ?property ?value 
     }
     LIMIT 20
-    `
+  `
 }
 
 export function getClassLinksQuery(class1URI: string, class2URI: string) {
   return `
     SELECT DISTINCT ?property (COUNT(*) AS ?instanceCount)
     WHERE {
-        ?class1 a <${class1URI}> .
-        ?class2 a <${class2URI}> .
-        ?class1 ?property ?class2 .
+      ?class1 a <${class1URI}> .
+      ?class2 a <${class2URI}> .
+      ?class1 ?property ?class2 .
     }
-    `
+  `
 }
+
+// PREFIX se: <http://test.com/>
+// CONSTRUCT {
+// []
+//   a se:AttributeObservation ;
+//   se:describedAttribute <http://dbpedia.org/ontology/abstract> ;
+//   se:attributeSourceClass <http://dbpedia.org/ontology/Person> ;
+//   se:targetLiteral ?targetLiteral .
+// } WHERE {
+//   {
+//     SELECT ?targetLiteral
+//     WHERE {
+//       GRAPH ?g {
+//         ?instance
+//           a <http://dbpedia.org/ontology/Person> ;
+//           <http://dbpedia.org/ontology/abstract> ?targetLiteral .
+//         FILTER isLiteral(?targetLiteral) 
+//       }
+//     }
+//   } 
+// }
+
 // export function getClassLinksQuery() {
 //   return `
 //     SELECT DISTINCT ?property (COUNT(*) AS ?instanceCount)

@@ -7,7 +7,7 @@ import type { StoreNode } from '@/stores/validators'
 const visStateStore = useVisStateStore()
 const endpointStore = useEndpointStore()
 const props = defineProps<{
-  data: any
+  data: StoreNode
 }>()
 const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
 const myNodeData = endpointStore.nodes.find((n) => n.id === props.data.id)
@@ -36,7 +36,9 @@ function handleClick() {
 }
 
 function handleUriClick() {
-  navigator.clipboard.writeText(myNodeData?.id)
+  if (myNodeData?.id) {
+    navigator.clipboard.writeText(myNodeData.id)
+  }
 }
 </script>
 

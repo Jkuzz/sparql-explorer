@@ -3,16 +3,18 @@ import { defineStore } from 'pinia'
 import type { z } from 'zod'
 import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
-import { NodeResponse, EdgeResponse } from '@/stores/validators'
+import { NodeResponse, EdgeResponse, AttributesResponse } from '@/stores/validators'
 
 import QueryQueue from '@/stores/queryQueue'
 import {
   getClassesQuery,
   getClassLinksQuery,
   getClassPropertiesQuery,
+  getAttributesQuery,
 } from '@/components/force/sparql'
 
-const ATTRIBUTE_MINIMUM_FACTOR = 0.01
+const PROPERTY_MINIMUM_FACTOR = 0.01
+const ATTRIBUTE_MINIMUM_FACTOR = 0.005
 
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = reactive<Array<StoreNode>>([])
@@ -23,16 +25,27 @@ export const useEndpointStore = defineStore('endpoint', () => {
 
   queryClasses()
 
+  /**
+   * Add a new node to the store unless it already exists.
+   * @param node to add
+   * @returns true of the node was added
+   */
   function addNode(node: StoreNode) {
-    if (nodes.find((n) => n.id == node.id)) return undefined
+    if (nodes.find((n) => n.id == node.id)) return false
     nodes.push(node)
     return true
   }
 
+  /**
+   * Add a new edge to the store unless it already exists
+   * @param edge to add
+   * @returns true of the edge was added
+   */
   function addEdge(edge: StoreEdge) {
-    if (edges.find((n) => n.id == edge.id)) return undefined
+    if (edges.find((n) => n.id == edge.id)) return false
     edges.push(edge)
     addRenderEdge(edge)
+    return true
   }
 
   function addRenderEdge(newEdge: StoreEdge) {
@@ -46,6 +59,11 @@ export const useEndpointStore = defineStore('endpoint', () => {
     }
   }
 
+  /**
+   * Change the store's target endpoint, reset the state and
+   * restart the querying process.
+   * @param newEndpoint to change to
+   */
   function changeEndpoint(newEndpoint: URL) {
     endpointURL.value = newEndpoint
     clearNodes()
@@ -80,6 +98,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
       if (addNode(nodeObject)) {
         queryClassEdges(nodeObject)
         queryClassProperties(nodeObject)
+        queryClassAttributes(nodeObject)
       }
     })
   }
@@ -101,10 +120,37 @@ export const useEndpointStore = defineStore('endpoint', () => {
     queryQueue.query(query, callback)
   }
 
+  /**
+   * For a newly added node, make a query that asks by which
+   * properties are two existing class nodes connected in the endpoint.
+   * @param newNode that was just added to the store
+   */
+  function queryClassAttributes(newNode: StoreNode) {
+    const query = getAttributesQuery(newNode.id)
+    const minAttibuteCount = +newNode.data.node.instanceCount.value * ATTRIBUTE_MINIMUM_FACTOR
+    queryQueue.query(query, (res: z.infer<typeof AttributesResponse>) => {
+      res.results.bindings
+        .filter((binding) => +binding.instanceCount.value > minAttibuteCount)
+        .forEach((binding) => {
+          newNode.data.attributes.push(binding)
+          console.log(binding)
+        })
+    })
+  }
+
+  /**
+   * For a newly added node, make a query that asks by which
+   * properties are two existing class nodes connected in the endpoint.
+   * @param newNode that was just added to the store
+   */
   function queryClassEdges(newNode: StoreNode) {
     nodes.forEach((n) => {
       if (n.id === newNode.id) return
-      askEdgeExists(newNode.data.class.value, n.data.class.value, +newNode.data.instanceCount.value)
+      askEdgeExists(
+        newNode.data.node.class.value,
+        n.data.node.class.value,
+        +newNode.data.node.instanceCount.value
+      )
     })
   }
 
@@ -120,7 +166,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     // Create closure around the callback, binding the class data
     const callbackFunc = (res: z.infer<typeof EdgeResponse>) => {
       res.results.bindings
-        .filter((binding) => +binding.instanceCount.value > originCount * ATTRIBUTE_MINIMUM_FACTOR)
+        .filter((binding) => +binding.instanceCount.value > originCount * PROPERTY_MINIMUM_FACTOR)
         .forEach((edge) => {
           const edgeObject = makeEdgeObject(edge, sourceClass, targetClass)
           addEdge(edgeObject)
