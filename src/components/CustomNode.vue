@@ -34,13 +34,14 @@ function handleClick() {
   selected.value = !selected.value
   console.log(props.data)
 }
+
+function handleUriClick() {
+  navigator.clipboard.writeText(myNodeData?.id)
+}
 </script>
 
 <template>
-  <div
-    class="rounded-md text-black group bg-blue-100 shadow-lg transition-all"
-    @click="handleClick"
-  >
+  <div class="rounded-md text-black group bg-blue-100 shadow-lg transition-all">
     <div
       :class="[
         selected ? 'bg-blue-700' : 'bg-blue-100',
@@ -48,14 +49,18 @@ function handleClick() {
         { 'group-hover:rounded-b-none': selected },
       ]"
       class="p-1 rounded"
+      @click="handleClick"
     >
       {{ getClassLabel() || `<${data.id}>` }}
     </div>
     <ul
-      class="hidden group-hover:block px-2"
+      class="hidden group-hover:block p-2"
       v-if="selected"
     >
-      <li v-if="getClassLabel()">
+      <li
+        class="cursor-pointer hover:underline"
+        @click="handleUriClick"
+      >
         {{ `<${data.id}>` }}
       </li>
       <!-- <li>[{{ myNodeData }}]</li> -->
