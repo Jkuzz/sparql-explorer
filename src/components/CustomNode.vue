@@ -42,6 +42,12 @@ function handleUriClick() {
   }
 }
 
+function handleAttributeClick(attr: z.infer<typeof AttributeBinding>) {
+  navigator.clipboard.writeText(attr.attribute.value)
+}
+
+function onMouseOver() {}
+
 function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
   const nodeCount = myNodeData?.data.node.instanceCount.value
   const attributeCount = attribute.instanceCount.value
@@ -51,25 +57,30 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
 </script>
 
 <template>
-  <div class="rounded-md text-black group bg-blue-100 shadow-lg transition-all">
+  <div class="rounded-md text-black group bg-blue-100 shadow-lg">
     <div
       :class="[
         selected ? 'bg-blue-700' : 'bg-blue-100',
         selected ? 'text-blue-100' : 'text-black',
+        selected ? 'p-2' : 'p-1',
         { 'group-hover:rounded-b-none': selected },
       ]"
-      class="p-1 rounded text-center"
+      class="rounded text-center transition-all"
       @click="handleClick"
+      @mouseover="onMouseOver"
     >
       {{ getClassLabel() || `<${data.id}>` }}
     </div>
     <ul
-      class="hidden group-hover:flex p-2 max-h-96 overflow-auto flex-col gap-y-1"
-      :class="[{ nowheel: selected }]"
+      :class="[
+        'flex p-0 group-hover:p-2 flex-col gap-y-1 nowheel rounded-b-md',
+        'max-h-0 group-hover:max-h-96 overflow-y-auto transition-all duration-200',
+        'max-w-[100px] group-hover:max-w-md',
+      ]"
       v-if="selected"
     >
       <li
-        class="cursor-pointer hover:underline text-center mb-2"
+        class="cursor-pointer hover:underline text-center mb-2 overflow-clip"
         @click="handleUriClick"
       >
         {{ `<${data.id}>` }}
@@ -77,9 +88,14 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
       <li
         v-for="attr in data.data.attributes"
         :key="attr.attribute.value"
-        class="flex flex-row justify-between gap-x-2"
+        class="flex flex-row justify-between gap-x-2 overflow-clip"
       >
-        <span> {{ attr.attribute.value }}: </span>
+        <span
+          class="cursor-pointer hover:underline"
+          @click="handleAttributeClick(attr)"
+        >
+          {{ attr.attribute.value }}:
+        </span>
         <span>{{ getAttributeRatio(attr) }}</span>
       </li>
       <!-- <li>[{{ myNodeData }}]</li> -->
