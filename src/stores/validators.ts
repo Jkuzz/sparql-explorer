@@ -45,12 +45,12 @@ const EdgeBinding = z.object({
   instanceCount: InstanceCount,
 })
 
-const AttributeBinding = z.object({
+export const AttributeBinding = z.object({
   attribute: Property,
-  targetClass: Class,
   instanceCount: InstanceCount,
 })
 
+// This is defined separately to allow z.infer-ence
 const AttributeBindingArr = AttributeBinding.array()
 
 export const NodeResponse = z.object({
@@ -74,7 +74,7 @@ export const EdgeResponse = z.object({
 export const AttributesResponse = z.object({
   // ignoring head
   results: z.object({
-    bindings: AttributeBinding.array(),
+    bindings: AttributeBindingArr,
     distinct: z.boolean(),
     ordered: z.boolean(),
   }),

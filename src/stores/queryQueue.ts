@@ -56,6 +56,7 @@ export default class QueryQueue {
     const response = await queryEndpoint(this.endpointURL, queryToExecute.query)
     // console.log('🚀 ~ file: queryQueue.ts:57 ~ QueryQueue ~ executeQuery ~ response', response)
     if (queryToExecute.validator) {
+      console.log(response)
       queryToExecute.callback(queryToExecute.validator.parse(response))
     } else {
       queryToExecute.callback(response)

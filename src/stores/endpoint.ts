@@ -128,14 +128,16 @@ export const useEndpointStore = defineStore('endpoint', () => {
   function queryClassAttributes(newNode: StoreNode) {
     const query = getAttributesQuery(newNode.id)
     const minAttibuteCount = +newNode.data.node.instanceCount.value * ATTRIBUTE_MINIMUM_FACTOR
-    queryQueue.query(query, (res: z.infer<typeof AttributesResponse>) => {
+
+    // Create closure around the callback, binding the class data
+    const callbackFunc = (res: z.infer<typeof AttributesResponse>) => {
       res.results.bindings
         .filter((binding) => +binding.instanceCount.value > minAttibuteCount)
         .forEach((binding) => {
           newNode.data.attributes.push(binding)
-          console.log(binding)
         })
-    })
+    }
+    queryQueue.query(query, callbackFunc, AttributesResponse)
   }
 
   /**
@@ -172,7 +174,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
           addEdge(edgeObject)
         })
     }
-
     queryQueue.query(linksQuery, callbackFunc, EdgeResponse)
   }
 

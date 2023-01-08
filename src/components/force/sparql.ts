@@ -14,13 +14,14 @@ export function getClassesQuery(offset: number) {
 
 export function getAttributesQuery(classURI: string) {
   return `
-    select DISTINCT ?attribute (COUNT(1) AS ?instanceCount)
-    where {
+    SELECT DISTINCT ?attribute (COUNT(1) AS ?instanceCount)
+    WHERE {
       ?instance
           a <${classURI}> ;
         ?attribute ?targetLiteral
       FILTER isLiteral(?targetLiteral)
     }
+    ORDER BY DESC(?instanceCount)
     `
 }
 
