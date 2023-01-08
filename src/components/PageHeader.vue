@@ -10,8 +10,8 @@ const links = [
     title: 'About',
   },
   {
-    to: '/vis',
-    title: 'Visualisation',
+    to: '/force',
+    title: 'Force',
   },
   {
     to: '/flow',

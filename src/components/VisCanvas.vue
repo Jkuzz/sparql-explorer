@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useEndpointStore } from '@/stores/endpoint'
 import * as d3 from 'd3'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, watch } from 'vue'
 import { useArrayFilter } from '@vueuse/core'
 import type { StoreNode } from '@/stores/validators'
 
@@ -19,20 +19,21 @@ const simulation = d3
 
 /**
  * Hack Pinia modeling by manually updating changes to the store.
- * Changes are mirrored into `nodes`
- * currently only additions are handled
+ * Changes are mirrored into `nodes`.
+ * Only triggers when the number of nodes in the store changed.
  */
-endpointStore.$subscribe((mutation, state) => {
-  // Copy the state stored nodes
-  // const newState = JSON.parse(JSON.stringify(state.nodes))
-  updateNodes(state.nodes)
+let lastNodesLength = 0
+watch(endpointStore.nodes, (state) => {
+  if (lastNodesLength == state.length) return
+  lastNodesLength = state.length
+  updateNodes(state)
 })
 
 function ticked() {
   svg
     .selectAll('.node')
     .data(nodes)
-    .attr('transform', (d) => `translate(${d.x}, ${d.y})`)
+    .attr('transform', (d) => `translate(${d.position.x}, ${d.position.y})`)
 }
 
 function updateNodes(newNodes: Array<StoreNode>) {
@@ -63,7 +64,7 @@ onMounted(() => {
  * Update the force visualisation modeled data
  * @param visData data to base the nodes off
  */
-function updateForceVis(visData: any) {
+function updateForceVis(visData: Array<StoreNode>) {
   let classesData = [...visData]
 
   // Make a shallow copy to protect against mutation, while
@@ -71,7 +72,7 @@ function updateForceVis(visData: any) {
   // const oldNodes = new Map(nodeSelect.data().map((d: any) => [d.id, d]))
   // classesData = classesData.map((d: any) => Object.assign(oldNodes.get(d.id) || {}, d))
 
-  nodeSelect = nodeSelect.data(classesData).join((enter) => {
+  nodeSelect = nodeSelect.data(classesData as any[]).join((enter) => {
     const nodeContainer = enter
       .append('g')
       .classed('node', true)
@@ -87,7 +88,7 @@ function updateForceVis(visData: any) {
     return nodeContainer
   })
 
-  const simulationNodes = [...classesData]
+  const simulationNodes = classesData.map((n) => n.position)
   simulation.nodes(simulationNodes)
   simulation.alpha(1).restart().tick()
   ticked() // render now!
@@ -98,11 +99,11 @@ let draggingBackground = false // To prevent stuttering
 function drag(simulation: any) {
   function dragstarted(event: any) {
     draggingBackground = 'id' in event.sourceEvent.target && event.sourceEvent.target.id == 'visSvg'
-
+    if (!event.subject || !event.subject.position) return
     if (!event.active) simulation.alphaTarget(0.3).restart()
     event.sourceEvent.stopPropagation()
-    event.subject.fx = event.subject.x
-    event.subject.fy = event.subject.y
+    event.subject.position.fx = event.subject.position.x
+    event.subject.position.fy = event.subject.position.y
   }
 
   function dragged(event: any) {
@@ -111,15 +112,16 @@ function drag(simulation: any) {
       const newTransform = moveTransformString(svg.attr('transform'), event.dx, event.dy)
       svg.attr('transform', newTransform)
     } else {
-      event.subject.fx = event.x
-      event.subject.fy = event.y
+      event.subject.position.fx = event.x
+      event.subject.position.fy = event.y
     }
   }
 
   function dragended(event: any) {
+    if (!event.subject || !event.subject.position) return
     if (!event.active) simulation.alphaTarget(0)
-    event.subject.fx = null
-    event.subject.fy = null
+    event.subject.position.fx = null
+    event.subject.position.fy = null
   }
 
   return d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended)

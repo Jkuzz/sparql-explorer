@@ -71,7 +71,7 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
     <ul
       :class="[
         'flex p-0 group-hover:p-2 flex-col gap-y-1 nowheel rounded-b-md',
-        'max-h-0 group-hover:max-h-96 overflow-y-auto transition-all duration-200',
+        'max-h-0 group-hover:max-h-96 overflow-y-auto transition-all',
         'max-w-[100px] group-hover:max-w-md',
       ]"
       v-if="selected"

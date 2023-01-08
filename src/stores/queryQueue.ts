@@ -78,7 +78,7 @@ function getNextId() {
  */
 export function makeNodeObject(node: any) {
   return {
-    position: { x: getRandomInt(0, 600), y: getRandomInt(0, 400) },
+    position: { x: getRandomInt(0, 600), y: getRandomInt(0, 400), vx: 0, vy: 0 },
     id: node?.class.value || '' + getNextId(),
     type: 'custom',
     data: { node, labels: [], attributes: [] },

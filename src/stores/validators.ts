@@ -84,6 +84,10 @@ export type StoreNode = {
   position: {
     x: number
     y: number
+    fx?: number
+    fy?: number
+    vx?: number
+    vy?: number
   }
   id: string
   type: string
