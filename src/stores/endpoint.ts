@@ -18,8 +18,8 @@ const ATTRIBUTE_MINIMUM_FACTOR = 0.005
 
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = reactive<Array<StoreNode>>([])
-  const edges = reactive<Array<any>>([])
-  const renderEdges = ref<Array<any>>([])
+  const edges = reactive<Array<StoreEdge>>([])
+  const renderEdges = ref<Array<StoreEdge>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
   const queryQueue = new QueryQueue(endpointURL.value)
 

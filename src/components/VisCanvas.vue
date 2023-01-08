@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useEndpointStore } from '@/stores/endpoint'
 import * as d3 from 'd3'
-import { onMounted, ref, type Ref } from 'vue'
+import { onMounted, reactive } from 'vue'
+import { useArrayFilter } from '@vueuse/core'
+import type { StoreNode } from '@/stores/validators'
 
 const endpointStore = useEndpointStore()
-const nodes: Ref<Array<any>> = ref([])
+const nodes = reactive<Array<StoreNode>>([])
 
 let svg = d3.select('#visSvg')
 let nodeSelect = svg.selectAll('.node')
@@ -22,29 +24,31 @@ const simulation = d3
  */
 endpointStore.$subscribe((mutation, state) => {
   // Copy the state stored nodes
-  const newState = JSON.parse(JSON.stringify(state.nodes))
-  updateNodes(newState)
+  // const newState = JSON.parse(JSON.stringify(state.nodes))
+  updateNodes(state.nodes)
 })
 
 function ticked() {
   svg
     .selectAll('.node')
-    .data(nodes.value)
+    .data(nodes)
     .attr('transform', (d) => `translate(${d.x}, ${d.y})`)
 }
 
-function updateNodes(newNodes: Array<any>) {
+function updateNodes(newNodes: Array<StoreNode>) {
   for (let node of newNodes) {
     // Only add nodes with a unique class URI
-    if (!nodes.value.find((n) => n.data.class?.value == node.data.class?.value)) {
-      nodes.value.push(node)
+    if (!nodes.find((n) => n.data.node.class?.value == node.data.node.class?.value)) {
+      nodes.push(node)
       console.log('🚀 ~ file: VisCanvas.vue:27 ~ endpointStore.$subscribe ~ node', node)
     }
   }
-  nodes.value = nodes.value.filter((node) =>
-    newNodes.find((newNode) => node.data.class?.value == newNode.data.class?.value)
+  useArrayFilter(nodes, (node) =>
+    Boolean(
+      newNodes.find((newNode) => node.data.node.class?.value == newNode.data.node.class?.value)
+    )
   )
-  updateForceVis(nodes.value)
+  updateForceVis(nodes)
 }
 
 onMounted(() => {
@@ -75,7 +79,7 @@ function updateForceVis(visData: any) {
     nodeContainer.append('circle').attr('r', 30).attr('stroke', 'white').attr('fill', 'transparent')
     nodeContainer
       .append('text')
-      .text((d) => getLabelFromURI(d.data.class?.value))
+      .text((d) => getLabelFromURI(d.data.node.class.value))
       .attr('text-anchor', 'middle')
       .attr('stroke', 'white')
       .classed('select-none', true)

@@ -46,8 +46,6 @@ function handleAttributeClick(attr: z.infer<typeof AttributeBinding>) {
   navigator.clipboard.writeText(attr.attribute.value)
 }
 
-function onMouseOver() {}
-
 function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
   const nodeCount = myNodeData?.data.node.instanceCount.value
   const attributeCount = attribute.instanceCount.value
@@ -67,7 +65,6 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
       ]"
       class="rounded text-center transition-all"
       @click="handleClick"
-      @mouseover="onMouseOver"
     >
       {{ getClassLabel() || `<${data.id}>` }}
     </div>
