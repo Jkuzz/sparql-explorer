@@ -8,8 +8,8 @@ const visStateStore = useVisStateStore()
 </script>
 
 <template>
-  <div class="flex flex-col gap-y-4 text-neutral-50">
-    <h4 class="text-center">Selected classes</h4>
+  <div class="flex flex-col text-neutral-50">
+    <h4 class="text-center text-xl">Selected classes</h4>
     <ul
       class="flex flex-col gap-y-2"
       v-auto-animate

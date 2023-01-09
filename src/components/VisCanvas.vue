@@ -148,7 +148,7 @@ function moveTransformString(transform: string, dx: number, dy: string) {
 
 <template>
   <div
-    class="bg-neutral-800 p-2"
+    class="bg-slate-800 p-2"
     id="canvas"
   >
     <svg
