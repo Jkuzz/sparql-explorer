@@ -15,6 +15,7 @@
     "format": "prettier . --write"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^1.0.0-beta.5",
     "@vue-flow/core": "^1.10.2",
     "d3": "^7.8.0",
     "ldkit": "^0.7.0",

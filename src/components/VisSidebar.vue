@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import EndpointSelector from '@/components/EndpointSelector.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
-
 </script>
 
 <template>

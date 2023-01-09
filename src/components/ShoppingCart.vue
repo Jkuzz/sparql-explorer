@@ -10,13 +10,17 @@ const visStateStore = useVisStateStore()
 <template>
   <div class="flex flex-col gap-y-4 text-neutral-50">
     <h4 class="text-center">Selected classes</h4>
-    <div class="overflow-y-auto px-1">
-      <div
+    <ul
+      class="flex flex-col gap-y-2"
+      v-auto-animate
+    >
+      <li
         v-for="node in visStateStore.selectedNodes"
         :key="node.id"
+        class="bg-neutral-700 p-2 rounded-md"
       >
-        {{ node }}
-      </div>
-    </div>
+        {{ node.id }}
+      </li>
+    </ul>
   </div>
 </template>
