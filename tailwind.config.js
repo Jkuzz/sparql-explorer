@@ -9,6 +9,8 @@ module.exports = {
       fontFamily: {
         // https://tailwindcss.com/docs/font-family#customizing-the-default-font
         sans: ['Raleway', ...defaultTheme.fontFamily.sans],
+        novem: ['Novem', 'serif'],
+        squared: ['SQUARED2', 'serif'],
       },},
   },
   plugins: [],

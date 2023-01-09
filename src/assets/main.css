@@ -17,6 +17,20 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Novem';
+  src: local('Novem'), url('Novem.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'SQUARED2';
+  src: local('SQUARED2'), url('SQUARED2.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
