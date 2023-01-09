@@ -17,7 +17,7 @@ const visStateStore = useVisStateStore()
       <li
         v-for="node in visStateStore.selectedNodes"
         :key="node.id"
-        class="bg-neutral-700 p-2 rounded-md"
+        class="bg-slate-700 p-2 rounded-md"
       >
         {{ node.id }}
       </li>
