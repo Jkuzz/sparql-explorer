@@ -10,10 +10,6 @@ const links = [
     title: 'About',
   },
   {
-    to: '/force',
-    title: 'Force',
-  },
-  {
     to: '/flow',
     title: 'Flow',
   },

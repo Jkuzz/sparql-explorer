@@ -3,12 +3,12 @@ import { VueFlow, useVueFlow } from '@vue-flow/core'
 import { useEndpointStore } from '@/stores/endpoint'
 import VisSidebar from '@/components/VisSidebar.vue'
 import CustomNode from '@/components/CustomNode.vue'
-// import { markRaw } from 'vue'
+import NodeModal from '@/components/NodeModal.vue'
+import { ref } from 'vue'
 
 const endpointStore = useEndpointStore()
-// const nodeTypes = {
-//   custom: markRaw(CustomNode),
-// }
+
+const isModalOpen = ref(false)
 
 const { onConnect, addEdges } = useVueFlow()
 onConnect((params) => addEdges([params]))
@@ -17,6 +17,7 @@ onConnect((params) => addEdges([params]))
 <template>
   <div class="bg-slate-800 text-gray-200 flex flex-row">
     <VisSidebar />
+    <button @click="isModalOpen = true">test</button>
 
     <div class="pt-2 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
       <h1 class="text-4xl font-novem">Flow 🌊</h1>
@@ -32,5 +33,23 @@ onConnect((params) => addEdges([params]))
         </VueFlow>
       </div>
     </div>
+
+    <!-- teleports contents inside another element https://vuejs.org/guide/built-ins/teleport.html -->
+    <Teleport to="body">
+      <Transition
+        enter-active-class="duration-300 ease-out"
+        leave-active-class="duration-200 ease-in"
+        enter-from-class="-translate-y-2 opacity-0"
+        enter-to-class="opacity-100"
+        leave-from-class="opacity-100"
+        leave-to-class="-translate-y-2 opacity-0"
+      >
+        <NodeModal
+          v-if="isModalOpen"
+          @modal-close="isModalOpen = false"
+        >
+        </NodeModal>
+      </Transition>
+    </Teleport>
   </div>
 </template>
