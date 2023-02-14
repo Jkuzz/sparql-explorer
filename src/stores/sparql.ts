@@ -1,6 +1,3 @@
-import QueryHandler from '@/components/force/queryHandler'
-import { devQueryClasses } from '@/components/force/dev'
-
 export function getClassesQuery(offset: number) {
   return `
     SELECT DISTINCT ?class (COUNT(*) AS ?instanceCount)
@@ -61,10 +58,10 @@ export function getClassLinksQuery(class1URI: string, class2URI: string) {
 //         ?instance
 //           a <http://dbpedia.org/ontology/Person> ;
 //           <http://dbpedia.org/ontology/abstract> ?targetLiteral .
-//         FILTER isLiteral(?targetLiteral) 
+//         FILTER isLiteral(?targetLiteral)
 //       }
 //     }
-//   } 
+//   }
 // }
 
 // export function getClassLinksQuery() {
@@ -78,21 +75,6 @@ export function getClassLinksQuery(class1URI: string, class2URI: string) {
 //     `
 // }
 
-const queryHandler = new QueryHandler()
-let queriedClasses = 0
-
-export function main() {
-  // const urlParams = new URLSearchParams(window.location.search)
-  // const endpointURL = urlParams.get('endpoint')
-  // document.getElementById('helloHeader').textContent += endpointURL
-
-  // queryEndpoint(endpointURL, getClassesQuery(0))
-  devQueryClasses(5, queriedClasses).then((response) => {
-    queriedClasses += response.length
-    queryHandler.handleClassesQuery(response)
-  })
-}
-
 /**
  * Query the SPARQL endpoint with the given query and handle results
  * @param endpoint
@@ -105,9 +87,3 @@ export async function queryEndpoint(endpoint: URL, query: string) {
 
   return fetch(queryURL).then((data) => data.json())
 }
-
-// async function updateVisGraph(visData) {
-//   const copyVisData = { ...visData }
-//   updateForceVis(copyVisData)
-//   return visData
-// }

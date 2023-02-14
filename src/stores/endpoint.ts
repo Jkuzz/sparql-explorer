@@ -11,7 +11,7 @@ import {
   getClassLinksQuery,
   getClassPropertiesQuery,
   getAttributesQuery,
-} from '@/components/force/sparql'
+} from '@/stores/sparql'
 
 const PROPERTY_MINIMUM_FACTOR = 0.01
 const ATTRIBUTE_MINIMUM_FACTOR = 0.005

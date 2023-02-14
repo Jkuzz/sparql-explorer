@@ -1,4 +1,4 @@
-import { queryEndpoint } from '@/components/force/sparql'
+import { queryEndpoint } from '@/stores/sparql'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { MarkerType } from '@vue-flow/core'
 import type { z } from 'zod'
