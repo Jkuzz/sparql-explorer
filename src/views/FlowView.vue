@@ -5,19 +5,25 @@ import VisSidebar from '@/components/VisSidebar.vue'
 import CustomNode from '@/components/CustomNode.vue'
 import NodeModal from '@/components/NodeModal.vue'
 import { ref } from 'vue'
+import type { StoreNode } from '@/stores/validators'
 
 const endpointStore = useEndpointStore()
 
 const isModalOpen = ref(false)
+const modalNode = ref<StoreNode | undefined>(undefined)
 
 const { onConnect, addEdges } = useVueFlow()
 onConnect((params) => addEdges([params]))
+
+function showNodeModal(node: StoreNode) {
+  isModalOpen.value = true
+  modalNode.value = node
+}
 </script>
 
 <template>
   <div class="bg-slate-800 text-gray-200 flex flex-row">
     <VisSidebar />
-    <button @click="isModalOpen = true">test</button>
 
     <div class="pt-2 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
       <h1 class="text-4xl font-novem">Flow 🌊</h1>
@@ -28,7 +34,10 @@ onConnect((params) => addEdges([params]))
           fit-view-on-init
         >
           <template #node-custom="props">
-            <CustomNode :data="props" />
+            <CustomNode
+              :data="props"
+              @click="showNodeModal(props)"
+            />
           </template>
         </VueFlow>
       </div>
@@ -46,6 +55,7 @@ onConnect((params) => addEdges([params]))
       >
         <NodeModal
           v-if="isModalOpen"
+          :node="modalNode"
           @modal-close="isModalOpen = false"
         >
         </NodeModal>

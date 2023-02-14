@@ -27,13 +27,13 @@ function getClassLabel() {
 }
 
 function handleClick() {
-  if (selected.value) {
-    visStateStore.deselectNode(props.data.id)
-  } else {
-    visStateStore.selectNode(props.data.id)
-  }
-  selected.value = !selected.value
-  console.log(props.data)
+  // if (selected.value) {
+  //   visStateStore.deselectNode(props.data.id)
+  // } else {
+  //   visStateStore.selectNode(props.data.id)
+  // }
+  // selected.value = !selected.value
+  // console.log(props.data)
 }
 
 function handleUriClick() {
