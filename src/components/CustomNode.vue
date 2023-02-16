@@ -2,8 +2,7 @@
 import { ref } from 'vue'
 import { useVisStateStore } from '@/stores/visState'
 import { useEndpointStore } from '@/stores/endpoint'
-import type { StoreNode, AttributeBinding } from '@/stores/validators'
-import type { z } from 'zod'
+import type { StoreNode } from '@/stores/validators'
 
 const visStateStore = useVisStateStore()
 const endpointStore = useEndpointStore()
@@ -35,23 +34,6 @@ function handleClick() {
   // selected.value = !selected.value
   // console.log(props.data)
 }
-
-function handleUriClick() {
-  if (myNodeData?.id) {
-    navigator.clipboard.writeText(myNodeData.id)
-  }
-}
-
-function handleAttributeClick(attr: z.infer<typeof AttributeBinding>) {
-  navigator.clipboard.writeText(attr.attribute.value)
-}
-
-function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
-  const nodeCount = myNodeData?.data.node.instanceCount.value
-  const attributeCount = attribute.instanceCount.value
-  if (!nodeCount) return 0
-  return ((+attributeCount / +nodeCount) * 100).toFixed(2) + '%'
-}
 </script>
 
 <template>
@@ -68,34 +50,5 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
     >
       {{ getClassLabel() || `<${data.id}>` }}
     </div>
-    <ul
-      :class="[
-        'flex p-0 group-hover:p-2 flex-col gap-y-1 nowheel rounded-b-md',
-        'max-h-0 group-hover:max-h-96 overflow-y-auto transition-all',
-        'max-w-[100px] group-hover:max-w-md',
-      ]"
-      v-if="selected"
-    >
-      <li
-        class="cursor-pointer hover:underline text-center mb-2 overflow-clip"
-        @click="handleUriClick"
-      >
-        {{ `<${data.id}>` }}
-      </li>
-      <li
-        v-for="attr in data.data.attributes"
-        :key="attr.attribute.value"
-        class="flex flex-row justify-between gap-x-2 overflow-clip"
-      >
-        <span
-          class="cursor-pointer hover:underline"
-          @click="handleAttributeClick(attr)"
-        >
-          {{ attr.attribute.value }}:
-        </span>
-        <span>{{ getAttributeRatio(attr) }}</span>
-      </li>
-      <!-- <li>[{{ myNodeData }}]</li> -->
-    </ul>
   </div>
 </template>
