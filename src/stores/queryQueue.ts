@@ -1,5 +1,5 @@
 import { queryEndpoint } from '@/stores/sparql'
-import type { StoreNode, StoreEdge } from '@/stores/validators'
+import type { StoreNode, StoreEdge, EdgeBinding } from '@/stores/validators'
 import { MarkerType } from '@vue-flow/core'
 import type { z } from 'zod'
 
@@ -85,13 +85,17 @@ export function makeNodeObject(node: any) {
   } satisfies StoreNode
 }
 
-export function makeEdgeObject(edge: any, sourceClass: string, targetClass: string) {
+export function makeEdgeObject(
+  edge: z.infer<typeof EdgeBinding>,
+  sourceClass: string,
+  targetClass: string
+) {
   return {
     id: `e-[${sourceClass}]-[${edge.property.value}]-[${targetClass}]`,
     source: sourceClass,
     target: targetClass,
     uri: edge.property.value,
-    data: { edge },
+    data: edge,
     markerEnd: MarkerType.ArrowClosed,
   } satisfies StoreEdge
 }

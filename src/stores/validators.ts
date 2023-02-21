@@ -103,7 +103,7 @@ export type StoreEdge = {
   source: string
   target: string
   uri: string
-  data: unknown
+  data: z.infer<typeof EdgeBinding>
   type?: string
   markerEnd?: MarkerType
 }
