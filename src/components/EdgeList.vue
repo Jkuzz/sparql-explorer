@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import type { z } from 'zod'
-import type { AttributeBinding } from '@/stores/validators'
+import type { AttributeBinding, StoreEdge } from '@/stores/validators'
 
 const props = defineProps<{
   instanceCount: number
-  attributes?: z.infer<typeof AttributeBinding>[]
+  edges?: StoreEdge[]
+  type: 'to' | 'from'
 }>()
 
-function handleAttributeClick(attr: z.infer<typeof AttributeBinding>) {
-  navigator.clipboard.writeText(attr.attribute.value)
+console.log(props.edges)
+
+function handleUriClick(uri: string) {
+  navigator.clipboard.writeText(uri)
 }
 
 function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
@@ -27,21 +30,28 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
     ]"
   >
     <tr class="flex flex-row justify-between gap-x-2">
+      <th>{{ type === 'to' ? 'Source' : 'Target' }}</th>
       <th>Property</th>
       <th>Occurence</th>
     </tr>
     <tr
-      v-for="attr in attributes"
-      :key="attr.attribute.value"
+      v-for="edge in edges"
+      :key="edge.type"
       class="flex flex-row justify-between gap-x-2"
     >
       <td
         class="cursor-pointer hover:underline"
-        @click="handleAttributeClick(attr)"
+        @click="handleUriClick(edge.source)"
       >
-        {{ attr.attribute.value }}:
+        {{ edge.target }}
       </td>
-      <td>{{ getAttributeRatio(attr) }}</td>
+      <td
+        class="cursor-pointer hover:underline"
+        @click="handleUriClick(edge.source)"
+      >
+        {{ edge.uri }}
+      </td>
+      <td>{{ '0%' }}</td>
     </tr>
   </table>
 </template>
