@@ -40,7 +40,7 @@ const NodeBinding = z.object({
   instanceCount: InstanceCount,
 })
 
-const EdgeBinding = z.object({
+export const EdgeBinding = z.object({
   property: Property,
   instanceCount: InstanceCount,
 })
