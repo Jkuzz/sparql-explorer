@@ -37,6 +37,20 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   /**
+   * Get the edges thet begin in the desired node
+   */
+  function getNodeFromEdges(nodeId: string) {
+    return edges.filter((e) => e.source == nodeId)
+  }
+
+  /**
+   * Get the edges thet end in the desired node
+   */
+  function getNodeToEdges(nodeId: string) {
+    return edges.filter((e) => e.target == nodeId)
+  }
+
+  /**
    * Add a new edge to the store unless it already exists
    * @param edge to add
    * @returns true of the edge was added
@@ -185,5 +199,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     renderEdges,
     endpointURL,
     changeEndpoint,
+    getNodeFromEdges,
+    getNodeToEdges,
   }
 })

@@ -87,9 +87,10 @@ export function makeNodeObject(node: any) {
 
 export function makeEdgeObject(edge: any, sourceClass: string, targetClass: string) {
   return {
-    id: `e-[${sourceClass}]-[${edge?.property.value}]-[${targetClass}]`,
+    id: `e-[${sourceClass}]-[${edge.property.value}]-[${targetClass}]`,
     source: sourceClass,
     target: targetClass,
+    uri: edge.property.value,
     data: { edge },
     markerEnd: MarkerType.ArrowClosed,
   } satisfies StoreEdge

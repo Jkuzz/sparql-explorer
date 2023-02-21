@@ -102,6 +102,7 @@ export type StoreEdge = {
   id: string
   source: string
   target: string
+  uri: string
   data: unknown
   type?: string
   markerEnd?: MarkerType
