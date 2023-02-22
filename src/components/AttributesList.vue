@@ -31,9 +31,10 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
       <th>Occurence</th>
     </tr>
     <tr
-      v-for="attr in attributes"
+      v-for="(attr, i) in attributes"
       :key="attr.attribute.value"
-      class="flex flex-row justify-between gap-x-2"
+      class="flex flex-row justify-between p-2"
+      :class="{ 'bg-blue-200': i % 2 == 0 }"
     >
       <td
         class="cursor-pointer hover:underline"

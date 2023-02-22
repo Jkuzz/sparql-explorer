@@ -4,20 +4,25 @@
     @click.self="onCloseModal"
     v-if="node"
   >
-    <div :class="['bg-blue-100 rounded-xl shadow-lg', 'p-6 m-12 w-[90%] overflow-clip']">
+    <div
+      :class="[
+        'bg-blue-100 rounded-xl shadow-lg',
+        'p-6 m-12 w-[90%] min-h-[60%] max-h-[90%] flex flex-col',
+      ]"
+    >
       <header>
         <h2 class="text-lg font-bold text-center">{{ node.id }}</h2>
         <div class="cursor-pointer hover:underline text-center mb-2">
           {{ `<${node.id}>` }}
         </div>
-      </header>
-
-      <main class="overflow-y-auto">
-        <div class="flex justify-between">
+        <div class="flex justify-center">
           <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'attributes'">Attributes edges</ButtonGeneric>
         </div>
+      </header>
+
+      <main class="flex-grow">
         <AttributesList
           v-if="displayMode === 'attributes'"
           :attributes="node.data.attributes"
@@ -37,7 +42,7 @@
         />
       </main>
 
-      <footer class="pt-4 flex justify-end">Footer</footer>
+      <footer class="pt-4">Footer</footer>
     </div>
   </div>
 </template>
@@ -64,11 +69,6 @@ function onCloseModal() {
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {
-  return +a.data.instanceCount.value - +b.data.instanceCount.value
+  return +b.data.instanceCount.value - +a.data.instanceCount.value
 }
-// function handleUriClick() {
-//   if (props.node?.id) {
-//     navigator.clipboard.writeText(props.node?.id)
-//   }
-// }
 </script>
