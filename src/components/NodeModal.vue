@@ -47,7 +47,8 @@
           <span class="text-white">Selected</span>
           <SliderSwitch
             value="Selected"
-            :is-default-enabled="false"
+            :is-default-enabled="isSelected"
+            @update:checkbox="onToggleSelection"
           />
         </div>
       </footer>
@@ -63,18 +64,29 @@ import SliderSwitch from './SliderSwitch.vue'
 import { ref } from 'vue'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
+import { useVisStateStore } from '@/stores/visState'
 
 const emits = defineEmits(['modal-close'])
-defineProps<{
+const props = defineProps<{
   node?: StoreNode
 }>()
 const endpointStore = useEndpointStore()
+const visStateStore = useVisStateStore()
+
+const isSelected = ref(visStateStore.isSelected(props.node?.id || ''))
 
 type displayModeType = '' | 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('')
 
 function onCloseModal() {
   emits('modal-close')
+}
+
+function onToggleSelection(newSelectionState: boolean) {
+  isSelected.value = newSelectionState
+  if (isSelected.value) {
+    visStateStore.selectNode(props.node?.id || '')
+  }
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

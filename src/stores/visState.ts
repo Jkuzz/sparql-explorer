@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, reactive } from 'vue'
-import type { StoreNode } from '@/stores/endpoint'
+import type { StoreNode } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
 
 const endpointStore = useEndpointStore()
@@ -33,10 +33,10 @@ export const useVisStateStore = defineStore('visState', () => {
 
   /**
    * See whether the selected nodes contain a specific one by comparing ids
-   * @param node node to check
+   * @param nodeId node to check
    */
-  function isSelected(node: StoreNode) {
-    const foundNode = selectedNodes.find((n) => n.id === node.id)
+  function isSelected(nodeId: StoreNode['id']) {
+    const foundNode = selectedNodes.find((n) => n.id === nodeId)
     return foundNode !== undefined
   }
 
