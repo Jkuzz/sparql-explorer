@@ -42,7 +42,15 @@
         />
       </main>
 
-      <footer class="pt-4">Footer</footer>
+      <footer class="pt-4 flex items-center justify-center">
+        <div class="flex flex-row items-center bg-slate-800 p-2 rounded-md">
+          <span class="text-white">Selected</span>
+          <SliderSwitch
+            value="Selected"
+            :is-default-enabled="false"
+          />
+        </div>
+      </footer>
     </div>
   </div>
 </template>
@@ -51,6 +59,7 @@
 import AttributesList from '@/components/AttributesList.vue'
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import EdgeList from '@/components/EdgeList.vue'
+import SliderSwitch from './SliderSwitch.vue'
 import { ref } from 'vue'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
