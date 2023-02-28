@@ -4,8 +4,10 @@ import { useEndpointStore } from '@/stores/endpoint'
 import VisSidebar from '@/components/VisSidebar.vue'
 import CustomNode from '@/components/CustomNode.vue'
 import NodeModal from '@/components/NodeModal.vue'
+import { layoutNodes } from '@/stores/layout'
 import { ref } from 'vue'
 import type { StoreNode } from '@/stores/validators'
+import ButtonGeneric from '@/components/ButtonGeneric.vue'
 
 const endpointStore = useEndpointStore()
 
@@ -19,6 +21,10 @@ function showNodeModal(node: StoreNode) {
   isModalOpen.value = true
   modalNode.value = node
 }
+
+function handleLayout() {
+  layoutNodes()
+}
 </script>
 
 <template>
@@ -28,6 +34,7 @@ function showNodeModal(node: StoreNode) {
     <div class="pt-2 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
       <h1 class="text-4xl font-novem">Flow 🌊</h1>
       <div class="h-screen w-full">
+        <ButtonGeneric @click="handleLayout">Layout</ButtonGeneric>
         <VueFlow
           v-model:nodes="endpointStore.nodes"
           v-model:edges="endpointStore.renderEdges"

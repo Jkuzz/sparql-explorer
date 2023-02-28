@@ -37,6 +37,7 @@ function getClassLabel() {
       class="rounded text-center transition-all"
     >
       {{ getClassLabel() || `<${data.id}>` }}
+      {{ data.position }}
     </div>
   </div>
 </template>
