@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useVisStateStore } from '@/stores/visState'
 import { useEndpointStore } from '@/stores/endpoint'
 import type { StoreNode } from '@/stores/validators'
@@ -9,7 +9,7 @@ const endpointStore = useEndpointStore()
 const props = defineProps<{
   data: StoreNode
 }>()
-const selected = ref(visStateStore.isSelected(props.data satisfies StoreNode))
+const selected = computed(() => visStateStore.isSelected(props.data.id))
 const myNodeData = endpointStore.nodes.find((n) => n.id === props.data.id)
 
 // For whatever reason making this computed() does not call reactive recomputes
@@ -20,19 +20,8 @@ function getClassLabel() {
   const englishLabel = labels.find((lbl: any) => lbl.value['xml:lang'] == 'en')
   if (!englishLabel) return ''
 
-  // return englishLabel.value
   const englishLabelValue = englishLabel.value.value
   return englishLabelValue.charAt(0).toUpperCase() + englishLabelValue.slice(1)
-}
-
-function handleClick() {
-  // if (selected.value) {
-  //   visStateStore.deselectNode(props.data.id)
-  // } else {
-  //   visStateStore.selectNode(props.data.id)
-  // }
-  // selected.value = !selected.value
-  // console.log(props.data)
 }
 </script>
 
@@ -46,7 +35,6 @@ function handleClick() {
         { 'group-hover:rounded-b-none': selected },
       ]"
       class="rounded text-center transition-all"
-      @click="handleClick"
     >
       {{ getClassLabel() || `<${data.id}>` }}
     </div>
