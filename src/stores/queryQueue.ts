@@ -2,6 +2,7 @@ import { queryEndpoint } from '@/stores/sparql'
 import type { StoreNode, StoreEdge, EdgeBinding } from '@/stores/validators'
 import { MarkerType } from '@vue-flow/core'
 import type { z } from 'zod'
+import { getRandomInt } from '@/stores/random'
 
 interface QueryRecord {
   query: string
@@ -98,10 +99,4 @@ export function makeEdgeObject(
     data: edge,
     markerEnd: MarkerType.ArrowClosed,
   } satisfies StoreEdge
-}
-
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min) + min) // The maximum is exclusive and the minimum is inclusive
 }

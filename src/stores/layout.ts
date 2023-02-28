@@ -1,4 +1,5 @@
 import { useEndpointStore } from '@/stores/endpoint'
+import { getRandomInt } from '@/stores/random'
 
 const endpointStore = useEndpointStore()
 
@@ -12,7 +13,10 @@ export function layoutNodes(layout: keyof typeof layoutTypes = 'random') {
 }
 
 function randomLayout() {
-  endpointStore.nodes.forEach((n) => (n.position.x = 0))
+  endpointStore.nodes.forEach((n) => {
+    n.position.x = getRandomInt(0, 800)
+    n.position.y = getRandomInt(0, 600)
+  })
 }
 
 function forceLayout() {
