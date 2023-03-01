@@ -27,11 +27,17 @@ function showNodeModal(node: StoreNode) {
   <div class="bg-slate-800 text-gray-200 flex flex-row">
     <VisSidebar />
 
-    <div class="pt-2 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
-      <h1 class="text-4xl font-novem">Flow 🌊</h1>
+    <div class="flex-grow flex flex-col items-center justify-items-stretch">
+      <div class="p-3 flex flex-row justify-between self-stretch">
+        <div />
+        <h1 class="text-4xl font-novem">Flow 🌊</h1>
+        <div>
+          Layout:
+          <ButtonGeneric @click="layoutNodes('random')">Random</ButtonGeneric>
+          <ButtonGeneric @click="layoutNodes('force')">Force</ButtonGeneric>
+        </div>
+      </div>
       <div class="h-screen w-full">
-        <ButtonGeneric @click="layoutNodes('random')">Random</ButtonGeneric>
-        <ButtonGeneric @click="layoutNodes('force')">Force</ButtonGeneric>
         <VueFlow
           v-model:nodes="endpointStore.nodes"
           v-model:edges="endpointStore.renderEdges"
