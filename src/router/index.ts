@@ -15,11 +15,6 @@ const router = createRouter({
       component: () => import('@/views/AboutView.vue'),
     },
     {
-      path: '/force',
-      name: 'force',
-      component: () => import('@/views/ForceView.vue'),
-    },
-    {
       path: '/flow',
       name: 'flow',
       component: () => import('@/views/FlowView.vue'),

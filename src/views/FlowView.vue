@@ -21,10 +21,6 @@ function showNodeModal(node: StoreNode) {
   isModalOpen.value = true
   modalNode.value = node
 }
-
-function handleLayout() {
-  layoutNodes()
-}
 </script>
 
 <template>
@@ -34,7 +30,8 @@ function handleLayout() {
     <div class="pt-2 flex-grow flex flex-col items-center justify-items-stretch space-y-4">
       <h1 class="text-4xl font-novem">Flow 🌊</h1>
       <div class="h-screen w-full">
-        <ButtonGeneric @click="handleLayout">Layout</ButtonGeneric>
+        <ButtonGeneric @click="layoutNodes('random')">Random</ButtonGeneric>
+        <ButtonGeneric @click="layoutNodes('force')">Force</ButtonGeneric>
         <VueFlow
           v-model:nodes="endpointStore.nodes"
           v-model:edges="endpointStore.renderEdges"
