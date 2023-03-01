@@ -46,9 +46,9 @@
         <div class="flex flex-row items-center bg-slate-800 p-2 rounded-md">
           <span class="text-white">Selected</span>
           <SliderSwitch
-            value="Selected"
-            :is-default-enabled="isSelected"
+            :isDefaultEnabled="isSelected"
             @update:checkbox="onToggleSelection"
+            value="selected"
           />
         </div>
       </footer>
@@ -74,6 +74,7 @@ const endpointStore = useEndpointStore()
 const visStateStore = useVisStateStore()
 
 const isSelected = ref(visStateStore.isSelected(props.node?.id || ''))
+console.log('🚀 ~ file: NodeModal.vue:77 ~ isSelected:', isSelected.value)
 
 type displayModeType = '' | 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('')
@@ -83,6 +84,10 @@ function onCloseModal() {
 }
 
 function onToggleSelection(newSelectionState: boolean) {
+  console.log(
+    '🚀 ~ file: NodeModal.vue:87 ~ onToggleSelection ~ newSelectionState:',
+    newSelectionState
+  )
   isSelected.value = newSelectionState
   if (isSelected.value) {
     visStateStore.selectNode(props.node?.id || '')

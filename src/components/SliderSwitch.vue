@@ -30,14 +30,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 
 const emits = defineEmits(['update:checkbox'])
 const isEnabled = ref(false)
 
 function onToggle() {
   isEnabled.value = !isEnabled.value
-  emits('update:checkbox', props.value, isEnabled.value)
+  emits('update:checkbox', isEnabled.value, props.value)
 }
 
 const props = defineProps<{
@@ -45,13 +45,6 @@ const props = defineProps<{
   isRequired?: boolean
   isDefaultEnabled?: boolean
 }>()
-
-onMounted(() => {
-  if (props.isRequired || props.isDefaultEnabled) {
-    isEnabled.value = true
-    emits('update:checkbox', props.value, true)
-  }
-})
 </script>
 
 <style scoped>

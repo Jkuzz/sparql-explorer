@@ -51,7 +51,6 @@ function forceLayout() {
       y: getRandomInt(0, 100),
     }
   })
-  console.log('🚀 ~ file: layout.ts:49 ~ nodes ~ nodes:', nodes)
 
   const edges = endpointStore.edges
     .map((edge) => {
@@ -65,17 +64,19 @@ function forceLayout() {
 
   const simulation = d3
     .forceSimulation(nodes)
-    .force('charge', d3.forceManyBody().strength(-100))
-    .force('center', d3.forceCenter(CENTER.x, CENTER.y))
-    .force('links', d3.forceLink(edges).strength(10000))
+    .force('charge', d3.forceManyBody().strength(-1000))
+    // .force('center', d3.forceCenter(CENTER.x, CENTER.y))
+    .force('x', d3.forceX(CENTER.x).strength(0.05))
+    .force('y', d3.forceY(0).strength(0.05))
+    .force('links', d3.forceLink(edges).strength(100))
     .force('collide', d3.forceCollide().radius(25)) // Reduce overlap
     .force(
       'gravity',
-      d3.forceY(CENTER.y * 4).strength((node: any) => {
+      d3.forceY(CENTER.y * 2).strength((node: any) => {
         // overriding the type here because we have the id field(defined above in `nodes`)
-        const edgeCount = clamp(countNodeEdges(node.id), -20, 20)
-        const nodeEdgeDelta = invlerp(-20, 20, edgeCount)
-        // console.log(`${edgeCount}\t${nodeEdgeDelta}\t${node.id}`)
+        const edgeCount = clamp(countNodeEdges(node.id), -10, 10)
+        const nodeEdgeDelta = invlerp(-10, 10, edgeCount) / 5
+        console.log(`${edgeCount}\t${nodeEdgeDelta}\t${node.id}`)
         return nodeEdgeDelta
       })
     )
