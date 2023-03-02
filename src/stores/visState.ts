@@ -1,15 +1,11 @@
 import { defineStore } from 'pinia'
-import { ref, reactive } from 'vue'
+import { reactive } from 'vue'
 import type { StoreNode } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
 
 const endpointStore = useEndpointStore()
 
 export const useVisStateStore = defineStore('visState', () => {
-  /**
-   * The node that was most recently selected -- show info about this
-   */
-  const highlightedNode = ref<StoreNode>()
   /**
    * Nodes that have been highlited -- export these
    */
@@ -20,7 +16,6 @@ export const useVisStateStore = defineStore('visState', () => {
     const nodeToSelect = endpointStore.nodes.find((n) => n.id === nodeId)
     if (!nodeToSelect) return
 
-    highlightedNode.value = nodeToSelect
     selectedNodes.push(nodeToSelect)
     console.log('🚀 ~ file: visState.ts:20 ~ selectNode ~ node', nodeToSelect)
   }
@@ -40,5 +35,5 @@ export const useVisStateStore = defineStore('visState', () => {
     return foundNode !== undefined
   }
 
-  return { selectedNodes, highlightedNode, selectNode, deselectNode, isSelected }
+  return { selectedNodes, selectNode, deselectNode, isSelected }
 })

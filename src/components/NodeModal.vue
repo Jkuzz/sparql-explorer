@@ -74,7 +74,6 @@ const endpointStore = useEndpointStore()
 const visStateStore = useVisStateStore()
 
 const isSelected = ref(visStateStore.isSelected(props.node?.id || ''))
-console.log('🚀 ~ file: NodeModal.vue:77 ~ isSelected:', isSelected.value)
 
 type displayModeType = '' | 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('')
