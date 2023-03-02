@@ -37,9 +37,14 @@ function findNamespace(iri: string) {
   }
 }
 
+/**
+ * Extracts the namespace
+ * optimistically hopes the namespace is separated by `/` or `#` from the object
+ * @param iri class whose namespace to create
+ * @returns url of the namespace
+ */
 function makeNewNamespace(iri: string) {
   const slashPos = iri.lastIndexOf('/')
   const hashPos = iri.lastIndexOf('#')
-
-  return iri.substring(0, Math.max(slashPos, hashPos))
+  return iri.substring(0, Math.max(slashPos, hashPos) + 1)
 }

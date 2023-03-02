@@ -1,6 +1,7 @@
 import { useEndpointStore } from '@/stores/endpoint'
 import { getRandomInt } from '@/stores/random'
 import * as d3 from 'd3'
+import { shuffle } from 'lodash'
 
 const endpointStore = useEndpointStore()
 const CENTER = {
@@ -51,7 +52,7 @@ function gridLayout() {
   let row = 0
   let col = 0
 
-  endpointStore.nodes.forEach((n) => {
+  shuffle(endpointStore.nodes).forEach((n) => {
     n.position.x = col * 300
     // Offset every even by a bit vertically to maintain legibility
     n.position.y = row * 200 + +(col % 2 == 0) * 40
@@ -90,7 +91,6 @@ function forceLayout() {
   const simulation = d3
     .forceSimulation(nodes)
     .force('charge', d3.forceManyBody().strength(-1000))
-    // .force('center', d3.forceCenter(CENTER.x, CENTER.y))
     .force('x', d3.forceX(CENTER.x).strength(0.05))
     .force('y', d3.forceY(0).strength(0.05))
     .force('links', d3.forceLink(edges).strength(100))
