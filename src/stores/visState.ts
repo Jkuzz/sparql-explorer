@@ -17,7 +17,6 @@ export const useVisStateStore = defineStore('visState', () => {
     if (!nodeToSelect) return
 
     selectedNodes.push(nodeToSelect)
-    console.log('🚀 ~ file: visState.ts:20 ~ selectNode ~ node', nodeToSelect)
   }
 
   function deselectNode(nodeId: string) {

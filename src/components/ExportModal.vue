@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import { useVisStateStore } from '@/stores/visState'
+import { makeSchema } from '@/stores/schema'
 
 const visStateStore = useVisStateStore()
 
@@ -35,6 +36,6 @@ function onCloseModal() {
 }
 
 function doExport() {
-  visStateStore.selectedNodes.forEach((n) => console.log(n))
+  makeSchema(visStateStore.selectedNodes)
 }
 </script>
