@@ -35,6 +35,7 @@ function showNodeModal(node: StoreNode) {
           Layout:
           <ButtonGeneric @click="layoutNodes('random')">Random</ButtonGeneric>
           <ButtonGeneric @click="layoutNodes('force')">Force</ButtonGeneric>
+          <ButtonGeneric @click="layoutNodes('grid')">Grid</ButtonGeneric>
         </div>
       </div>
       <div class="h-screen w-full">

@@ -14,6 +14,7 @@ const CENTER = {
 const layoutTypes = {
   random: randomLayout,
   force: forceLayout,
+  grid: gridLayout,
 }
 
 type edgeT = {
@@ -36,6 +37,30 @@ function randomLayout() {
   endpointStore.nodes.forEach((n) => {
     n.position.x = getRandomInt(0, CENTER.x * 2)
     n.position.y = getRandomInt(0, CENTER.y * 2)
+  })
+}
+
+/**
+ * Layout the nodes in a square-ish grid
+ */
+function gridLayout() {
+  const numNodes = endpointStore.nodes.length
+  // Last row will be intentionally non-empty
+  const rowSize = Math.ceil(Math.sqrt(numNodes))
+
+  let row = 0
+  let col = 0
+
+  endpointStore.nodes.forEach((n) => {
+    n.position.x = col * 300
+    // Offset every even by a bit vertically to maintain legibility
+    n.position.y = row * 200 + +(col % 2 == 0) * 40
+
+    col += 1
+    if (col >= rowSize) {
+      col = 0
+      row += 1
+    }
   })
 }
 
