@@ -83,10 +83,12 @@ function onCloseModal() {
 }
 
 function onToggleSelection(newSelectionState: boolean) {
-  isSelected.value = newSelectionState
-  if (isSelected.value) {
+  if (newSelectionState) {
     visStateStore.selectNode(props.node?.id || '')
+  } else {
+    visStateStore.deselectNode(props.node?.id || '')
   }
+  isSelected.value = newSelectionState
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

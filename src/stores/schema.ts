@@ -38,5 +38,8 @@ function findNamespace(iri: string) {
 }
 
 function makeNewNamespace(iri: string) {
-  return 'http://example.org/'
+  const slashPos = iri.lastIndexOf('/')
+  const hashPos = iri.lastIndexOf('#')
+
+  return iri.substring(0, Math.max(slashPos, hashPos))
 }
