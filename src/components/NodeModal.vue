@@ -83,10 +83,6 @@ function onCloseModal() {
 }
 
 function onToggleSelection(newSelectionState: boolean) {
-  console.log(
-    '🚀 ~ file: NodeModal.vue:87 ~ onToggleSelection ~ newSelectionState:',
-    newSelectionState
-  )
   isSelected.value = newSelectionState
   if (isSelected.value) {
     visStateStore.selectNode(props.node?.id || '')

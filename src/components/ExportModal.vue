@@ -15,8 +15,12 @@
 
       <main class="flex-grow">Main</main>
 
-      <footer class="pt-4 flex items-center justify-center">
-        <ButtonGeneric @click="doExport">Export</ButtonGeneric>
+      <footer class="p-4 flex items-center justify-center bg-slate-800 rounded-md">
+        <ButtonGeneric
+          class="text-xl font-bold"
+          @click="doExport"
+          >Export</ButtonGeneric
+        >
       </footer>
     </div>
   </div>
