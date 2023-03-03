@@ -13,7 +13,7 @@
         <h2 class="text-lg font-bold text-center">Export</h2>
       </header>
 
-      <main class="flex-grow">Main</main>
+      <main class="flex-grow text-center">Work in progress :)</main>
 
       <footer class="p-4 flex items-center justify-center bg-slate-800 rounded-md">
         <ButtonGeneric

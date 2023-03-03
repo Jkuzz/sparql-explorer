@@ -16,9 +16,9 @@
           {{ `<${node.id}>` }}
         </div>
         <div class="flex justify-center">
+          <ButtonGeneric @click="displayMode = 'attributes'">Attributes</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
-          <ButtonGeneric @click="displayMode = 'attributes'">Attributes edges</ButtonGeneric>
         </div>
       </header>
 
@@ -33,12 +33,14 @@
           :edges="endpointStore.getNodeFromEdges(node.id).sort(edgesSort)"
           type="from"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
+          @select="handleAttributeSelection"
         />
         <EdgeList
           v-if="displayMode === 'incoming'"
           :edges="endpointStore.getNodeToEdges(node.id).sort(edgesSort)"
           type="to"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
+          @select="handleAttributeSelection"
         />
       </main>
 
@@ -75,8 +77,10 @@ const visStateStore = useVisStateStore()
 
 const isSelected = ref(visStateStore.isSelected(props.node?.id || ''))
 
-type displayModeType = '' | 'incoming' | 'outgoing' | 'attributes'
-const displayMode = ref<displayModeType>('')
+type displayModeType = 'incoming' | 'outgoing' | 'attributes'
+const displayMode = ref<displayModeType>('attributes')
+
+console.log(props.node?.data.attributes)
 
 function onCloseModal() {
   emits('modal-close')
@@ -89,6 +93,10 @@ function onToggleSelection(newSelectionState: boolean) {
     visStateStore.deselectNode(props.node?.id || '')
   }
   isSelected.value = newSelectionState
+}
+
+function handleAttributeSelection(attribute: string) {
+  visStateStore.toggleAttributeSelection(props.node?.id || '', attribute)
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

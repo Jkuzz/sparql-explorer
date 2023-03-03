@@ -40,6 +40,7 @@ function findNamespace(iri: string) {
 /**
  * Extracts the namespace
  * optimistically hopes the namespace is separated by `/` or `#` from the object
+ * // TODO: add the namespace definition to the export
  * @param iri class whose namespace to create
  * @returns url of the namespace
  */

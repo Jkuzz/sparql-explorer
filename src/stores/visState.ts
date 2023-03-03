@@ -25,6 +25,14 @@ export const useVisStateStore = defineStore('visState', () => {
     selectedNodes.splice(selectedNodes.indexOf(nodeToRemove), 1)
   }
 
+  function toggleAttributeSelection(nodeId: string, attribute: string) {
+    console.log(nodeId, attribute)
+  }
+
+  function toggleEdgeSelection(nodeId: string, edgeId: string) {
+    console.log(nodeId, edgeId)
+  }
+
   /**
    * See whether the selected nodes contain a specific one by comparing ids
    * @param nodeId node to check
@@ -34,5 +42,12 @@ export const useVisStateStore = defineStore('visState', () => {
     return foundNode !== undefined
   }
 
-  return { selectedNodes, selectNode, deselectNode, isSelected }
+  return {
+    selectedNodes,
+    selectNode,
+    deselectNode,
+    isSelected,
+    toggleAttributeSelection,
+    toggleEdgeSelection,
+  }
 })

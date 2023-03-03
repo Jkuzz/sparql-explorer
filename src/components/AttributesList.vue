@@ -20,29 +20,28 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
 </script>
 
 <template>
-  <table
-    :class="[
-      'flex p-0 flex-col gap-y-1 max-h-96 overflow-y-auto rounded-b-md',
-      'group-hover:max-w-md',
-    ]"
-  >
-    <tr class="flex flex-row justify-between gap-x-2">
-      <th>Property</th>
-      <th>Occurence</th>
-    </tr>
-    <tr
-      v-for="(attr, i) in attributes"
-      :key="attr.attribute.value"
-      class="flex flex-row justify-between p-2"
-      :class="{ 'bg-blue-200': i % 2 == 0 }"
-    >
-      <td
-        class="cursor-pointer hover:underline"
-        @click="handleAttributeClick(attr)"
+  <div class="flex max-h-[60vh] overflow-y-auto rounded-md">
+    <table :class="['table-auto w-full']">
+      <tr class="">
+        <th>Property</th>
+        <th>Occurence</th>
+        <th>Select</th>
+      </tr>
+      <tr
+        v-for="(attr, i) in attributes"
+        :key="attr.attribute.value"
+        class="p-2"
+        :class="{ 'bg-blue-200': i % 2 == 0 }"
       >
-        {{ attr.attribute.value }}:
-      </td>
-      <td>{{ getAttributeRatio(attr) }}</td>
-    </tr>
-  </table>
+        <td
+          class="cursor-pointer hover:underline p-2"
+          @click="handleAttributeClick(attr)"
+        >
+          {{ attr.attribute.value }}
+        </td>
+        <td class="text-center p-1">{{ getAttributeRatio(attr) }}</td>
+        <td class="text-center p-1"><input type="checkbox" /></td>
+      </tr>
+    </table>
+  </div>
 </template>
