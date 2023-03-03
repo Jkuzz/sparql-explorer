@@ -15,15 +15,27 @@ const knownNamespaces: { [key: string]: unknown } = {
   [ns.xsd.$iri]: ns.xsd,
 }
 
+const ldkitExportBase = `
+import * as ldkitns from 'ldkit/namespaces'
+
+// Schema definitions`
+
 export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: string]: string[] }) {
+  let exportText = ldkitExportBase
   nodes.forEach((node) => {
     let nodeNamespace = findNamespace(node.id)
     if (!nodeNamespace) {
       nodeNamespace = makeNewNamespace(node.id)
     }
+    exportText += `
+const test = {
+  '@id': ${node.id},
+}`
     console.log(`${node.id}\t:\t${nodeNamespace}`)
     selectedAttributes[node.id].forEach(console.log)
   })
+  console.log('🚀 ~ file: schema.ts:31 ~ makeSchema ~ exportText:', exportText)
+  return exportText
 }
 
 /**

@@ -6,16 +6,31 @@
     <div
       :class="[
         'bg-blue-100 rounded-xl shadow-lg',
-        'p-6 m-12 w-[90%] min-h-[60%] max-h-[90%] flex flex-col',
+        'p-4 m-12 w-[90%] min-h-[60%] max-h-[90%] flex flex-col',
       ]"
     >
       <header>
         <h2 class="text-lg font-bold text-center">Export</h2>
       </header>
 
-      <main class="flex-grow text-center">Work in progress :)</main>
+      <main class="flex-grow">
+        <pre
+          v-if="exportText"
+          class="rounded-md"
+        >
+          <code class="language-ts">
+            {{ exportText }}
+          </code>          
+        </pre>
+        <div
+          class="text-center text-slate-300"
+          v-else
+        >
+          Export to see :)
+        </div>
+      </main>
 
-      <footer class="p-4 flex items-center justify-center bg-slate-800 rounded-md">
+      <footer class="flex items-center justify-center pt-4">
         <ButtonGeneric
           class="text-xl font-bold"
           @click="doExport"
@@ -30,16 +45,24 @@
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import { useVisStateStore } from '@/stores/visState'
 import { makeSchema } from '@/stores/schema'
+import { ref } from 'vue'
+import Prism from 'prismjs'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/themes/prism-tomorrow.min.css'
 
 const visStateStore = useVisStateStore()
 
 const emits = defineEmits(['modal-close'])
+
+const exportText = ref('')
 
 function onCloseModal() {
   emits('modal-close')
 }
 
 function doExport() {
-  makeSchema(visStateStore.selectedNodes, visStateStore.selectedAttributes)
+  exportText.value = makeSchema(visStateStore.selectedNodes, visStateStore.selectedAttributes)
+  // Don't ask me why this needs a 0 timeout but it doesn't highlight otherwise
+  setTimeout(Prism.highlightAll, 0)
 }
 </script>
