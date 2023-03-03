@@ -2,7 +2,7 @@
 import type { StoreEdge } from '@/stores/validators'
 
 defineEmits<{
-  (e: 'select', edge: string): void
+  (e: 'change', edge: string): void
 }>()
 
 const props = defineProps<{
@@ -19,7 +19,7 @@ function getEdgeRatio(edge: StoreEdge) {
   const nodeCount = props.instanceCount
   const attributeCount = edge.data.instanceCount.value
   if (!nodeCount) return 0
-  return ((+attributeCount / +nodeCount) * 100).toFixed(2) + '%'
+  return +((+attributeCount / +nodeCount) * 100).toFixed(2)
 }
 </script>
 
@@ -54,11 +54,11 @@ function getEdgeRatio(edge: StoreEdge) {
           >
             {{ edge.uri }}
           </td>
-          <td class="p-2 text-center">{{ getEdgeRatio(edge) }}</td>
+          <td class="p-2 text-center">{{ getEdgeRatio(edge) }}%</td>
           <td class="text-center p-1">
             <input
               type="checkbox"
-              @select="$emit('select', edge.id)"
+              @change="$emit('change', edge.id)"
             />
           </td>
         </tr>
