@@ -26,15 +26,16 @@
         <AttributesList
           v-if="displayMode === 'attributes'"
           :attributes="node.data.attributes"
-          :instance-count="+(node.data.node.instanceCount.value || 0)"
+          :instance-count="+node.data.node.instanceCount.value"
           @change="handleAttributeSelection"
           :node-selected="isSelected"
+          :selected-attributes="visStateStore.selectedAttributes[node.id]"
         />
         <EdgeList
           v-if="displayMode === 'outgoing'"
           :edges="endpointStore.getNodeFromEdges(node.id).sort(edgesSort)"
           type="from"
-          :instance-count="+(node.data.node.instanceCount.value || 0)"
+          :instance-count="+node.data.node.instanceCount.value"
           @change="handleEdgeSelection"
           :node-selected="isSelected"
         />
@@ -42,7 +43,7 @@
           v-if="displayMode === 'incoming'"
           :edges="endpointStore.getNodeToEdges(node.id).sort(edgesSort)"
           type="to"
-          :instance-count="+(node.data.node.instanceCount.value || 0)"
+          :instance-count="+node.data.node.instanceCount.value"
           @change="handleEdgeSelection"
           :node-selected="isSelected"
         />
@@ -74,12 +75,12 @@ import { useVisStateStore } from '@/stores/visState'
 
 const emits = defineEmits(['modal-close'])
 const props = defineProps<{
-  node?: StoreNode
+  node: StoreNode
 }>()
 const endpointStore = useEndpointStore()
 const visStateStore = useVisStateStore()
 
-const isSelected = ref(visStateStore.isSelected(props.node?.id || ''))
+const isSelected = ref(visStateStore.isSelected(props.node.id))
 
 type displayModeType = 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('attributes')
@@ -89,16 +90,16 @@ function onCloseModal() {
 }
 
 function onToggleSelection(newSelectionState: boolean) {
-  visStateStore.toggleNodeSelection(props.node?.id || '')
+  visStateStore.toggleNodeSelection(props.node.id)
   isSelected.value = newSelectionState
 }
 
 function handleAttributeSelection(attribute: string) {
-  visStateStore.toggleAttributeSelection(props.node?.id || '', attribute)
+  visStateStore.toggleAttributeSelection(props.node.id, attribute)
 }
 
 function handleEdgeSelection(edgeId: string) {
-  visStateStore.toggleEdgeSelection(props.node?.id || '', edgeId)
+  visStateStore.toggleEdgeSelection(props.node.id, edgeId)
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

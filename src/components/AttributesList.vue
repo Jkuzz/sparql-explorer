@@ -9,7 +9,8 @@ defineEmits<{
 const props = defineProps<{
   instanceCount: number
   nodeSelected: boolean
-  attributes?: z.infer<typeof AttributeBinding>[]
+  attributes: z.infer<typeof AttributeBinding>[]
+  selectedAttributes?: string[]
 }>()
 
 function handleAttributeClick(attr: z.infer<typeof AttributeBinding>) {
@@ -51,6 +52,7 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
             type="checkbox"
             @change="$emit('change', attr.attribute.value)"
             :disabled="!nodeSelected"
+            :checked="selectedAttributes?.includes(attr.attribute.value)"
           />
         </td>
       </tr>

@@ -65,7 +65,7 @@ function showNodeModal(node: StoreNode) {
         leave-to-class="-translate-y-2 opacity-0"
       >
         <NodeModal
-          v-if="isModalOpen"
+          v-if="isModalOpen && modalNode"
           :node="modalNode"
           @modal-close="isModalOpen = false"
         >

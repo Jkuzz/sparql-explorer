@@ -32,7 +32,12 @@ function getEdgeRatio(edge: StoreEdge) {
           <th scope="col">{{ type === 'to' ? 'Source' : 'Target' }}</th>
           <th scope="col">Property</th>
           <th scope="col">Occurence</th>
-          <th scope="col">Select</th>
+          <th
+            scope="col"
+            v-if="type === 'from'"
+          >
+            Select
+          </th>
         </tr>
       </thead>
       <tbody class="">
@@ -56,7 +61,10 @@ function getEdgeRatio(edge: StoreEdge) {
             {{ edge.uri }}
           </td>
           <td class="p-2 text-center">{{ getEdgeRatio(edge) }}%</td>
-          <td class="text-center p-1">
+          <td
+            class="text-center p-1"
+            v-if="type === 'from'"
+          >
             <input
               :class="{ 'cursor-not-allowed': !nodeSelected }"
               type="checkbox"

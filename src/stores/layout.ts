@@ -90,11 +90,11 @@ function forceLayout() {
 
   const simulation = d3
     .forceSimulation(nodes)
-    .force('charge', d3.forceManyBody().strength(-1000))
+    .force('charge', d3.forceManyBody().strength(-2000))
     .force('x', d3.forceX(CENTER.x).strength(0.05))
     .force('y', d3.forceY(0).strength(0.05))
     .force('links', d3.forceLink(edges).strength(100))
-    .force('collide', d3.forceCollide().radius(25)) // Reduce overlap
+    .force('collide', d3.forceCollide().radius(30)) // Reduce overlap
     .force(
       'gravity',
       d3.forceY(CENTER.y * 2).strength((node: any) => {

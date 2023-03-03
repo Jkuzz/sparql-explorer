@@ -15,13 +15,14 @@ const knownNamespaces: { [key: string]: unknown } = {
   [ns.xsd.$iri]: ns.xsd,
 }
 
-export function makeSchema(nodes: StoreNode[]) {
+export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: string]: string[] }) {
   nodes.forEach((node) => {
     let nodeNamespace = findNamespace(node.id)
     if (!nodeNamespace) {
       nodeNamespace = makeNewNamespace(node.id)
     }
     console.log(`${node.id}\t:\t${nodeNamespace}`)
+    selectedAttributes[node.id].forEach(console.log)
   })
 }
 

@@ -40,6 +40,6 @@ function onCloseModal() {
 }
 
 function doExport() {
-  makeSchema(visStateStore.selectedNodes)
+  makeSchema(visStateStore.selectedNodes, visStateStore.selectedAttributes)
 }
 </script>

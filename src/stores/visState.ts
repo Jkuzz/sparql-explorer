@@ -18,6 +18,13 @@ export const useVisStateStore = defineStore('visState', () => {
    */
   const selectedAttributes = reactive<{ [key: string]: string[] }>({})
 
+  /**
+   * Attributes of selected nodes that are to be included in the schema
+   * Dictionary of
+   * IRI => attributes[]
+   */
+  const selectedEdges = reactive<{ [key: string]: string[] }>({})
+
   function toggleNodeSelection(nodeId: string) {
     const nodeToToggle = selectedNodes.find((n) => n.id === nodeId)
 
@@ -61,8 +68,21 @@ export const useVisStateStore = defineStore('visState', () => {
     return foundNode !== undefined
   }
 
+  /**
+   * See whether the selected nodes attribute is selected
+   * (the node must therefore also be selected)
+   * @param nodeId whose attribute you are inspecting
+   * @param attribute to check
+   */
+  function isAttributeSelected(nodeId: StoreNode['id'], attribute: string) {
+    const foundNode = selectedAttributes[nodeId]
+    if (!foundNode) return false
+    return foundNode.includes(attribute)
+  }
+
   return {
     selectedNodes,
+    selectedAttributes,
     toggleNodeSelection,
     isSelected,
     toggleAttributeSelection,
