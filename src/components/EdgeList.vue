@@ -8,6 +8,7 @@ defineEmits<{
 const props = defineProps<{
   instanceCount: number
   edges?: StoreEdge[]
+  nodeSelected: boolean
   type: 'to' | 'from'
 }>()
 
@@ -57,8 +58,10 @@ function getEdgeRatio(edge: StoreEdge) {
           <td class="p-2 text-center">{{ getEdgeRatio(edge) }}%</td>
           <td class="text-center p-1">
             <input
+              :class="{ 'cursor-not-allowed': !nodeSelected }"
               type="checkbox"
               @change="$emit('change', edge.id)"
+              :disabled="!nodeSelected"
             />
           </td>
         </tr>

@@ -8,6 +8,7 @@ defineEmits<{
 
 const props = defineProps<{
   instanceCount: number
+  nodeSelected: boolean
   attributes?: z.infer<typeof AttributeBinding>[]
 }>()
 
@@ -46,9 +47,10 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
         <td class="text-center p-1">{{ getAttributeRatio(attr) }}%</td>
         <td class="text-center p-1">
           <input
+            :class="{ 'cursor-not-allowed': !nodeSelected }"
             type="checkbox"
             @change="$emit('change', attr.attribute.value)"
-            :checked="getAttributeRatio(attr) > 50 ? true : false"
+            :disabled="!nodeSelected"
           />
         </td>
       </tr>

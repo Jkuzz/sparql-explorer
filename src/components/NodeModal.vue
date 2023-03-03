@@ -28,6 +28,7 @@
           :attributes="node.data.attributes"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
           @change="handleAttributeSelection"
+          :node-selected="isSelected"
         />
         <EdgeList
           v-if="displayMode === 'outgoing'"
@@ -35,6 +36,7 @@
           type="from"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
           @change="handleEdgeSelection"
+          :node-selected="isSelected"
         />
         <EdgeList
           v-if="displayMode === 'incoming'"
@@ -42,6 +44,7 @@
           type="to"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
           @change="handleEdgeSelection"
+          :node-selected="isSelected"
         />
       </main>
 
