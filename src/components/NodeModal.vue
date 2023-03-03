@@ -27,20 +27,21 @@
           v-if="displayMode === 'attributes'"
           :attributes="node.data.attributes"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
+          @change="handleAttributeSelection"
         />
         <EdgeList
           v-if="displayMode === 'outgoing'"
           :edges="endpointStore.getNodeFromEdges(node.id).sort(edgesSort)"
           type="from"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
-          @select="handleAttributeSelection"
+          @change="handleEdgeSelection"
         />
         <EdgeList
           v-if="displayMode === 'incoming'"
           :edges="endpointStore.getNodeToEdges(node.id).sort(edgesSort)"
           type="to"
           :instance-count="+(node.data.node.instanceCount.value || 0)"
-          @select="handleAttributeSelection"
+          @change="handleEdgeSelection"
         />
       </main>
 
@@ -80,23 +81,21 @@ const isSelected = ref(visStateStore.isSelected(props.node?.id || ''))
 type displayModeType = 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('attributes')
 
-console.log(props.node?.data.attributes)
-
 function onCloseModal() {
   emits('modal-close')
 }
 
 function onToggleSelection(newSelectionState: boolean) {
-  if (newSelectionState) {
-    visStateStore.selectNode(props.node?.id || '')
-  } else {
-    visStateStore.deselectNode(props.node?.id || '')
-  }
+  visStateStore.toggleNodeSelection(props.node?.id || '')
   isSelected.value = newSelectionState
 }
 
 function handleAttributeSelection(attribute: string) {
   visStateStore.toggleAttributeSelection(props.node?.id || '', attribute)
+}
+
+function handleEdgeSelection(edgeId: string) {
+  visStateStore.toggleEdgeSelection(props.node?.id || '', edgeId)
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

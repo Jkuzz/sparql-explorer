@@ -11,26 +11,31 @@ export const useVisStateStore = defineStore('visState', () => {
    */
   const selectedNodes = reactive<StoreNode[]>([])
 
-  function selectNode(nodeId: string) {
-    if (selectedNodes.find((n: StoreNode) => n.id === nodeId)) return
-    const nodeToSelect = endpointStore.nodes.find((n) => n.id === nodeId)
-    if (!nodeToSelect) return
+  const selectedAttributes = reactive<{ [key: string]: string[] }>({})
 
-    selectedNodes.push(nodeToSelect)
-  }
+  function toggleNodeSelection(nodeId: string) {
+    const nodeToToggle = endpointStore.nodes.find((n) => n.id === nodeId)
 
-  function deselectNode(nodeId: string) {
-    const nodeToRemove = endpointStore.nodes.find((n) => n.id === nodeId)
-    if (!nodeToRemove) return
-    selectedNodes.splice(selectedNodes.indexOf(nodeToRemove), 1)
+    if (nodeToToggle) {
+      // Exists: remove it
+      selectedNodes.splice(selectedNodes.indexOf(nodeToToggle), 1)
+      delete selectedAttributes[nodeId]
+    } else {
+      // Doesn't exist: select it
+      const newNode = endpointStore.nodes.find((n) => n.id === nodeId)
+      if (newNode) {
+        selectedNodes.push(newNode)
+      }
+      selectedAttributes[nodeId] = []
+    }
   }
 
   function toggleAttributeSelection(nodeId: string, attribute: string) {
-    console.log(nodeId, attribute)
+    console.log('Attribute', nodeId, attribute)
   }
 
   function toggleEdgeSelection(nodeId: string, edgeId: string) {
-    console.log(nodeId, edgeId)
+    console.log('Edge', nodeId, edgeId)
   }
 
   /**
@@ -44,8 +49,7 @@ export const useVisStateStore = defineStore('visState', () => {
 
   return {
     selectedNodes,
-    selectNode,
-    deselectNode,
+    toggleNodeSelection,
     isSelected,
     toggleAttributeSelection,
     toggleEdgeSelection,
