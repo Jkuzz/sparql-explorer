@@ -17,11 +17,7 @@
         <pre
           v-if="exportText"
           class="rounded-md max-h-[80vh] overflow-y-auto"
-        >
-          <code class="language-ts">
-            {{ exportText }}
-          </code>          
-        </pre>
+        ><code class="language-ts">{{ exportText }}</code></pre>
         <div
           class="text-center text-slate-300"
           v-else
@@ -30,7 +26,7 @@
         </div>
       </main>
 
-      <footer class="flex items-center justify-center pt-4">
+      <footer class="flex items-center justify-center pt-3">
         <ButtonGeneric
           class="text-xl font-bold"
           @click="doExport"
@@ -46,6 +42,8 @@ import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import { useVisStateStore } from '@/stores/visState'
 import { makeSchema } from '@/stores/schema'
 import { ref } from 'vue'
+import { format } from 'prettier'
+import parserTypescript from 'prettier/parser-typescript.js'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-typescript'
 import 'prismjs/themes/prism-tomorrow.min.css'
@@ -61,7 +59,12 @@ function onCloseModal() {
 }
 
 function doExport() {
-  exportText.value = makeSchema(visStateStore.selectedNodes, visStateStore.selectedAttributes)
+  // Format the schema export using prettier
+  // Syntax errors will break this!!
+  exportText.value = format(
+    makeSchema(visStateStore.selectedNodes, visStateStore.selectedAttributes),
+    { semi: false, parser: 'typescript', plugins: [parserTypescript] }
+  )
   // Don't ask me why this needs a 0 timeout but it doesn't highlight otherwise
   setTimeout(Prism.highlightAll, 0)
 }

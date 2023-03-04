@@ -22,13 +22,15 @@ const defaultNamespaces = Object.keys(knownNamespaces)
 const usedNamespaces = new Set<string>()
 const exportedClasses: string[] = []
 
-const ldkitExportBase = `
-import * as ldkit from 'ldkit'
-import * as ldkitns from 'ldkit/namespaces'
+const ldkitExportBase = `import * as ldkit from 'ldkit'
+  import * as ldkitns from 'ldkit/namespaces'
 
-// Schema definitions`
+  // Schema definitions`
 
 export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: string]: string[] }) {
+  usedNamespaces.clear()
+  exportedClasses.splice(0, exportedClasses.length)
+
   let exportText = ldkitExportBase
   nodes.forEach((node) => {
     exportText += exportNode(node.id, selectedAttributes[node.id])
@@ -46,8 +48,8 @@ function exportNode(nodeId: string, selectedAttributes: string[]) {
   usedNamespaces.add(knownNamespaces[nodeNamespaceIri])
 
   let nodeExport = `
-const ${nodeName}Schema = {
-  '@type': ldkitns.${knownNamespaces[nodeNamespaceIri]}.${nodeName},`
+    const ${nodeName}Schema = {
+    '@type': ldkitns.${knownNamespaces[nodeNamespaceIri]}.${nodeName},`
   console.log(`${nodeId}\t:\t${nodeNamespaceIri}`)
   selectedAttributes.forEach((attr) => {
     nodeExport += exportAttr(attr, 'xsd.string')
@@ -61,11 +63,11 @@ function exportAttr(attrIri: string, attrType: string) {
   const attrNamespace = findNamespace(attrIri)
   const attrName = removeNamespace(attrNamespace, attrIri)
   return `
-  ${attrName}: {
-    '@id': ldkitns.${knownNamespaces[attrNamespace]}.${attrName},
-    '@type': ldkitns.${attrType},
-    '@optional': true,
-  },`
+    ${attrName}: {
+      '@id': ldkitns.${knownNamespaces[attrNamespace]}.${attrName},
+      '@type': ldkitns.${attrType},
+      '@optional': true,
+    },`
 }
 
 /**
@@ -89,11 +91,11 @@ function removeNamespace(nameSpace: string, iri: string) {
 
 function exportContext() {
   return `
-// Create a context for query engine
-const context: ldkit.Context = {
-  sources: ['${endpointStore.endpointURL}'], // SPARQL endpoint
-  language: 'en', // Preferred language
-}`
+    // Create a context for query engine
+    const context: ldkit.Context = {
+      sources: ['${endpointStore.endpointURL}'], // SPARQL endpoint
+      language: 'en', // Preferred language
+    }`
 }
 
 function exportLenses() {
