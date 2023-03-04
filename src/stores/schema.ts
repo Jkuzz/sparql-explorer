@@ -1,21 +1,28 @@
 import * as ns from 'ldkit/namespaces'
 import type { StoreNode } from '@/stores/validators'
+import { useEndpointStore } from '@/stores/endpoint'
 
-const knownNamespaces: { [key: string]: unknown } = {
-  [ns.dbo.$iri]: ns.dbo,
-  [ns.dc.$iri]: ns.dc,
-  [ns.dcterms.$iri]: ns.dcterms,
-  [ns.foaf.$iri]: ns.foaf,
-  [ns.gr.$iri]: ns.gr,
-  [ns.rdf.$iri]: ns.rdf,
-  [ns.rdfs.$iri]: ns.rdfs,
-  [ns.schema.$iri]: ns.schema,
-  [ns.schema.$iri]: ns.schema,
-  [ns.skos.$iri]: ns.skos,
-  [ns.xsd.$iri]: ns.xsd,
+const endpointStore = useEndpointStore()
+
+const knownNamespaces: { [key: string]: string } = {
+  [ns.dbo.$iri]: ns.dbo.$prefix.slice(0, -1),
+  [ns.dc.$iri]: ns.dc.$prefix.slice(0, -1),
+  [ns.dcterms.$iri]: ns.dcterms.$prefix.slice(0, -1),
+  [ns.foaf.$iri]: ns.foaf.$prefix.slice(0, -1),
+  [ns.gr.$iri]: ns.gr.$prefix.slice(0, -1),
+  [ns.rdf.$iri]: ns.rdf.$prefix.slice(0, -1),
+  [ns.rdfs.$iri]: ns.rdfs.$prefix.slice(0, -1),
+  [ns.schema.$iri]: ns.schema.$prefix.slice(0, -1),
+  [ns.schema.$iri]: ns.schema.$prefix.slice(0, -1),
+  [ns.skos.$iri]: ns.skos.$prefix.slice(0, -1),
+  [ns.xsd.$iri]: ns.xsd.$prefix.slice(0, -1),
 }
 
-const ldkitExportBase = `
+const defaultNamespaces = Object.keys(knownNamespaces)
+const usedNamespaces = new Set<string>()
+const exportedClasses: string[] = []
+
+const ldkitExportBase = `import * as ldkit from 'ldkit'
 import * as ldkitns from 'ldkit/namespaces'
 
 // Schema definitions`
@@ -23,19 +30,40 @@ import * as ldkitns from 'ldkit/namespaces'
 export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: string]: string[] }) {
   let exportText = ldkitExportBase
   nodes.forEach((node) => {
-    let nodeNamespace = findNamespace(node.id)
-    if (!nodeNamespace) {
-      nodeNamespace = makeNewNamespace(node.id)
-    }
-    exportText += `
-const test = {
-  '@id': ${node.id},
-}`
-    console.log(`${node.id}\t:\t${nodeNamespace}`)
-    selectedAttributes[node.id].forEach(console.log)
+    exportText += exportNode(node.id, selectedAttributes[node.id])
   })
-  console.log('🚀 ~ file: schema.ts:31 ~ makeSchema ~ exportText:', exportText)
+  exportText += exportContext()
+  exportText += exportLenses()
   return exportText
+}
+
+function exportNode(nodeId: string, selectedAttributes: string[]) {
+  const nodeNamespaceIri = findNamespace(nodeId)
+  const nodeName = removeNamespace(nodeNamespaceIri, nodeId)
+
+  usedNamespaces.add(knownNamespaces[nodeNamespaceIri])
+
+  let nodeExport = `
+const ${nodeName}Schema = {
+  '@type': ldkitns.${knownNamespaces[nodeNamespaceIri]}.${nodeName},`
+  console.log(`${nodeId}\t:\t${nodeNamespaceIri}`)
+  selectedAttributes.forEach((attr) => {
+    nodeExport += exportAttr(attr, 'xsd.string')
+  })
+
+  nodeExport += `\n} as const\n`
+  return nodeExport
+}
+
+function exportAttr(attrIri: string, attrType: string) {
+  const attrNamespace = findNamespace(attrIri)
+  const attrName = removeNamespace(attrNamespace, attrIri)
+  return `
+  ${attrName}: {
+    '@id': ldkitns.${knownNamespaces[attrNamespace]}.${attrName},
+    '@type': ${attrType},
+    '@optional': true,
+  },`
 }
 
 /**
@@ -46,8 +74,30 @@ const test = {
 function findNamespace(iri: string) {
   for (const nameSpace in knownNamespaces) {
     if (iri.startsWith(nameSpace)) return nameSpace
-    return undefined
   }
+  return makeNewNamespace(iri)
+}
+
+function removeNamespace(nameSpace: string, iri: string) {
+  if (nameSpace === iri.substring(0, nameSpace.length)) {
+    return iri.substring(nameSpace.length)
+  }
+  return iri
+}
+
+function exportContext() {
+  return `
+// Create a context for query engine
+const context: ldkit.Context = {
+  sources: ['${endpointStore.endpointURL}'], // SPARQL endpoint
+  language: 'en', // Preferred language
+}`
+}
+
+function exportLenses() {
+  let lensesExport = `\n
+  // Create a resource using the data schema and context above`
+  return lensesExport
 }
 
 /**

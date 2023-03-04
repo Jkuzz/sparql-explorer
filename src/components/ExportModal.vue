@@ -9,14 +9,14 @@
         'p-4 m-12 w-[90%] min-h-[60%] max-h-[90%] flex flex-col',
       ]"
     >
-      <header>
+      <!-- <header>
         <h2 class="text-lg font-bold text-center">Export</h2>
-      </header>
+      </header> -->
 
       <main class="flex-grow">
         <pre
           v-if="exportText"
-          class="rounded-md"
+          class="rounded-md max-h-[80vh] overflow-y-auto"
         >
           <code class="language-ts">
             {{ exportText }}
@@ -65,4 +65,13 @@ function doExport() {
   // Don't ask me why this needs a 0 timeout but it doesn't highlight otherwise
   setTimeout(Prism.highlightAll, 0)
 }
+
+doExport()
 </script>
+
+<style scoped>
+pre,
+code {
+  margin: 0;
+}
+</style>
