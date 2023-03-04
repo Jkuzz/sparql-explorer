@@ -52,7 +52,6 @@ export const useVisStateStore = defineStore('visState', () => {
     } else {
       selected.push(attribute)
     }
-    console.log(selected)
   }
 
   function toggleEdgeSelection(nodeId: string, edgeId: string) {

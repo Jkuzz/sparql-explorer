@@ -22,7 +22,8 @@ const defaultNamespaces = Object.keys(knownNamespaces)
 const usedNamespaces = new Set<string>()
 const exportedClasses: string[] = []
 
-const ldkitExportBase = `import * as ldkit from 'ldkit'
+const ldkitExportBase = `
+import * as ldkit from 'ldkit'
 import * as ldkitns from 'ldkit/namespaces'
 
 // Schema definitions`
@@ -41,6 +42,7 @@ function exportNode(nodeId: string, selectedAttributes: string[]) {
   const nodeNamespaceIri = findNamespace(nodeId)
   const nodeName = removeNamespace(nodeNamespaceIri, nodeId)
 
+  exportedClasses.push(nodeName)
   usedNamespaces.add(knownNamespaces[nodeNamespaceIri])
 
   let nodeExport = `
@@ -61,7 +63,7 @@ function exportAttr(attrIri: string, attrType: string) {
   return `
   ${attrName}: {
     '@id': ldkitns.${knownNamespaces[attrNamespace]}.${attrName},
-    '@type': ${attrType},
+    '@type': ldkitns.${attrType},
     '@optional': true,
   },`
 }
@@ -95,8 +97,10 @@ const context: ldkit.Context = {
 }
 
 function exportLenses() {
-  let lensesExport = `\n
-  // Create a resource using the data schema and context above`
+  let lensesExport = `\n\n// Create a resource using the data schema and context above\n`
+  exportedClasses.forEach((cls) => {
+    lensesExport += `const ${cls} = ldkit.createLens(${cls}Schema, context)\n`
+  })
   return lensesExport
 }
 
