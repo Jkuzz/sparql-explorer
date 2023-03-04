@@ -6,7 +6,7 @@
     <div
       :class="[
         'bg-blue-100 rounded-xl shadow-lg',
-        'p-4 m-12 w-[90%] min-h-[60%] max-h-[90%] flex flex-col',
+        'p-4 m-12 w-[80%] min-h-[60%] max-h-[90%] flex flex-col',
       ]"
     >
       <!-- <header>

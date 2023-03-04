@@ -44,7 +44,6 @@
           :edges="endpointStore.getNodeToEdges(node.id).sort(edgesSort)"
           type="to"
           :instance-count="+node.data.node.instanceCount.value"
-          @change="handleEdgeSelection"
           :node-selected="isSelected"
         />
       </main>
@@ -98,8 +97,8 @@ function handleAttributeSelection(attribute: string) {
   visStateStore.toggleAttributeSelection(props.node.id, attribute)
 }
 
-function handleEdgeSelection(edgeId: string) {
-  visStateStore.toggleEdgeSelection(props.node.id, edgeId)
+function handleEdgeSelection(edge: StoreEdge) {
+  visStateStore.toggleEdgeSelection(edge)
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

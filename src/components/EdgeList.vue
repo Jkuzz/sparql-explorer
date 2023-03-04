@@ -2,7 +2,7 @@
 import type { StoreEdge } from '@/stores/validators'
 
 defineEmits<{
-  (e: 'change', edge: string): void
+  (e: 'change', edge: StoreEdge): void
 }>()
 
 const props = defineProps<{
@@ -68,7 +68,7 @@ function getEdgeRatio(edge: StoreEdge) {
             <input
               :class="{ 'cursor-not-allowed': !nodeSelected }"
               type="checkbox"
-              @change="$emit('change', edge.id)"
+              @change="$emit('change', edge)"
               :disabled="!nodeSelected"
             />
           </td>

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { reactive } from 'vue'
-import type { StoreNode } from '@/stores/validators'
+import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
 
 const endpointStore = useEndpointStore()
@@ -23,7 +23,7 @@ export const useVisStateStore = defineStore('visState', () => {
    * Dictionary of
    * IRI => attributes[]
    */
-  const selectedEdges = reactive<{ [key: string]: string[] }>({})
+  const selectedEdges = reactive<StoreEdge[]>([])
 
   function toggleNodeSelection(nodeId: string) {
     const nodeToToggle = selectedNodes.find((n) => n.id === nodeId)
@@ -54,8 +54,15 @@ export const useVisStateStore = defineStore('visState', () => {
     }
   }
 
-  function toggleEdgeSelection(nodeId: string, edgeId: string) {
-    console.log('Edge', nodeId, edgeId)
+  function toggleEdgeSelection(edge: StoreEdge) {
+    console.log('Edge', edge.source, edge.target)
+
+    const selectedIndex = selectedEdges.indexOf(edge)
+    if (selectedIndex > -1) {
+      selectedEdges.splice(selectedIndex, 1)
+    } else {
+      selectedEdges.push(edge)
+    }
   }
 
   /**
