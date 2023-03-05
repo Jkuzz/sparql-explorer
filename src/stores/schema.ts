@@ -1,6 +1,7 @@
 import * as ns from 'ldkit/namespaces'
 import type { StoreNode } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
+import { tryGuessPrefix, removeNamespace, getAvailablePrefix } from '@/stores/iriManipulation'
 
 const endpointStore = useEndpointStore()
 
@@ -50,6 +51,12 @@ export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: strin
   return exportText
 }
 
+/**
+ * Export the selected node into an LDKit schema definition
+ * @param nodeId iri of the node
+ * @param selectedAttributes attributes of the node that were selected for export
+ * @returns string containing the LDKit schema definition code
+ */
 function exportNode(nodeId: string, selectedAttributes: string[]) {
   const nodeNamespaceIri = findNamespace(nodeId)
   const nodeName = removeNamespace(nodeNamespaceIri, nodeId)
@@ -92,20 +99,6 @@ function findNamespace(iri: string) {
     if (iri.startsWith(nameSpace)) return nameSpace
   }
   return makeNewNamespace(iri)
-}
-
-/**
- * Cut the provided namespace prefix from the iri.
- * Leaves the iri unchanged if the namespace does not match the iri's prefix
- * @param nameSpace that is being removed
- * @param iri from which to cut the namespace
- * @returns the iri with the namespace iri prefix removed
- */
-function removeNamespace(nameSpace: string, iri: string) {
-  if (nameSpace === iri.substring(0, nameSpace.length)) {
-    return iri.substring(nameSpace.length)
-  }
-  return iri
 }
 
 /**
@@ -152,49 +145,7 @@ function makeNewNamespace(iri: string) {
   }
   console.log('🚀 ~ file: schema.ts:147 ~ makeNewNamespace ~ nsPrefix:', possiblePrefixes)
 
-  knownNamespaces[newNs] = getAvailablePrefix(possiblePrefixes)
+  knownNamespaces[newNs] = getAvailablePrefix(possiblePrefixes, knownNamespaces)
   newNamespaces[newNs] = []
   return newNs
-}
-
-/**
- * This loop goes through all the possible prefixes and tests if they are available
- * If none are, adds a number at the end and tests again
- * @returns an available namespace prefix
- */
-function getAvailablePrefix(possiblePrefixes: string[]) {
-  // This loop is limited because in testing, a whie(true) somehow inexplicably ran infinitely
-  for (let iterations = 0; iterations < 10000; iterations += 1) {
-    for (const prefix of possiblePrefixes) {
-      const numberedPrefix = iterations > 0 ? prefix + iterations : prefix
-      console.log('🚀 ~ file: schema.ts:162 ~ getAvailablePrefix ~ numberedPrefix:', numberedPrefix)
-      if (!Object.values(knownNamespaces).includes(numberedPrefix)) {
-        return numberedPrefix
-      }
-    }
-  }
-  return 'unknown'
-}
-
-/**
- * Guesses the prefix of the namespace based on the iri.
- * Hopes that the iri directly includes the prefix as a substring.
- * @param iri whose prefix to guess
- * @returns array of possible prefixes
- */
-function tryGuessPrefix(iri: string) {
-  console.log('🚀 ~ file: schema.ts:174 ~ tryGuessPrefix ~ iri:', iri)
-  const prefixes = /\/[A-Za-z]{3,4}[^A-Za-z.]/.exec(iri)
-  const shortPrefixes = prefixes
-    ?.map((p) => p.substring(1, p.length - 1))
-    .filter((p) => p !== 'www')
-  console.log('🚀 ~ file: schema.ts:177 ~ tryGuessPrefix ~ shortPrefixes:', shortPrefixes)
-  if (shortPrefixes && shortPrefixes?.length > 0) return shortPrefixes
-
-  const longPrefixes = /\/[A-Za-z]+[^A-Za-z.]/
-    .exec(iri)
-    ?.map((p) => p.substring(1, p.length - 1))
-    .filter((p) => p !== 'www')
-  console.log('🚀 ~ file: schema.ts:183 ~ tryGuessPrefix ~ longPrefixes:', longPrefixes)
-  return longPrefixes
 }
