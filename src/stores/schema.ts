@@ -21,13 +21,12 @@ const defaultNamespaces: { [key: string]: string } = {
 
 // Copy the defaultNamespaces object
 let knownNamespaces = Object.assign({}, defaultNamespaces)
-let newNamespaces: { [key: string]: string[] } = {}
+let newNamespaces: { [key: string]: Set<string> } = {}
 const exportedClasses: string[] = []
 
 const ldkitExportBase = `import * as ldkit from 'ldkit'
   import * as ldkitns from 'ldkit/namespaces'
-
-  // Schema definitions`
+`
 
 /**
  * Export the provided entities as an LDKit schema definition code
@@ -43,10 +42,16 @@ export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: strin
   exportedClasses.splice(0, exportedClasses.length)
 
   let exportText = ldkitExportBase
+
+  let nodesExportText = '\n// Schema definitions'
   nodes.forEach((node) => {
-    exportText += exportNode(node.id, selectedAttributes[node.id])
+    nodesExportText += exportNode(node.id, selectedAttributes[node.id])
   })
-  exportText += exportContext()
+
+  exportText += exportNamespaces() + '\n'
+
+  if (nodes.length > 0) exportText += nodesExportText
+  exportText += exportContext(endpointStore.endpointURL.toString())
   exportText += exportLenses()
   return exportText
 }
@@ -60,6 +65,7 @@ export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: strin
 function exportNode(nodeId: string, selectedAttributes: string[]) {
   const nodeNamespaceIri = findNamespace(nodeId)
   const nodeName = removeNamespace(nodeNamespaceIri, nodeId)
+  registerNamespaceTerm(nodeNamespaceIri, nodeName)
 
   exportedClasses.push(nodeName)
 
@@ -69,7 +75,6 @@ function exportNode(nodeId: string, selectedAttributes: string[]) {
   let nodeExport = `
     const ${nodeName}Schema = {
     '@type': ${nsCodePrefix}${knownNamespaces[nodeNamespaceIri]}.${nodeName},`
-  console.log(`${nodeId}\t:\t${nodeNamespaceIri}`)
   selectedAttributes.forEach((attr) => {
     nodeExport += exportAttr(attr, 'xsd.string')
   })
@@ -77,9 +82,17 @@ function exportNode(nodeId: string, selectedAttributes: string[]) {
   return nodeExport + `\n} as const\n`
 }
 
+/**
+ * Create an export object for the exported attribute
+ * TODO: detect attrtype instead of using 'xsd.string'
+ * @param attrIri iri of the exported attribute (predicate)
+ * @param attrType type of the attribute
+ * @returns the LDKit schema entry for the schema object
+ */
 function exportAttr(attrIri: string, attrType: string) {
   const attrNamespace = findNamespace(attrIri)
   const attrName = removeNamespace(attrNamespace, attrIri)
+  registerNamespaceTerm(attrNamespace, attrName)
   const nsCodePrefix = newNamespaces[attrNamespace] ? '' : 'ldkitns.'
   return `
     ${attrName}: {
@@ -105,11 +118,11 @@ function findNamespace(iri: string) {
  * Create the export string of the LDKit context
  * @returns the export code string
  */
-function exportContext() {
+function exportContext(endpointUrl: string) {
   return `
     // Create a context for query engine
     const context: ldkit.Context = {
-      sources: ['${endpointStore.endpointURL}'], // SPARQL endpoint
+      sources: ['${endpointUrl}'], // SPARQL endpoint
       language: 'en', // Preferred language
     }`
 }
@@ -120,11 +133,49 @@ function exportContext() {
  * @returns the export code string
  */
 function exportLenses() {
+  if (exportedClasses.length === 0) return ''
   let lensesExport = `\n\n// Create a resource using the data schema and context above\n`
   exportedClasses.forEach((cls) => {
     lensesExport += `const ${cls}Lens = ldkit.createLens(${cls}Schema, context)\n`
   })
   return lensesExport
+}
+
+/**
+ * Create namespace definitions for all the entities belonging
+ * to LDKit non-default namespaces.
+ * @returns the LDKit namespace definition code
+ */
+function exportNamespaces() {
+  if (Object.keys(newNamespaces).length === 0) return ''
+  let exportNs = "\n// Define namespaces not included in LDKit's defaults\n"
+
+  for (const nameSpace in newNamespaces) {
+    const nsTerms = Array.from(newNamespaces[nameSpace].values()).map((term) => `"${term}"`)
+    exportNs += `export const ${knownNamespaces[nameSpace]} = ldkit.createNamespace(
+      {
+        iri: '${nameSpace}',
+        prefix: '${knownNamespaces[nameSpace]}',
+        terms: [
+          ${nsTerms.join(', ')}
+        ],
+      } as const,
+    )\n`
+  }
+  return exportNs
+}
+
+/**
+ * Take the term and append it to the namespace's export set.
+ * The set ignores duplicates natively
+ * Call this for every exported entity to make sure they are defined as namespace
+ * terms in case they are not from the default namespaces!
+ * @param nameSpace whose term is being registered
+ * @param term the term
+ */
+function registerNamespaceTerm(nameSpace: string, term: string) {
+  if (!newNamespaces[nameSpace]) return
+  newNamespaces[nameSpace].add(term)
 }
 
 /**
@@ -139,13 +190,11 @@ function makeNewNamespace(iri: string) {
   const hashPos = iri.lastIndexOf('#')
   const newNs = iri.substring(0, Math.max(slashPos, hashPos) + 1)
   let possiblePrefixes = tryGuessPrefix(newNs)
-  console.log('🚀 ~ file: schema.ts:143 ~ makeNewNamespace ~ possiblePrefixes:', possiblePrefixes)
   if (!possiblePrefixes || possiblePrefixes.length === 0) {
     possiblePrefixes = ['prefix']
   }
-  console.log('🚀 ~ file: schema.ts:147 ~ makeNewNamespace ~ nsPrefix:', possiblePrefixes)
 
   knownNamespaces[newNs] = getAvailablePrefix(possiblePrefixes, knownNamespaces)
-  newNamespaces[newNs] = []
+  newNamespaces[newNs] = new Set()
   return newNs
 }

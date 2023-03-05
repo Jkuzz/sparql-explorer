@@ -5,19 +5,16 @@
  * @returns array of possible prefixes
  */
 export function tryGuessPrefix(iri: string) {
-  console.log('🚀 ~ file: schema.ts:174 ~ tryGuessPrefix ~ iri:', iri)
   const prefixes = /\/[A-Za-z]{3,4}[^A-Za-z.]/.exec(iri)
   const shortPrefixes = prefixes
     ?.map((p) => p.substring(1, p.length - 1))
     .filter((p) => p !== 'www')
-  console.log('🚀 ~ file: schema.ts:177 ~ tryGuessPrefix ~ shortPrefixes:', shortPrefixes)
   if (shortPrefixes && shortPrefixes?.length > 0) return shortPrefixes
 
   const longPrefixes = /\/[A-Za-z]+[^A-Za-z.]/
     .exec(iri)
     ?.map((p) => p.substring(1, p.length - 1))
     .filter((p) => p !== 'www')
-  console.log('🚀 ~ file: schema.ts:183 ~ tryGuessPrefix ~ longPrefixes:', longPrefixes)
   return longPrefixes
 }
 
