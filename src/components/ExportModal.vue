@@ -9,10 +9,6 @@
         'p-4 m-12 w-[80%] min-h-[60%] max-h-[90%] flex flex-col',
       ]"
     >
-      <!-- <header>
-        <h2 class="text-lg font-bold text-center">Export</h2>
-      </header> -->
-
       <main class="flex-grow">
         <pre
           v-if="exportText"

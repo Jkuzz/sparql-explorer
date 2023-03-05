@@ -43,7 +43,7 @@ export const useVisStateStore = defineStore('visState', () => {
   }
 
   function toggleAttributeSelection(nodeId: string, attribute: string) {
-    console.log('Attribute', nodeId, attribute)
+    // console.log('Attribute', nodeId, attribute)
     const selected = selectedAttributes[nodeId]
 
     const selectedIndex = selected.indexOf(attribute)
