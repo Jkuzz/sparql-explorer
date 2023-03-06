@@ -15,10 +15,23 @@
         <div class="cursor-pointer hover:underline text-center mb-2">
           {{ `<${node.id}>` }}
         </div>
-        <div class="flex justify-center">
+        <div class="flex flex-row justify-center items-center relative">
           <ButtonGeneric @click="displayMode = 'attributes'">Attributes</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
+          <!-- <div
+            class="absolute right-2"
+            v-if="['attributes', 'outgoing'].includes(displayMode)"
+          >
+            <label class="flex flex-col"
+              >Select all
+              <input
+                type="checkbox"
+                :disabled="!isSelected"
+                @change="handleSelectAllToggle"
+              />
+            </label>
+          </div> -->
         </div>
       </header>
 
@@ -30,6 +43,7 @@
           @change="handleAttributeSelection"
           :node-selected="isSelected"
           :selected-attributes="visStateStore.selectedAttributes[node.id]"
+          ref="attributesList"
         />
         <EdgeList
           v-if="displayMode === 'outgoing'"
@@ -39,6 +53,7 @@
           @change="handleEdgeSelection"
           :node-selected="isSelected"
           :filter-selected="filterSelected"
+          ref="outEdgeList"
         />
         <EdgeList
           v-if="displayMode === 'incoming'"
@@ -92,6 +107,9 @@ const props = defineProps<{
 const endpointStore = useEndpointStore()
 const visStateStore = useVisStateStore()
 
+const outEdgeList = ref<InstanceType<typeof EdgeList> | null>(null)
+const attributesList = ref<InstanceType<typeof AttributesList> | null>(null)
+
 const isSelected = ref(visStateStore.isSelected(props.node.id))
 const filterSelected = ref(false)
 
@@ -113,6 +131,14 @@ function handleAttributeSelection(attribute: string) {
 
 function handleEdgeSelection(edge: StoreEdge) {
   visStateStore.toggleEdgeSelection(edge)
+}
+
+function handleSelectAllToggle() {
+  if (displayMode.value === 'attributes') {
+    attributesList.value?.toggleAll(true)
+  } else if (displayMode.value === 'outgoing') {
+    outEdgeList.value?.toggleAll(true)
+  }
 }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {

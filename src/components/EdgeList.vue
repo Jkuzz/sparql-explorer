@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { StoreEdge } from '@/stores/validators'
 import { useVisStateStore } from '@/stores/visState'
+import { ref } from 'vue'
 
 const visStateStore = useVisStateStore()
 defineEmits<{
@@ -15,6 +16,10 @@ const props = defineProps<{
   filterSelected: boolean
   type: 'to' | 'from'
 }>()
+
+defineExpose({ toggleAll })
+
+const inputs = ref<HTMLInputElement[]>([])
 
 /**
  * Filter all the edges to only show those to selected nodes
@@ -37,6 +42,8 @@ function getEdgeRatio(edge: StoreEdge) {
   if (!nodeCount) return 0
   return +((+attributeCount / +nodeCount) * 100).toFixed(2)
 }
+
+function toggleAll(target: boolean) {}
 </script>
 
 <template>
@@ -85,6 +92,7 @@ function getEdgeRatio(edge: StoreEdge) {
               type="checkbox"
               @change="$emit('change', edge)"
               :disabled="!nodeSelected"
+              ref="inputs"
             />
           </td>
         </tr>

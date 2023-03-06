@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import type { z } from 'zod'
 import type { AttributeBinding } from '@/stores/validators'
+import { ref } from 'vue'
 
 defineEmits<{
   (e: 'change', edge: string): void
 }>()
+
+defineExpose({ toggleAll })
 
 const props = defineProps<{
   instanceCount: number
@@ -12,6 +15,8 @@ const props = defineProps<{
   attributes: z.infer<typeof AttributeBinding>[]
   selectedAttributes?: string[]
 }>()
+
+const inputs = ref<HTMLInputElement[]>([])
 
 function handleAttributeClick(attr: z.infer<typeof AttributeBinding>) {
   navigator.clipboard.writeText(attr.attribute.value)
@@ -23,6 +28,8 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
   if (!nodeCount) return 0
   return +((+attributeCount / +nodeCount) * 100).toFixed(2)
 }
+
+function toggleAll(target: boolean) {}
 </script>
 
 <template>
@@ -53,6 +60,7 @@ function getAttributeRatio(attribute: z.infer<typeof AttributeBinding>) {
             @change="$emit('change', attr.attribute.value)"
             :disabled="!nodeSelected"
             :checked="selectedAttributes?.includes(attr.attribute.value)"
+            ref="inputs"
           />
         </td>
       </tr>
