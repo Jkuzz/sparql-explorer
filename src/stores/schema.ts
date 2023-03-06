@@ -148,11 +148,11 @@ function exportLenses() {
  */
 function exportNamespaces() {
   if (Object.keys(newNamespaces).length === 0) return ''
-  let exportNs = "\n// Define namespaces not included in LDKit's defaults\n"
+  let exportNs = "\n// Define namespaces not included in LDKit's defaults"
 
   for (const nameSpace in newNamespaces) {
     const nsTerms = Array.from(newNamespaces[nameSpace].values()).map((term) => `"${term}"`)
-    exportNs += `export const ${knownNamespaces[nameSpace]} = ldkit.createNamespace(
+    exportNs += `\nexport const ${knownNamespaces[nameSpace]} = ldkit.createNamespace(
       {
         iri: '${nameSpace}',
         prefix: '${knownNamespaces[nameSpace]}',

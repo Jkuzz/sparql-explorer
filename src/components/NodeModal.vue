@@ -38,6 +38,7 @@
           :instance-count="+node.data.node.instanceCount.value"
           @change="handleEdgeSelection"
           :node-selected="isSelected"
+          :filter-selected="filterSelected"
         />
         <EdgeList
           v-if="displayMode === 'incoming'"
@@ -45,16 +46,28 @@
           type="to"
           :instance-count="+node.data.node.instanceCount.value"
           :node-selected="isSelected"
+          :filter-selected="filterSelected"
         />
       </main>
 
-      <footer class="pt-4 flex items-center justify-center">
+      <footer class="pt-4 flex justify-center relative">
         <div class="flex flex-row items-center bg-slate-800 p-2 rounded-md">
           <span class="text-white">Selected</span>
           <SliderSwitch
             :isDefaultEnabled="isSelected"
             @update:checkbox="onToggleSelection"
             value="selected"
+          />
+        </div>
+        <div
+          class="flex flex-row items-center bg-slate-800 p-2 rounded-md absolute right-0"
+          v-if="['incoming', 'outgoing'].includes(displayMode)"
+        >
+          <span class="text-white">Only selected</span>
+          <SliderSwitch
+            :isDefaultEnabled="false"
+            @update:checkbox="filterSelected = !filterSelected"
+            value="filterSelected"
           />
         </div>
       </footer>
@@ -80,6 +93,7 @@ const endpointStore = useEndpointStore()
 const visStateStore = useVisStateStore()
 
 const isSelected = ref(visStateStore.isSelected(props.node.id))
+const filterSelected = ref(false)
 
 type displayModeType = 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('attributes')
