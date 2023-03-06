@@ -14,6 +14,7 @@ const props = defineProps<{
   edges?: StoreEdge[]
   nodeSelected: boolean
   filterSelected: boolean
+  searchStr: string
   type: 'to' | 'from'
 }>()
 
@@ -25,11 +26,13 @@ const inputs = ref<HTMLInputElement[]>([])
  * Filter all the edges to only show those to selected nodes
  */
 const filteredEdges = computed(() => {
-  return props.edges?.filter((edge) => {
-    if (!props.filterSelected) return true
-    if (props.type == 'from') return visStateStore.isSelected(edge.target)
-    return visStateStore.isSelected(edge.source)
-  })
+  return props.edges
+    ?.filter((edge) => {
+      if (!props.filterSelected) return true
+      if (props.type == 'from') return visStateStore.isSelected(edge.target)
+      return visStateStore.isSelected(edge.source)
+    })
+    .filter((edge) => edge.id.includes(props.searchStr))
 })
 
 function handleUriClick(uri: string) {

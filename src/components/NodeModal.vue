@@ -16,6 +16,16 @@
           {{ `<${node.id}>` }}
         </div>
         <div class="flex flex-row justify-center items-center relative">
+          <div class="absolute left-2">
+            <label
+              >Search
+              <input
+                class="border border-slate-600 rounded-md p-1"
+                type="text"
+                v-model="searchStr"
+              />
+            </label>
+          </div>
           <ButtonGeneric @click="displayMode = 'attributes'">Attributes</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
           <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
@@ -43,6 +53,7 @@
           @change="handleAttributeSelection"
           :node-selected="isSelected"
           :selected-attributes="visStateStore.selectedAttributes[node.id]"
+          :search-str="searchStr"
           ref="attributesList"
         />
         <EdgeList
@@ -53,6 +64,7 @@
           @change="handleEdgeSelection"
           :node-selected="isSelected"
           :filter-selected="filterSelected"
+          :search-str="searchStr"
           ref="outEdgeList"
         />
         <EdgeList
@@ -62,6 +74,7 @@
           :instance-count="+node.data.node.instanceCount.value"
           :node-selected="isSelected"
           :filter-selected="filterSelected"
+          :search-str="searchStr"
         />
       </main>
 
@@ -115,6 +128,7 @@ const filterSelected = ref(false)
 
 type displayModeType = 'incoming' | 'outgoing' | 'attributes'
 const displayMode = ref<displayModeType>('attributes')
+const searchStr = ref('')
 
 function onCloseModal() {
   emits('modal-close')

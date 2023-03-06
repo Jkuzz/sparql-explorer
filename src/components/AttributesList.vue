@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { z } from 'zod'
 import type { AttributeBinding } from '@/stores/validators'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 defineEmits<{
   (e: 'change', edge: string): void
@@ -14,7 +14,12 @@ const props = defineProps<{
   nodeSelected: boolean
   attributes: z.infer<typeof AttributeBinding>[]
   selectedAttributes?: string[]
+  searchStr: string
 }>()
+
+const filteredAttributes = computed(() => {
+  return props.attributes.filter((attr) => attr.attribute.value.includes(props.searchStr))
+})
 
 const inputs = ref<HTMLInputElement[]>([])
 
@@ -41,7 +46,7 @@ function toggleAll(target: boolean) {}
         <th>Select</th>
       </tr>
       <tr
-        v-for="(attr, i) in attributes"
+        v-for="(attr, i) in filteredAttributes"
         :key="attr.attribute.value"
         class="p-2"
         :class="{ 'bg-blue-200': i % 2 == 0 }"
