@@ -2,6 +2,7 @@
 import type { z } from 'zod'
 import type { AttributeBinding } from '@/stores/validators'
 import { ref, computed } from 'vue'
+import SpinnerLoader from '@/components/SpinnerLoader.vue'
 
 defineEmits<{
   (e: 'change', edge: string): void
@@ -38,7 +39,10 @@ function toggleAll(target: boolean) {}
 </script>
 
 <template>
-  <div class="flex max-h-[60vh] overflow-y-auto rounded-md">
+  <div
+    v-if="attributes.length > 0"
+    class="flex max-h-[60vh] overflow-y-auto rounded-md"
+  >
     <table :class="['table-auto w-full']">
       <tr class="">
         <th>Attribute</th>
@@ -70,5 +74,15 @@ function toggleAll(target: boolean) {}
         </td>
       </tr>
     </table>
+  </div>
+  <div
+    class="mt-20 flex flex-col items-center"
+    v-else
+  >
+    <SpinnerLoader />
+    <span class="text-center w-[50%] p-2">
+      Searching. Try closing this modal and checking later. If none appear, the endpoint might not
+      contain any.
+    </span>
   </div>
 </template>

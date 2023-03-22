@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { StoreEdge } from '@/stores/validators'
 import { useVisStateStore } from '@/stores/visState'
 import { ref } from 'vue'
+import SpinnerLoader from '@/components/SpinnerLoader.vue'
 
 const visStateStore = useVisStateStore()
 defineEmits<{
@@ -50,7 +51,10 @@ function toggleAll(target: boolean) {}
 </script>
 
 <template>
-  <div class="flex max-h-[60vh] overflow-y-auto rounded-md">
+  <div
+    class="flex max-h-[60vh] overflow-y-auto rounded-md"
+    v-if="edges && edges.length > 0"
+  >
     <table class="p-0 w-full rounded-b-md table-auto">
       <thead class="">
         <tr class="">
@@ -101,5 +105,15 @@ function toggleAll(target: boolean) {}
         </tr>
       </tbody>
     </table>
+  </div>
+  <div
+    class="mt-20 flex flex-col items-center"
+    v-else
+  >
+    <SpinnerLoader />
+    <span class="text-center w-[50%] p-2">
+      Searching. Try closing this modal and checking later. If none appear, the endpoint might not
+      contain any.
+    </span>
   </div>
 </template>
