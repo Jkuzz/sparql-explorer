@@ -17,9 +17,9 @@ const PROPERTY_MINIMUM_FACTOR = 0.01
 const ATTRIBUTE_MINIMUM_FACTOR = 0.005
 
 export const useEndpointStore = defineStore('endpoint', () => {
-  const nodes = reactive<Array<StoreNode>>([])
-  const edges = reactive<Array<StoreEdge>>([])
-  const renderEdges = reactive<Array<StoreEdge>>([])
+  const nodes = ref<Array<StoreNode>>([])
+  const edges = ref<Array<StoreEdge>>([])
+  const renderEdges = ref<Array<StoreEdge>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
   const queryQueue = new QueryQueue(endpointURL.value)
 
@@ -31,8 +31,8 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * @returns true of the node was added
    */
   function addNode(node: StoreNode) {
-    if (nodes.find((n) => n.id == node.id)) return false
-    nodes.push(node)
+    if (nodes.value.find((n) => n.id == node.id)) return false
+    nodes.value.push(node)
     return true
   }
 
@@ -40,14 +40,14 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * Get the edges thet begin in the desired node
    */
   function getNodeFromEdges(nodeId: string) {
-    return edges.filter((e) => e.source == nodeId)
+    return edges.value.filter((e) => e.source == nodeId)
   }
 
   /**
    * Get the edges thet end in the desired node
    */
   function getNodeToEdges(nodeId: string) {
-    return edges.filter((e) => e.target == nodeId)
+    return edges.value.filter((e) => e.target == nodeId)
   }
 
   /**
@@ -56,20 +56,20 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * @returns true of the edge was added
    */
   function addEdge(edge: StoreEdge) {
-    if (edges.find((n) => n.id == edge.id)) return false
-    edges.push(edge)
+    if (edges.value.find((n) => n.id == edge.id)) return false
+    edges.value.push(edge)
     addRenderEdge(edge)
     return true
   }
 
   function addRenderEdge(newEdge: StoreEdge) {
-    const existingEdge = renderEdges.find(
+    const existingEdge = renderEdges.value.find(
       (e) => e.source == newEdge.source && e.target == newEdge.target
     )
     if (existingEdge) {
-      renderEdges.splice(renderEdges.indexOf(existingEdge), 1, newEdge)
+      renderEdges.value.splice(renderEdges.value.indexOf(existingEdge), 1, newEdge)
     } else {
-      renderEdges.push(newEdge)
+      renderEdges.value.push(newEdge)
     }
   }
 
@@ -89,9 +89,11 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * Reset the stored endpoint data
    */
   function clearNodes() {
-    nodes.splice(0, nodes.length)
-    edges.splice(0, edges.length)
-    renderEdges.splice(0, renderEdges.length)
+    nodes.value = []
+    edges.value = []
+    renderEdges.value = []
+    // edges.splice(0, edges.length)
+    // renderEdges.splice(0, renderEdges.length)
   }
 
   /**
@@ -162,7 +164,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * @param newNode that was just added to the store
    */
   function queryClassEdges(newNode: StoreNode) {
-    nodes.forEach((n) => {
+    nodes.value.forEach((n) => {
       if (n.id === newNode.id) return
       askEdgeExists(
         newNode.data.node.class.value,
