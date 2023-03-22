@@ -8,14 +8,18 @@ const newEndpoint = ref('')
 const changing = ref(false)
 
 function handleChangeButtonClick() {
+  // Save the new endpoint url
   if (changing.value) {
     try {
       const newEndpointUrl = new URL(newEndpoint.value)
-      endpointStore.changeEndpoint(newEndpointUrl)
+      if (newEndpointUrl != endpointStore.endpointURL) {
+        endpointStore.changeEndpoint(newEndpointUrl)
+      }
     } catch (_e) {
       return
     }
   } else {
+    // Enter the existing url into the input
     newEndpoint.value = endpointStore.endpointURL.toString()
   }
   changing.value = !changing.value

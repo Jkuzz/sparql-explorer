@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue'
+import { ref, reactive, render } from 'vue'
 import { defineStore } from 'pinia'
 import type { z } from 'zod'
 import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
@@ -19,7 +19,7 @@ const ATTRIBUTE_MINIMUM_FACTOR = 0.005
 export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = reactive<Array<StoreNode>>([])
   const edges = reactive<Array<StoreEdge>>([])
-  const renderEdges = ref<Array<StoreEdge>>([])
+  const renderEdges = reactive<Array<StoreEdge>>([])
   const endpointURL = ref(new URL('https://dbpedia.org/sparql'))
   const queryQueue = new QueryQueue(endpointURL.value)
 
@@ -63,13 +63,13 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   function addRenderEdge(newEdge: StoreEdge) {
-    const existingEdge = renderEdges.value.find(
+    const existingEdge = renderEdges.find(
       (e) => e.source == newEdge.source && e.target == newEdge.target
     )
     if (existingEdge) {
-      renderEdges.value.splice(renderEdges.value.indexOf(existingEdge), 1, newEdge)
+      renderEdges.splice(renderEdges.indexOf(existingEdge), 1, newEdge)
     } else {
-      renderEdges.value.push(newEdge)
+      renderEdges.push(newEdge)
     }
   }
 
@@ -80,6 +80,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
    */
   function changeEndpoint(newEndpoint: URL) {
     endpointURL.value = newEndpoint
+    queryQueue.changeEndpoint(newEndpoint)
     clearNodes()
     queryClasses()
   }
@@ -90,6 +91,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   function clearNodes() {
     nodes.splice(0, nodes.length)
     edges.splice(0, edges.length)
+    renderEdges.splice(0, renderEdges.length)
   }
 
   /**

@@ -8,12 +8,18 @@ interface QueryRecord {
   query: string
   callback: (data: any) => void
   validator?: z.AnyZodObject
+  endpointIndex: number
 }
 
 export default class QueryQueue {
   private queue: Array<QueryRecord> = []
   private endpointURL
   private queriesRunning = false
+  /**
+   * Index of the url on which the query was initiated.
+   * If the endpoint is changed, discard query results from previous endpoints.
+   */
+  private endpointIndex = 0
 
   public constructor(endpointUrl: URL) {
     this.endpointURL = endpointUrl
@@ -27,7 +33,7 @@ export default class QueryQueue {
    * @param callback to be called with the query data on completion
    */
   public query(query: string, callback: (data: any) => void, validator?: z.AnyZodObject) {
-    this.queue.push({ query, callback, validator })
+    this.queue.push({ query, callback, validator, endpointIndex: this.endpointIndex })
     this.lockedQueryLoop()
   }
 
@@ -45,19 +51,21 @@ export default class QueryQueue {
 
   /**
    * Wipe the query queue and set the new endpoint
-   * TODO: might have to handle the current query if there is one
    * @param endpointUrl new endpoint url
    */
   public changeEndpoint(endpointUrl: URL) {
     this.queue.splice(0, this.queue.length)
+    this.endpointIndex += 1
     this.endpointURL = endpointUrl
   }
 
   private async executeQuery(queryToExecute: QueryRecord) {
     const response = await queryEndpoint(this.endpointURL, queryToExecute.query)
-    // console.log('🚀 ~ file: queryQueue.ts:57 ~ QueryQueue ~ executeQuery ~ response', response)
+
+    // The query ran while the endpoint was changed, discard the response
+    if (queryToExecute.endpointIndex != this.endpointIndex) return
+
     if (queryToExecute.validator) {
-      // console.log(response)
       queryToExecute.callback(queryToExecute.validator.parse(response))
     } else {
       queryToExecute.callback(response)
