@@ -1,9 +1,6 @@
 <script setup lang="ts">
-// import { useEndpointStore } from '@/stores/endpoint'
 import { useVisStateStore } from '@/stores/visState'
-// import ButtonGeneric from '@/components/ButtonGeneric.vue'
 
-// const endpointStore = useEndpointStore()
 const visStateStore = useVisStateStore()
 </script>
 
