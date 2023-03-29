@@ -1,15 +1,7 @@
 <script setup lang="ts">
 import EndpointSelector from '@/components/EndpointSelector.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
-import ButtonGeneric from '@/components/ButtonGeneric.vue'
-import ExportModal from '@/components/ExportModal.vue'
-import { ref } from 'vue'
-
-const exportModalOpen = ref(false)
-
-function showExportModal() {
-  exportModalOpen.value = true
-}
+import SidebarControls from '@/components/SidebarControls.vue'
 </script>
 
 <template>
@@ -24,22 +16,6 @@ function showExportModal() {
       <EndpointSelector />
       <ShoppingCart />
     </div>
-    <ButtonGeneric @click="showExportModal">Export</ButtonGeneric>
+    <SidebarControls />
   </aside>
-  <Teleport to="body">
-    <Transition
-      enter-active-class="duration-300 ease-out"
-      leave-active-class="duration-200 ease-in"
-      enter-from-class="-translate-y-2 opacity-0"
-      enter-to-class="opacity-100"
-      leave-from-class="opacity-100"
-      leave-to-class="-translate-y-2 opacity-0"
-    >
-      <ExportModal
-        v-if="exportModalOpen"
-        @modal-close="exportModalOpen = false"
-      >
-      </ExportModal>
-    </Transition>
-  </Teleport>
 </template>

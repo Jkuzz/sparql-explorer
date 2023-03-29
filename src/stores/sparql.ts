@@ -1,11 +1,11 @@
-export function getClassesQuery(offset: number) {
+export function getClassesQuery(offset: number, count: number) {
   return `
     SELECT DISTINCT ?class (COUNT(*) AS ?instanceCount)
     WHERE {
       ?s a ?class
     }
     ORDER BY DESC(?instanceCount)
-    LIMIT 10
+    LIMIT ${count}
     OFFSET ${offset}`
 }
 

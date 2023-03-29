@@ -82,7 +82,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
     endpointURL.value = newEndpoint
     queryQueue.changeEndpoint(newEndpoint)
     clearNodes()
-    queryClasses()
+    queryClasses(0, 10)
   }
 
   /**
@@ -98,11 +98,17 @@ export const useEndpointStore = defineStore('endpoint', () => {
 
   /**
    * Get the top 10 + offset most numerous classes from the endpoint
-   * @param offset from most numerous class
+   * @param offset Offset from most numerous class
+   * @param classCount How many next k classes to get
+   * @param callback optional callback that will be called once the classes query returns
    */
-  function queryClasses(offset = 0) {
-    const query = getClassesQuery(offset)
-    queryQueue.query(query, classQueryCallback, NodeResponse)
+  function queryClasses(offset = nodes.value.length, classCount = 10, callback = () => {}) {
+    const query = getClassesQuery(offset, classCount)
+    const compositeCallback = (res: z.infer<typeof NodeResponse>) => {
+      classQueryCallback(res)
+      callback()
+    }
+    queryQueue.query(query, compositeCallback, NodeResponse)
   }
 
   /**
@@ -205,5 +211,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
     changeEndpoint,
     getNodeFromEdges,
     getNodeToEdges,
+    queryClasses,
   }
 })
