@@ -9,6 +9,22 @@ export function getClassesQuery(offset: number, count: number) {
     OFFSET ${offset}`
 }
 
+/*
+FILTER isLiteral(?object)
+BIND(datatype(?object) AS ?type)
+*/
+
+/*
+def _sanitize_lang_string(binding) -> str:
+    # https://www.w3.org/TR/sparql11-query/#func-datatype
+    # In SPARQL 1.0, the DATATYPE function was not defined for literals
+    # with a language tag.
+    if binding == {}:
+        return "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+    else:
+        return binding["type"].value
+
+*/
 export function getAttributesQuery(classURI: string) {
   return `
     SELECT DISTINCT ?attribute (COUNT(1) AS ?instanceCount)
