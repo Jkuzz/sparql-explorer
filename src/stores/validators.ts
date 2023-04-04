@@ -47,6 +47,7 @@ export const EdgeBinding = z.object({
 
 export const AttributeBinding = z.object({
   attribute: Property,
+  type: Class.optional(),
   instanceCount: InstanceCount,
 })
 
