@@ -35,7 +35,10 @@ const ldkitExportBase = `import * as ldkit from 'ldkit'
  * @param selectedAttributes attributes of the selected nodes to export
  * @returns string containing the exported schema definition
  */
-export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: string]: string[] }) {
+export default function exportSchema(
+  nodes: StoreNode[],
+  selectedAttributes: { [key: string]: string[] }
+) {
   // Clear these to default in case of previous export
   newNamespaces = {}
   knownNamespaces = Object.assign({}, defaultNamespaces)
