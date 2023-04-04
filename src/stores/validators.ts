@@ -47,7 +47,10 @@ export const EdgeBinding = z.object({
 
 export const AttributeBinding = z.object({
   attribute: Property,
-  type: Class.optional(),
+  type: Class.default({
+    type: 'uri',
+    value: 'http://www.w3.org/2001/XMLSchema#string',
+  }),
   instanceCount: InstanceCount,
 })
 

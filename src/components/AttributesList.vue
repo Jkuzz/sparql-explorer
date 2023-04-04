@@ -46,6 +46,7 @@ function toggleAll(target: boolean) {}
     <table :class="['table-auto w-full']">
       <tr class="">
         <th>Attribute</th>
+        <th>Type</th>
         <th>Occurence</th>
         <th>Select</th>
       </tr>
@@ -61,6 +62,7 @@ function toggleAll(target: boolean) {}
         >
           {{ attr.attribute.value }}
         </td>
+        <td class="text-center p-1">{{ attr.type.value }}</td>
         <td class="text-center p-1">{{ getAttributeRatio(attr) }}%</td>
         <td class="text-center p-1">
           <input

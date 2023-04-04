@@ -45,7 +45,7 @@ export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: strin
 
   let nodesExportText = '\n// Schema definitions'
   nodes.forEach((node) => {
-    nodesExportText += exportNode(node.id, selectedAttributes[node.id])
+    nodesExportText += exportNode(node, selectedAttributes[node.id])
   })
 
   exportText += exportNamespaces() + '\n'
@@ -58,13 +58,13 @@ export function makeSchema(nodes: StoreNode[], selectedAttributes: { [key: strin
 
 /**
  * Export the selected node into an LDKit schema definition
- * @param nodeId iri of the node
+ * @param node The store node object to export
  * @param selectedAttributes attributes of the node that were selected for export
  * @returns string containing the LDKit schema definition code
  */
-function exportNode(nodeId: string, selectedAttributes: string[]) {
-  const nodeNamespaceIri = findNamespace(nodeId)
-  const nodeName = removeNamespace(nodeNamespaceIri, nodeId)
+function exportNode(node: StoreNode, selectedAttributes: string[]) {
+  const nodeNamespaceIri = findNamespace(node.id)
+  const nodeName = removeNamespace(nodeNamespaceIri, node.id)
   registerNamespaceTerm(nodeNamespaceIri, nodeName)
 
   exportedClasses.push(nodeName)
@@ -76,10 +76,27 @@ function exportNode(nodeId: string, selectedAttributes: string[]) {
     const ${nodeName}Schema = {
     '@type': ${nsCodePrefix}${knownNamespaces[nodeNamespaceIri]}.${nodeName},`
   selectedAttributes.forEach((attr) => {
-    nodeExport += exportAttr(attr, 'xsd.string')
+    const attrType = node.data.attributes.find((a) => a.attribute.value === attr)
+    nodeExport += exportAttr(attr, getAttributeType(attrType?.type.value))
   })
 
   return nodeExport + `\n} as const\n`
+}
+
+/**
+ * Turn the uri into an ldkit type. Only considers xsd types.
+ * If the uri is anyhow invalid, defaults to 'xsd.string'
+ * @param typeUri uri of the type of literal
+ * @returns ldkit code string of the type
+ */
+function getAttributeType(typeUri: string | undefined) {
+  if (!typeUri) return 'xsd.string'
+  if (!typeUri.startsWith(ns.xsd.$iri)) return 'xsd.string'
+
+  const xsdType = removeNamespace(ns.xsd.$iri, typeUri)
+  if (!(xsdType in ns.xsd)) return 'xsd.string'
+
+  return 'xsd.' + xsdType
 }
 
 /**
