@@ -11,24 +11,26 @@
       ]"
     >
       <header>
-        <h2 class="text-lg font-bold text-center">{{ node.id }}</h2>
-        <div class="cursor-pointer hover:underline text-center mb-2">
-          {{ `<${node.id}>` }}
-        </div>
-        <div class="flex flex-row justify-center items-center relative">
-          <div class="absolute left-2">
-            <label
-              >Search
-              <input
-                class="border border-slate-600 rounded-md p-1"
-                type="text"
-                v-model="searchStr"
-              />
-            </label>
+        <h2
+          class="text-lg font-bold text-center hover:underline cursor-pointer"
+          @click="copyToClipboard(node.id)"
+        >
+          {{ node.id }}
+        </h2>
+        <div class="flex flex-row items-center justify-between relative">
+          <label
+            >Search
+            <input
+              class="border border-slate-600 rounded-md p-1"
+              type="text"
+              v-model="searchStr"
+            />
+          </label>
+          <div>
+            <ButtonGeneric @click="displayMode = 'attributes'">Attributes</ButtonGeneric>
+            <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
+            <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
           </div>
-          <ButtonGeneric @click="displayMode = 'attributes'">Attributes</ButtonGeneric>
-          <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
-          <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
           <!-- <div
             class="absolute right-2"
             v-if="['attributes', 'outgoing'].includes(displayMode)"
@@ -157,5 +159,9 @@ function handleSelectAllToggle() {
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {
   return +b.data.instanceCount.value - +a.data.instanceCount.value
+}
+
+function copyToClipboard(text: string) {
+  navigator.clipboard.writeText(text)
 }
 </script>
