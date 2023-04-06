@@ -2,19 +2,17 @@
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import SpinnerLoader from './SpinnerLoader.vue'
 import ExportModal from '@/components/ExportModal.vue'
+import ImportModal from '@/components/ImportModal.vue'
 import { useEndpointStore } from '@/stores/endpoint'
 import { ref } from 'vue'
 
 const endpointStore = useEndpointStore()
 
 const exportModalOpen = ref(false)
+const importModalOpen = ref(false)
 const classesQueryOpen = ref(false)
 const classesQueryNumber = ref(10)
 const classesQueryRunning = ref(false)
-
-function showExportModal() {
-  exportModalOpen.value = true
-}
 
 function handleQueryClasses() {
   classesQueryOpen.value = false
@@ -34,10 +32,11 @@ function classesQueryCallback() {
 <template>
   <div class="flex flex-col items-center overflow-clip">
     <div class="flex flex-row">
-      <ButtonGeneric @click="showExportModal">Export</ButtonGeneric>
+      <ButtonGeneric @click="exportModalOpen = true">Export</ButtonGeneric>
       <ButtonGeneric @click="classesQueryOpen = !classesQueryOpen">{{
         classesQueryOpen ? 'Close' : 'More classes'
       }}</ButtonGeneric>
+      <ButtonGeneric @click="importModalOpen = true">Import</ButtonGeneric>
     </div>
     <Transition
       enter-active-class="duration-300 ease-out"
@@ -92,8 +91,20 @@ function classesQueryCallback() {
       <ExportModal
         v-if="exportModalOpen"
         @modal-close="exportModalOpen = false"
-      >
-      </ExportModal>
+      />
+    </Transition>
+    <Transition
+      enter-active-class="duration-300 ease-out"
+      leave-active-class="duration-200 ease-in"
+      enter-from-class="-translate-y-2 opacity-0"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-to-class="-translate-y-2 opacity-0"
+    >
+      <ImportModal
+        v-if="importModalOpen"
+        @modal-close="importModalOpen = false"
+      />
     </Transition>
   </Teleport>
 </template>

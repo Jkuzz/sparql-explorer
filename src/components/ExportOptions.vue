@@ -44,7 +44,7 @@ function handleExportClick(exp: ExportDef) {
 
 <template>
   <div>
-    <div class="pb-4 text-lg text-black font-bold">Choose your export format</div>
+    <h4 class="pb-4 text-lg text-black font-bold">Choose your export format</h4>
     <div class="flex flex-row flex-wrap max-h-[60vh] overflow-auto items-center justify-center">
       <button
         v-for="(exp, i) in registeredExports"
