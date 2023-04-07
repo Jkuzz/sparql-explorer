@@ -1,9 +1,10 @@
-import { ref, reactive, render } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { z } from 'zod'
 import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { NodeResponse, EdgeResponse, AttributesResponse } from '@/stores/validators'
+import type { ImportSchema } from '@/importSchema'
 
 import QueryQueue from '@/stores/queryQueue'
 import {
@@ -201,6 +202,10 @@ export const useEndpointStore = defineStore('endpoint', () => {
     queryQueue.query(linksQuery, callbackFunc, EdgeResponse)
   }
 
+  function handleParsedImport(parsedImport: ImportSchema) {
+    console.log('🚀 ~ file: endpoint.ts:206 ~ handleParsedImport ~ parsedImport:', parsedImport)
+  }
+
   return {
     nodes,
     edges,
@@ -212,5 +217,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
     getNodeFromEdges,
     getNodeToEdges,
     queryClasses,
+    handleParsedImport,
   }
 })
