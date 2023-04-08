@@ -1,7 +1,27 @@
-import type { JTDDataType } from 'ajv/dist/jtd'
+import type { JTDDataType, JTDSchemaType } from 'ajv/dist/jtd'
 
-export const importSchema = {
+export interface SchemaType {
+  endpoint: string
+  nodes: {
+    id: string
+    instanceCount: number
+    attributes?: {
+      id: string
+      type: string
+      instanceCount: number
+    }[]
+  }[]
+  edges: {
+    source: string
+    target: string
+    id: string
+    instanceCount: number
+  }[]
+}
+
+export const importSchema: JTDSchemaType<SchemaType> = {
   properties: {
+    endpoint: { type: 'string' },
     nodes: {
       elements: {
         properties: {

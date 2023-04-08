@@ -4,7 +4,8 @@ import type { z } from 'zod'
 import { makeNodeObject, makeEdgeObject } from '@/stores/queryQueue'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { NodeResponse, EdgeResponse, AttributesResponse } from '@/stores/validators'
-import type { ImportSchema } from '@/importSchema'
+import type { SchemaType } from '@/importSchema'
+import { MarkerType } from '@vue-flow/core'
 
 import QueryQueue from '@/stores/queryQueue'
 import {
@@ -78,12 +79,15 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * Change the store's target endpoint, reset the state and
    * restart the querying process.
    * @param newEndpoint to change to
+   * @param doQueries whether to query for classes. Use false when manually importing
    */
-  function changeEndpoint(newEndpoint: URL) {
+  function changeEndpoint(newEndpoint: URL, doQueries = true) {
     endpointURL.value = newEndpoint
     queryQueue.changeEndpoint(newEndpoint)
     clearNodes()
-    queryClasses(0, 10)
+    if (doQueries) {
+      queryClasses(0, 10)
+    }
   }
 
   /**
@@ -93,8 +97,6 @@ export const useEndpointStore = defineStore('endpoint', () => {
     nodes.value = []
     edges.value = []
     renderEdges.value = []
-    // edges.splice(0, edges.length)
-    // renderEdges.splice(0, renderEdges.length)
   }
 
   /**
@@ -202,8 +204,67 @@ export const useEndpointStore = defineStore('endpoint', () => {
     queryQueue.query(linksQuery, callbackFunc, EdgeResponse)
   }
 
-  function handleParsedImport(parsedImport: ImportSchema) {
-    console.log('🚀 ~ file: endpoint.ts:206 ~ handleParsedImport ~ parsedImport:', parsedImport)
+  function handleParsedImport(parsedImport: SchemaType) {
+    changeEndpoint(new URL(parsedImport.endpoint), false)
+
+    for (const node of parsedImport.nodes) {
+      const newNodeAttributes =
+        node.attributes?.map((attr) => {
+          return {
+            attribute: { type: 'uri', value: attr.id },
+            instanceCount: {
+              type: 'typed-literal',
+              datatype: 'http://www.w3.org/2001/XMLSchema#integer',
+              value: '' + attr.instanceCount,
+            },
+            type: { type: 'uri', value: attr.type },
+          } as const
+        }) || []
+
+      const newNode: StoreNode = {
+        position: { x: 0, y: 0 },
+        id: node.id,
+        type: 'custom',
+        data: {
+          node: {
+            class: {
+              type: 'uri',
+              value: node.id,
+            },
+            instanceCount: {
+              datatype: 'http://www.w3.org/2001/XMLSchema#integer',
+              type: 'typed-literal',
+              value: '' + node.instanceCount,
+            },
+          },
+          labels: [],
+          attributes: newNodeAttributes,
+        },
+      }
+      addNode(newNode)
+    }
+
+    for (const edge of parsedImport.edges) {
+      const newEdge: StoreEdge = {
+        id: `[${edge.source}-${edge.id}-${edge.target}]`,
+        source: edge.source,
+        target: edge.target,
+        uri: edge.id,
+        markerEnd: MarkerType.ArrowClosed,
+        data: {
+          instanceCount: {
+            type: 'typed-literal',
+            datatype: 'http://www.w3.org/2001/XMLSchema#integer',
+            value: '' + edge.instanceCount,
+          },
+          property: {
+            type: 'uri',
+            value: edge.id,
+          },
+        },
+      }
+      addEdge(newEdge)
+    }
   }
 
   return {

@@ -12,10 +12,11 @@
       <main class="flex-grow flex flex-col items-stretch">
         <h4 class="pb-2 text-lg text-center text-black font-bold">Paste import data</h4>
         <h4
-          class="text-lg text-center text-red-600"
-          v-if="errorText"
+          class="text-lg text-center"
+          :class="popupClass"
+          v-if="popupText"
         >
-          {{ errorText }}
+          {{ popupText }}
         </h4>
         <textarea
           autofocus
@@ -38,7 +39,8 @@ import { ref } from 'vue'
 
 const emits = defineEmits(['modal-close'])
 const inputText = ref('')
-const errorText = ref('')
+const popupText = ref('')
+const popupClass = ref('')
 
 function onCloseModal() {
   emits('modal-close')
@@ -47,11 +49,16 @@ function onCloseModal() {
 function handleImpportButton() {
   try {
     parseInput(inputText.value)
-    errorText.value = ''
-  } catch (e) {
-    errorText.value = '' + e
+    popupClass.value = 'text-green-600'
+    popupText.value = 'Imported ✅'
     window.setTimeout(() => {
-      errorText.value = ''
+      popupText.value = ''
+    }, 5000)
+  } catch (e) {
+    popupText.value = '' + e
+    popupClass.value = 'text-red-600'
+    window.setTimeout(() => {
+      popupText.value = ''
     }, 10000)
   }
 }

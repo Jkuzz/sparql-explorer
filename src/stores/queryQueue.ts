@@ -100,7 +100,7 @@ export function makeEdgeObject(
   targetClass: string
 ) {
   return {
-    id: `e-[${sourceClass}]-[${edge.property.value}]-[${targetClass}]`,
+    id: `[${sourceClass}]-[${edge.property.value}]-[${targetClass}]`,
     source: sourceClass,
     target: targetClass,
     uri: edge.property.value,
