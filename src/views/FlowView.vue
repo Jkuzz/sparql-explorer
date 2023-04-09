@@ -4,7 +4,7 @@ import { useEndpointStore } from '@/stores/endpoint'
 import VisSidebar from '@/components/VisSidebar.vue'
 import CustomNode from '@/components/CustomNode.vue'
 import NodeModal from '@/components/NodeModal.vue'
-import { layoutNodes } from '@/stores/layout'
+import { layoutNodes, availableLayouts } from '@/stores/layout'
 import { ref } from 'vue'
 import type { StoreNode } from '@/stores/validators'
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
@@ -32,10 +32,14 @@ function showNodeModal(node: StoreNode) {
         <div />
         <h1 class="text-4xl font-novem">Flow 🌊</h1>
         <div>
-          Layout:
-          <ButtonGeneric @click="layoutNodes('random')">Random</ButtonGeneric>
-          <ButtonGeneric @click="layoutNodes('force')">Force</ButtonGeneric>
-          <ButtonGeneric @click="layoutNodes('grid')">Grid</ButtonGeneric>
+          <span>Layout:</span>
+          <ButtonGeneric
+            v-for="(layout, i) in availableLayouts"
+            :key="i"
+            @click="layoutNodes(layout)"
+          >
+            {{ layout }}
+          </ButtonGeneric>
         </div>
       </div>
       <div class="h-screen w-full">

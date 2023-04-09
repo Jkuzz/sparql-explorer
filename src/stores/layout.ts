@@ -1,7 +1,7 @@
 import { useEndpointStore } from '@/stores/endpoint'
 import { getRandomInt } from '@/stores/random'
 import * as d3 from 'd3'
-import { shuffle } from 'lodash'
+import { keysIn, shuffle } from 'lodash'
 
 const endpointStore = useEndpointStore()
 const CENTER = {
@@ -11,12 +11,15 @@ const CENTER = {
 
 /**
  * Dictionary holds the layout types and their creation handlers
+ * The key is used as a button label in the flow view.
  */
-const layoutTypes = {
-  random: randomLayout,
-  force: forceLayout,
-  grid: gridLayout,
-}
+export const layoutTypes = {
+  Random: randomLayout,
+  Force: forceLayout,
+  Grid: gridLayout,
+} as const
+
+export const availableLayouts = Object.keys(layoutTypes) as (keyof typeof layoutTypes)[]
 
 type edgeT = {
   source: string
@@ -27,7 +30,7 @@ type edgeT = {
  * Layout the nodes present in the endpointStore. Mutates the store.
  * @param layout Type of layout to use, lists all available as types
  */
-export function layoutNodes(layout: keyof typeof layoutTypes = 'random') {
+export function layoutNodes(layout: keyof typeof layoutTypes = 'Random') {
   layoutTypes[layout]()
 }
 
