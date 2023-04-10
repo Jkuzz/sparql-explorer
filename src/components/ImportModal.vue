@@ -24,7 +24,12 @@
           class="p-2 flex flex-1"
         />
         <div class="flex pt-2 justify-center">
-          <ButtonGeneric @click="handleImportButton">Import</ButtonGeneric>
+          <ButtonGeneric
+            v-for="parserName in Object.keys(importOptions)"
+            :key="parserName"
+            @click="handleImportButton(importOptions[parserName])"
+            >Import {{ parserName }}</ButtonGeneric
+          >
           <ButtonGeneric>Schema</ButtonGeneric>
         </div>
       </main>
@@ -34,7 +39,7 @@
 
 <script setup lang="ts">
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
-import { parseInput } from '@/importParser'
+import * as jsonImport from '@/importParser'
 import { ref } from 'vue'
 
 const emits = defineEmits(['modal-close'])
@@ -46,9 +51,19 @@ function onCloseModal() {
   emits('modal-close')
 }
 
-function handleImportButton() {
+type InputParser = (input: string) => void
+
+/**
+ * Contains import parser options.
+ * Object keys are used as labels on buttons
+ */
+const importOptions: { [key: string]: InputParser } = {
+  JSON: jsonImport.parseInput,
+} as const
+
+function handleImportButton(parse: InputParser) {
   try {
-    parseInput(inputText.value)
+    parse(inputText.value)
     popupClass.value = 'text-green-600'
     popupText.value = 'Imported ✅'
     window.setTimeout(() => {
