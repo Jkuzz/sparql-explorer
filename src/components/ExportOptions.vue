@@ -17,9 +17,26 @@ interface Exporter {
 }
 
 type ExportDef = {
+  /**
+   * The label that will be shown to the user
+   */
   label: string
+  /**
+   * This function will be handed the store's contents and is expected to
+   * return the export format, which will be shown to the user
+   */
   exporter: Exporter
+  /**
+   * Class that is assigned to the PrismJS code block, into
+   * which the export text will be placed.
+   * Refer to https://prismjs.com/#supported-languages
+   * for a list of valid options or use empty string for no syntax highlighting.
+   */
   prismClass: string
+  /**
+   * Configuration object that is passed to the prettier formatter.
+   * Use a falsy value to not perform formatting.
+   */
   prettierConfig: Object
 }
 

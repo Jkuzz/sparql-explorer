@@ -24,7 +24,7 @@
           class="p-2 flex flex-1"
         />
         <div class="flex pt-2 justify-center">
-          <ButtonGeneric @click="handleImpportButton">Import</ButtonGeneric>
+          <ButtonGeneric @click="handleImportButton">Import</ButtonGeneric>
           <ButtonGeneric>Schema</ButtonGeneric>
         </div>
       </main>
@@ -46,7 +46,7 @@ function onCloseModal() {
   emits('modal-close')
 }
 
-function handleImpportButton() {
+function handleImportButton() {
   try {
     parseInput(inputText.value)
     popupClass.value = 'text-green-600'

@@ -53,7 +53,11 @@ function handleExport(exportedSchema: string, newPrismClass: string, prettierCon
   prismClass.value = newPrismClass
   // Format the schema export using prettier
   // Syntax errors will break this!!
-  exportText.value = format(exportedSchema, prettierConfig)
+  if (prettierConfig) {
+    exportText.value = format(exportedSchema, prettierConfig)
+  } else {
+    exportText.value = exportedSchema
+  }
   // Don't ask me why this needs a 0 timeout but it doesn't highlight otherwise
   setTimeout(Prism.highlightAll, 0)
 }
