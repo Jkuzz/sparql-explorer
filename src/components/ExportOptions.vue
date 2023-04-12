@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StoreNode } from '@/stores/validators'
-import exportSchema from '@/stores/schema'
+import exportSchema from '@/stores/ldkitExport'
 import parserTypescript from 'prettier/parser-typescript.js'
 
 const emit = defineEmits<{
