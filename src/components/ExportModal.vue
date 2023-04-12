@@ -21,6 +21,7 @@
           <ExportOptions
             :nodes="visStateStore.selectedNodes"
             :selected-attributes="visStateStore.selectedAttributes"
+            :selected-edges="visStateStore.selectedEdges"
             @export="handleExport"
           />
         </div>

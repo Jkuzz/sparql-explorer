@@ -1,5 +1,5 @@
 import * as ns from 'ldkit/namespaces'
-import type { StoreNode } from '@/stores/validators'
+import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
 import { tryGuessPrefix, removeNamespace, getAvailablePrefix } from '@/stores/iriManipulation'
 
@@ -33,11 +33,13 @@ const ldkitExportBase = `import * as ldkit from 'ldkit'
  * Not formated correctly, do that externally.
  * @param nodes selected nodes to export
  * @param selectedAttributes attributes of the selected nodes to export
+ * @param selectedAttributes edges selected for export
  * @returns string containing the exported schema definition
  */
 export default function exportSchema(
   nodes: StoreNode[],
-  selectedAttributes: { [key: string]: string[] }
+  selectedAttributes: { [key: string]: string[] },
+  selectedEdges: StoreEdge[]
 ) {
   // Clear these to default in case of previous export
   newNamespaces = {}
@@ -48,7 +50,11 @@ export default function exportSchema(
 
   let nodesExportText = '\n// Schema definitions'
   nodes.forEach((node) => {
-    nodesExportText += exportNode(node, selectedAttributes[node.id])
+    nodesExportText += exportNode(
+      node,
+      selectedAttributes[node.id],
+      selectedEdges.filter((e) => e.source === node.id)
+    )
   })
 
   exportText += exportNamespaces() + '\n'
@@ -65,7 +71,7 @@ export default function exportSchema(
  * @param selectedAttributes attributes of the node that were selected for export
  * @returns string containing the LDKit schema definition code
  */
-function exportNode(node: StoreNode, selectedAttributes: string[]) {
+function exportNode(node: StoreNode, selectedAttributes: string[], nodeEdges: StoreEdge[]) {
   const nodeNamespaceIri = findNamespace(node.id)
   const nodeName = removeNamespace(nodeNamespaceIri, node.id)
   registerNamespaceTerm(nodeNamespaceIri, nodeName)
@@ -81,6 +87,11 @@ function exportNode(node: StoreNode, selectedAttributes: string[]) {
   selectedAttributes.forEach((attr) => {
     const attrType = node.data.attributes.find((a) => a.attribute.value === attr)
     nodeExport += exportAttr(attr, getAttributeType(attrType?.type.value))
+  })
+
+  const existingNodeEdges: string[] = []
+  nodeEdges.forEach((edge) => {
+    nodeExport += exportEdge(edge, existingNodeEdges)
   })
 
   return nodeExport + `\n} as const\n`
@@ -104,7 +115,6 @@ function getAttributeType(typeUri: string | undefined) {
 
 /**
  * Create an export object for the exported attribute
- * TODO: detect attrtype instead of using 'xsd.string'
  * @param attrIri iri of the exported attribute (predicate)
  * @param attrType type of the attribute
  * @returns the LDKit schema entry for the schema object
@@ -118,6 +128,46 @@ function exportAttr(attrIri: string, attrType: string) {
     ${attrName}: {
       '@id': ${nsCodePrefix}${knownNamespaces[attrNamespace]}.${attrName},
       '@type': ${nsCodePrefix}${attrType},
+      '@optional': true,
+    },`
+}
+
+/**
+ * Create an export object for the edge.
+ * Ensures edges with same uris have different field names.
+ * @param edge the edge to export
+ * @param existingNodeEdges list of edge names that are already exported on the node
+ * @returns the edge export code string
+ */
+function exportEdge(edge: StoreEdge, existingNodeEdges: string[]) {
+  console.log('🚀 ~ file: ldkitExport.ts:143 ~ exportEdge ~ existingNodeEdges:', existingNodeEdges)
+  const edgeNamespace = findNamespace(edge.uri)
+  const edgeName = removeNamespace(edgeNamespace, edge.uri)
+  registerNamespaceTerm(edgeNamespace, edgeName)
+  const targetNamespace = findNamespace(edge.target)
+  const targetName = removeNamespace(targetNamespace, edge.target)
+  registerNamespaceTerm(targetNamespace, targetName)
+  const nsCodePrefix = newNamespaces[targetNamespace] ? '' : 'ldkitns.'
+
+  /**
+   * If the field already exists on the exported node, add a numeric suffix
+   */
+  const numberSuffixes = existingNodeEdges
+    .map((existingEdge) => {
+      if (!existingEdge.startsWith(edgeName)) return null
+      const numberSuffix = +existingEdge.substring(edgeName.length)
+      if (isNaN(numberSuffix)) return null // Not number suffix, ignore
+      return numberSuffix
+    })
+    .filter((x): x is number => x !== null) // filter out null values
+  const edgeNameSuffix =
+    numberSuffixes.length > 0 ? numberSuffixes.reduce((max, item) => Math.max(max, item)) + 1 : ''
+  existingNodeEdges.push(edgeName + edgeNameSuffix)
+
+  return `
+    ${edgeName}${edgeNameSuffix}: {
+      '@id': ${nsCodePrefix}${knownNamespaces[targetNamespace]}.${targetName},
+      '@type': ldkitns.xsd.anyURI,
       '@optional': true,
     },`
 }
@@ -187,7 +237,7 @@ function exportNamespaces() {
 
 /**
  * Take the term and append it to the namespace's export set.
- * The set ignores duplicates natively
+ * The set ignores duplicates natively.
  * Call this for every exported entity to make sure they are defined as namespace
  * terms in case they are not from the default namespaces!
  * @param nameSpace whose term is being registered
@@ -201,7 +251,6 @@ function registerNamespaceTerm(nameSpace: string, term: string) {
 /**
  * Extracts the namespace
  * optimistically hopes the namespace is separated by `/` or `#` from the object
- * // TODO: add the namespace definition to the export
  * @param iri class whose namespace to create
  * @returns url of the namespace
  */

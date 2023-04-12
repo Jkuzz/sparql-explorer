@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { StoreNode } from '@/stores/validators'
+import type { StoreNode, StoreEdge } from '@/stores/validators'
 import exportSchema from '@/stores/ldkitExport'
 import parserTypescript from 'prettier/parser-typescript.js'
 
@@ -10,10 +10,15 @@ const emit = defineEmits<{
 const props = defineProps<{
   nodes: StoreNode[]
   selectedAttributes: { [key: string]: string[] }
+  selectedEdges: StoreEdge[]
 }>()
 
 interface Exporter {
-  (nodes: StoreNode[], selectedAttributes: { [key: string]: string[] }): string
+  (
+    nodes: StoreNode[],
+    selectedAttributes: { [key: string]: string[] },
+    selectedEdges: StoreEdge[]
+  ): string
 }
 
 type ExportDef = {
@@ -54,7 +59,7 @@ const registeredExports: ExportDef[] = [
 ]
 
 function handleExportClick(exp: ExportDef) {
-  const exportSchema = exp.exporter(props.nodes, props.selectedAttributes)
+  const exportSchema = exp.exporter(props.nodes, props.selectedAttributes, props.selectedEdges)
   emit('export', exportSchema, exp.prismClass, exp.prettierConfig)
 }
 </script>
