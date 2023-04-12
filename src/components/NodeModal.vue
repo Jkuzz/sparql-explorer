@@ -66,6 +66,7 @@
           @change="handleEdgeSelection"
           :node-selected="isSelected"
           :filter-selected="filterSelected"
+          :selected-edges="visStateStore.selectedEdges"
           :search-str="searchStr"
           ref="outEdgeList"
         />

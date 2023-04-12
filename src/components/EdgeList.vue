@@ -16,6 +16,7 @@ const props = defineProps<{
   nodeSelected: boolean
   filterSelected: boolean
   searchStr: string
+  selectedEdges?: StoreEdge[]
   type: 'to' | 'from'
 }>()
 
@@ -63,7 +64,7 @@ function toggleAll(target: boolean) {}
           <th scope="col">Occurence</th>
           <th
             scope="col"
-            v-if="type === 'from'"
+            v-if="selectedEdges"
           >
             Select
           </th>
@@ -92,13 +93,14 @@ function toggleAll(target: boolean) {}
           <td class="p-2 text-center">{{ getEdgeRatio(edge) }}%</td>
           <td
             class="text-center p-1"
-            v-if="type === 'from'"
+            v-if="selectedEdges"
           >
             <input
               :class="{ 'cursor-not-allowed': !nodeSelected }"
               type="checkbox"
               @change="$emit('change', edge)"
               :disabled="!nodeSelected"
+              :checked="selectedEdges?.includes(edge)"
               ref="inputs"
             />
           </td>

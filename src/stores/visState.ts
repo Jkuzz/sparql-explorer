@@ -89,6 +89,7 @@ export const useVisStateStore = defineStore('visState', () => {
   return {
     selectedNodes,
     selectedAttributes,
+    selectedEdges,
     toggleNodeSelection,
     isSelected,
     toggleAttributeSelection,
