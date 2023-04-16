@@ -77,5 +77,13 @@ function handleExportClick(exp: ExportDef) {
         <span class="p-12 font-bold text-xl">{{ exp.label }}</span>
       </button>
     </div>
+    <div class="text-black pt-10 max-w-lg mx-auto italic">
+      Not enough export formats? You can help by implementing a new export format at this project's
+      <a
+        class="text-blue-900"
+        href="https://github.com/Jkuzz/sparql-explorer"
+        >GitHub page</a
+      >
+    </div>
   </div>
 </template>

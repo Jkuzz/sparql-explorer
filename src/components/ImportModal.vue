@@ -44,6 +44,18 @@
           </button>
         </div>
         <div
+          v-if="displayMode === 'options'"
+          class="text-black pt-10 max-w-lg mx-auto italic"
+        >
+          Not enough import formats? You can help us by implementing a new import format at this
+          project's
+          <a
+            class="text-blue-900"
+            href="https://github.com/Jkuzz/sparql-explorer"
+            >GitHub page</a
+          >
+        </div>
+        <div
           v-if="displayMode === 'schema'"
           class="flex flex-1 bg-gray-300 p-2 m-1 rounded-md"
         >
