@@ -18,6 +18,12 @@ const visStateStore = useVisStateStore()
       >
         {{ node.id }}
       </li>
+      <li
+        class="p-4 text-center italic"
+        v-if="visStateStore.selectedNodes.length === 0"
+      >
+        You can select a class by clicking on its class node and activating the toggle
+      </li>
     </ul>
   </div>
 </template>
