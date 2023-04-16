@@ -5,10 +5,16 @@
   >
     <div
       :class="[
-        'bg-blue-100 rounded-xl shadow-lg',
+        'bg-blue-100 rounded-xl shadow-lg relative',
         'p-4 m-12 w-[80%] min-h-[80%] max-h-[90%] flex flex-col',
       ]"
     >
+      <div
+        class="absolute top-2 right-4 cursor-pointer"
+        @click="onCloseModal"
+      >
+        X
+      </div>
       <main class="flex-grow flex flex-col items-stretch">
         <h4 class="pb-2 text-lg text-center text-black font-bold">Paste import data</h4>
         <h4

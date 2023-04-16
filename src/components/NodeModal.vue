@@ -6,11 +6,17 @@
   >
     <div
       :class="[
-        'bg-blue-100 rounded-xl shadow-lg',
+        'bg-blue-100 rounded-xl shadow-lg relative',
         'p-6 m-12 w-[90%] min-h-[60%] max-h-[90%] flex flex-col',
       ]"
     >
-      <header>
+      <div
+        class="absolute top-2 right-4 cursor-pointer"
+        @click="onCloseModal"
+      >
+        X
+      </div>
+      <header class="">
         <h2
           class="text-lg font-bold text-center hover:underline cursor-pointer"
           @click="copyToClipboard(node.id)"
