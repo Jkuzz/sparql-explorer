@@ -16,13 +16,35 @@
       >
         X
       </div>
-      <header class="">
+      <header class="flex flex-row justify-center items-center relative pb-2">
+        <div class="flex flex-row items-center bg-slate-700 p-1 rounded-md left-0 absolute">
+          <span class="text-white pl-1">Selected</span>
+          <SliderSwitch
+            :isDefaultEnabled="isSelected"
+            @update:checkbox="onToggleSelection"
+            value="selected"
+          />
+        </div>
         <h2
           class="text-lg font-bold text-center hover:underline cursor-pointer"
           @click="copyToClipboard(node.id)"
         >
           {{ node.id }}
         </h2>
+        <div
+          class="flex flex-row items-center bg-slate-700 p-1 rounded-md m-1 absolute right-0"
+          v-if="['incoming', 'outgoing'].includes(displayMode)"
+        >
+          <span class="text-white pl-1">Filter selected</span>
+          <SliderSwitch
+            :isDefaultEnabled="false"
+            @update:checkbox="filterSelected = !filterSelected"
+            value="filterSelected"
+          />
+        </div>
+      </header>
+
+      <main class="flex-grow">
         <div class="flex flex-row items-center justify-between relative">
           <label
             >Search
@@ -51,9 +73,6 @@
             </label>
           </div> -->
         </div>
-      </header>
-
-      <main class="flex-grow">
         <AttributesList
           v-if="displayMode === 'attributes'"
           :attributes="node.data.attributes"
@@ -87,27 +106,7 @@
         />
       </main>
 
-      <footer class="pt-4 flex justify-center relative">
-        <div class="flex flex-row items-center bg-slate-800 p-2 rounded-md">
-          <span class="text-white">Selected</span>
-          <SliderSwitch
-            :isDefaultEnabled="isSelected"
-            @update:checkbox="onToggleSelection"
-            value="selected"
-          />
-        </div>
-        <div
-          class="flex flex-row items-center bg-slate-800 p-2 rounded-md absolute right-0"
-          v-if="['incoming', 'outgoing'].includes(displayMode)"
-        >
-          <span class="text-white">Only selected</span>
-          <SliderSwitch
-            :isDefaultEnabled="false"
-            @update:checkbox="filterSelected = !filterSelected"
-            value="filterSelected"
-          />
-        </div>
-      </footer>
+      <footer class="pt-4 flex justify-center relative"></footer>
     </div>
   </div>
 </template>
@@ -156,13 +155,13 @@ function handleEdgeSelection(edge: StoreEdge) {
   visStateStore.toggleEdgeSelection(edge)
 }
 
-function handleSelectAllToggle() {
-  if (displayMode.value === 'attributes') {
-    attributesList.value?.toggleAll(true)
-  } else if (displayMode.value === 'outgoing') {
-    outEdgeList.value?.toggleAll(true)
-  }
-}
+// function handleSelectAllToggle() {
+//   if (displayMode.value === 'attributes') {
+//     attributesList.value?.toggleAll(true)
+//   } else if (displayMode.value === 'outgoing') {
+//     outEdgeList.value?.toggleAll(true)
+//   }
+// }
 
 const edgesSort = (a: StoreEdge, b: StoreEdge) => {
   return +b.data.instanceCount.value - +a.data.instanceCount.value
