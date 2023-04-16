@@ -11,6 +11,7 @@ import ButtonGeneric from '@/components/ButtonGeneric.vue'
 
 const endpointStore = useEndpointStore()
 
+const isLayoutExtended = ref(false)
 const isModalOpen = ref(false)
 const modalNode = ref<StoreNode | undefined>(undefined)
 
@@ -27,12 +28,21 @@ function showNodeModal(node: StoreNode) {
   <div class="bg-slate-800 text-gray-200 flex flex-row">
     <VisSidebar />
 
-    <div class="flex-grow flex flex-col items-center justify-items-stretch">
-      <div class="p-3 flex flex-row justify-between self-stretch">
-        <div />
-        <h1 class="text-4xl font-novem">Flow 🌊</h1>
-        <div>
-          <span>Layout:</span>
+    <div class="flex-grow flex flex-row relative">
+      <div
+        class="p-1 flex flex-row items-center rounded-bl-md absolute z-20 bg-slate-700 cursor-pointer right-0"
+        @click.self="isLayoutExtended = !isLayoutExtended"
+      >
+        <span
+          @click.self="isLayoutExtended = !isLayoutExtended"
+          class="pl-1 select-none"
+        >
+          Layout
+        </span>
+        <div
+          class="transition-all whitespace-nowrap overflow-clip ease-in-out duration-300"
+          :class="{ 'max-w-0': !isLayoutExtended, 'max-w-xs': isLayoutExtended }"
+        >
           <ButtonGeneric
             v-for="(layout, i) in availableLayouts"
             :key="i"
