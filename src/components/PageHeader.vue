@@ -6,12 +6,12 @@ const links = [
     title: 'Home',
   },
   {
-    to: '/about',
-    title: 'About',
+    to: '/schema',
+    title: 'Schema',
   },
   {
-    to: '/flow',
-    title: 'Flow',
+    to: '/about',
+    title: 'About',
   },
 ]
 </script>

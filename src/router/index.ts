@@ -15,8 +15,8 @@ const router = createRouter({
       component: () => import('@/views/AboutView.vue'),
     },
     {
-      path: '/flow',
-      name: 'flow',
+      path: '/schema',
+      name: 'schema',
       component: () => import('@/views/FlowView.vue'),
     },
   ],
