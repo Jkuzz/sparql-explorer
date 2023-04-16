@@ -104,7 +104,6 @@ function forceLayout() {
         // overriding the type here because we have the id field(defined above in `nodes`)
         const edgeCount = clamp(countNodeEdges(node.id), -10, 10)
         const nodeEdgeDelta = invlerp(-10, 10, edgeCount) / 5
-        console.log(`${edgeCount}\t${nodeEdgeDelta}\t${node.id}`)
         return nodeEdgeDelta
       })
     )

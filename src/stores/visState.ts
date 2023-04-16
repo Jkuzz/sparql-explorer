@@ -43,7 +43,6 @@ export const useVisStateStore = defineStore('visState', () => {
   }
 
   function toggleAttributeSelection(nodeId: string, attribute: string) {
-    // console.log('Attribute', nodeId, attribute)
     const selected = selectedAttributes[nodeId]
 
     const selectedIndex = selected.indexOf(attribute)
@@ -55,8 +54,6 @@ export const useVisStateStore = defineStore('visState', () => {
   }
 
   function toggleEdgeSelection(edge: StoreEdge) {
-    console.log('Edge', edge.source, edge.target)
-
     const selectedIndex = selectedEdges.indexOf(edge)
     if (selectedIndex > -1) {
       selectedEdges.splice(selectedIndex, 1)

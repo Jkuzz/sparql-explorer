@@ -140,7 +140,6 @@ function exportAttr(attrIri: string, attrType: string) {
  * @returns the edge export code string
  */
 function exportEdge(edge: StoreEdge, existingNodeEdges: string[]) {
-  console.log('🚀 ~ file: ldkitExport.ts:143 ~ exportEdge ~ existingNodeEdges:', existingNodeEdges)
   const edgeNamespace = findNamespace(edge.uri)
   const edgeName = removeNamespace(edgeNamespace, edge.uri)
   registerNamespaceTerm(edgeNamespace, edgeName)
