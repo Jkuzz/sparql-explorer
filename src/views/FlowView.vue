@@ -29,8 +29,22 @@ function showNodeModal(node: StoreNode) {
     <VisSidebar />
 
     <div class="flex-grow flex flex-row relative">
+      <div class="h-screen w-full">
+        <VueFlow
+          v-model:nodes="endpointStore.nodes"
+          v-model:edges="endpointStore.renderEdges"
+          fit-view-on-init
+        >
+          <template #node-custom="props">
+            <CustomNode
+              :data="props"
+              @click="showNodeModal(props)"
+            />
+          </template>
+        </VueFlow>
+      </div>
       <div
-        class="p-1 flex flex-row items-center rounded-bl-md absolute z-20 bg-slate-700 cursor-pointer right-0"
+        class="p-1 flex flex-row items-center rounded-bl-md absolute bg-slate-700 cursor-pointer right-0"
         @click.self="isLayoutExtended = !isLayoutExtended"
       >
         <span
@@ -51,20 +65,6 @@ function showNodeModal(node: StoreNode) {
             {{ layout }}
           </ButtonGeneric>
         </div>
-      </div>
-      <div class="h-screen w-full">
-        <VueFlow
-          v-model:nodes="endpointStore.nodes"
-          v-model:edges="endpointStore.renderEdges"
-          fit-view-on-init
-        >
-          <template #node-custom="props">
-            <CustomNode
-              :data="props"
-              @click="showNodeModal(props)"
-            />
-          </template>
-        </VueFlow>
       </div>
     </div>
 
