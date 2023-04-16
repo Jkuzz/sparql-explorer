@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:base",
+  ],
+  packageRules: [
+    {
+      // Group eslint packages into single PRs
+      groupName: "eslint packages",
+      matchPackagePatterns: ["^eslint"],
+    },
+    {
+      // Group Vite packages and plugins
+      groupName: "Vite packages",
+      matchPackagePatterns: ["^vite", "^@vitejs/"],
+    },
+    {
+      // Automerge minor and patches of dev dependencies
+      // Renovate only automerges branches which are up-to-date and green
+      groupName: "Dev dependencies minor/patch",
+      matchUpdateTypes: ["minor", "patch"],
+      matchDepTypes: ["devDependencies"],
+      automerge: true,
+    },
+  ],
+}
