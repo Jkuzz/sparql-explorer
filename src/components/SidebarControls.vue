@@ -30,12 +30,15 @@ function classesQueryCallback() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center overflow-clip">
+  <div class="flex flex-col items-center">
     <div class="flex flex-row">
       <ButtonGeneric @click="exportModalOpen = true">Export</ButtonGeneric>
-      <ButtonGeneric @click="classesQueryOpen = !classesQueryOpen">{{
-        classesQueryOpen ? 'Close' : 'More classes'
-      }}</ButtonGeneric>
+      <ButtonGeneric
+        @click="classesQueryOpen = !classesQueryOpen"
+        :tooltip="classesQueryOpen ? undefined : 'Load additional classes'"
+      >
+        {{ classesQueryOpen ? 'Close' : 'More classes' }}
+      </ButtonGeneric>
       <ButtonGeneric @click="importModalOpen = true">Import</ButtonGeneric>
     </div>
     <Transition
@@ -47,7 +50,7 @@ function classesQueryCallback() {
       leave-to-class="max-h-0"
     >
       <div
-        class="flex flex-col transition-all"
+        class="flex flex-col transition-all overflow-clip"
         v-if="classesQueryOpen"
       >
         <div
