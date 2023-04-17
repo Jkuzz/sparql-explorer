@@ -34,7 +34,7 @@ const descriptionPoints = [
         Your type safe gateway to SPARQL endpoints
       </h2>
     </div>
-    <div class="flex flex-col items-center bg-slate-800">
+    <div class="flex flex-col items-center bg-slate-800 pb-32">
       <ol class="p-4 bg-slate-700 text-xl rounded-md font-squared max-w-xl relative -top-20">
         <li
           v-for="(point, i) in descriptionPoints"
@@ -45,14 +45,28 @@ const descriptionPoints = [
           <span>{{ point.text }}</span>
         </li>
       </ol>
-    </div>
-    <div class="flex flex-col items-center bg-slate-800 gap-y-10 pb-20">
-      <div class="p-4 bg-slate-700 rounded-md max-w-xl">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      <div
+        class="p-4 bg-slate-700 rounded-md max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl space-y-4"
+      >
+        <p>
+          TypeSPARQ is a dynamic and user-friendly service that simplifies the process of exploring
+          and extracting data from SPARQL endpoints. With TypeSPARQ, you can easily navigate and
+          understand the schema of a SPARQL endpoint, thanks to its graphical interface that
+          provides a visual representation of the endpoint's schema.
+        </p>
+
+        <p>
+          TypeSPARQ integrates with
+          <a
+            class="text-blue-400 font-semibold"
+            href="https://ldkit.io/"
+            >LDKit</a
+          >
+          to provide type-safe access to SPARQL endpoints, enabling you to quickly and easily query
+          RDF data without worrying about manual parsing of SPARQL responses. TypeSPARQ makes it
+          easy to integrate SPARQL schema exploration and extraction into your TypeScript codebase.
+          Try TypeSPARQ today and see how it can take your TypeScript development to the next level!
+        </p>
       </div>
     </div>
   </main>

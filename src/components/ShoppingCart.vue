@@ -5,12 +5,9 @@ const visStateStore = useVisStateStore()
 </script>
 
 <template>
-  <div class="flex flex-col text-neutral-50">
+  <div class="flex flex-col text-neutral-50 overflow-y-auto">
     <h4 class="text-center text-xl">Selected classes</h4>
-    <ul
-      class="flex flex-col gap-y-2"
-      v-auto-animate
-    >
+    <ul class="flex flex-col gap-y-2">
       <li
         v-for="node in visStateStore.selectedNodes"
         :key="node.id"

@@ -28,7 +28,7 @@ function showNodeModal(node: StoreNode) {
   <div class="bg-slate-800 text-gray-200 flex flex-row">
     <VisSidebar />
 
-    <div class="flex-grow flex flex-row relative">
+    <div class="flex-grow flex flex-row relative overflow-clip">
       <div class="h-screen w-full">
         <VueFlow
           v-model:nodes="endpointStore.nodes"

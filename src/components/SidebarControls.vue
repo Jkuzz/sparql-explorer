@@ -50,7 +50,7 @@ function classesQueryCallback() {
       leave-to-class="max-h-0"
     >
       <div
-        class="flex flex-col transition-all overflow-clip"
+        class="flex flex-col transition-all"
         v-if="classesQueryOpen"
       >
         <div

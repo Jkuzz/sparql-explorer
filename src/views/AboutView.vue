@@ -1,33 +1,35 @@
 <template>
-  <div class="bg-slate-800 text-gray-200 p-8 flex flex-col items-center space-y-20">
-    <h1 class="text-4xl font-semibold">How to use this</h1>
-    <div class="p-4 bg-slate-700 rounded-md max-w-xl space-y-4">
+  <div class="bg-slate-800 text-gray-200 p-8 flex flex-col items-center space-y-10">
+    <h1 class="text-4xl p-4 font-semibold">About TypeSPARQ</h1>
+    <div
+      class="p-4 bg-slate-700 rounded-md max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl space-y-4"
+    >
       <p>
-        TypeSparq is a dynamic and user-friendly service that simplifies the process of exploring
-        and extracting data from SPARQL endpoints. With TypeSparq, you can easily navigate and
-        understand the schema of a SPARQL endpoint, thanks to its graphical interface that provides
-        a visual representation of the endpoint's schema.
-      </p>
-
-      <p>
-        TypeSparq provides type-safe access to SPARQL endpoints, enabling you to quickly and easily
-        extract data and query RDF data without worrying about manual parsing of SPARQL responses.
-        TypeSparq makes it easy to integrate SPARQL schema exploration and extraction into your
-        TypeScript codebase. Try TypeSparq today and see how it can take your TypeScript development
-        to the next level!
+        TypeSPARQ was created at the
+        <a
+          class="text-blue-400 font-semibold"
+          href="https://www.mff.cuni.cz/en"
+          >Faculty of Mathematics and Physics</a
+        >
+        at Charles University as a part of my Bachelor thesis. You can find the thesis
+        <a
+          class="text-blue-400 font-semibold"
+          href=""
+          >here once it's done :)</a
+        >. This is an open source project and you can view the code, contribute or report any issues
+        you find by visiting the project's
+        <a
+          class="text-blue-400 font-semibold"
+          href=""
+          >Github page</a
+        >.
       </p>
     </div>
-    <div class="p-4 bg-slate-700 rounded-md max-w-xl">
-      TypeSparq is a powerful web service that simplifies the process of exploring and extracting
-      SPARQL endpoint schemata, and generates the schema for the LDKit TypeScript library. With
-      TypeSparq, you can easily navigate and understand the schema of a SPARQL endpoint, thanks to
-      its user-friendly interface that provides a visual representation of the endpoint's schema.
-      TypeSparq allows you to export the generated schema into various formats, making it easy to
-      integrate with different tools and platforms. TypeSparq's dynamic capabilities ensure that the
-      generated schema stays up-to-date with any changes made to the endpoint's schema. TypeSparq is
-      an essential tool for developers who want to work with RDF data and build type-safe
-      applications with ease. Try TypeSparq today and see how it can take your TypeScript
-      development to the next level
+    <h2 class="text-2xl font-semibold">How to use TypeSPARQ</h2>
+    <div
+      class="p-4 bg-slate-700 rounded-md max-w-lg md:max-w-xl lg:max-w-2xl xl:max-w-4xl space-y-4"
+    >
+      <p>TODO</p>
     </div>
   </div>
 </template>
