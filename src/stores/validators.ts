@@ -61,8 +61,6 @@ export const NodeResponse = z.object({
   // ignoring head
   results: z.object({
     bindings: NodeBinding.array(),
-    distinct: z.boolean(),
-    ordered: z.boolean(),
   }),
 })
 
@@ -70,8 +68,6 @@ export const EdgeResponse = z.object({
   // ignoring head
   results: z.object({
     bindings: EdgeBinding.array(),
-    distinct: z.boolean(),
-    ordered: z.boolean(),
   }),
 })
 
@@ -79,8 +75,6 @@ export const AttributesResponse = z.object({
   // ignoring head
   results: z.object({
     bindings: AttributeBindingArr,
-    distinct: z.boolean(),
-    ordered: z.boolean(),
   }),
 })
 
