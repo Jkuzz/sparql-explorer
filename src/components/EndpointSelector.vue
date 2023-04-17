@@ -12,7 +12,7 @@ function handleChangeButtonClick() {
   if (changing.value) {
     try {
       const newEndpointUrl = new URL(newEndpoint.value)
-      if (newEndpointUrl != endpointStore.endpointURL) {
+      if (newEndpointUrl.hash != endpointStore.endpointURL.hash) {
         endpointStore.changeEndpoint(newEndpointUrl)
       }
     } catch (_e) {
