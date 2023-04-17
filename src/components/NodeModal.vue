@@ -55,9 +55,31 @@
             />
           </label>
           <div>
-            <ButtonGeneric @click="displayMode = 'attributes'">Attributes</ButtonGeneric>
-            <ButtonGeneric @click="displayMode = 'outgoing'">Outgoing edges</ButtonGeneric>
-            <ButtonGeneric @click="displayMode = 'incoming'">Incoming edges</ButtonGeneric>
+            <ButtonGeneric
+              :active="displayMode === 'attributes'"
+              :expand="false"
+              intent="tab"
+              @click="displayMode = 'attributes'"
+            >
+              Attributes ({{ node.data.attributes.length }})</ButtonGeneric
+            >
+            <ButtonGeneric
+              :active="displayMode === 'outgoing'"
+              :expand="false"
+              intent="tab"
+              class="m-0"
+              @click="displayMode = 'outgoing'"
+            >
+              Outgoing edges ({{ endpointStore.getNodeFromEdges(node.id).length }})</ButtonGeneric
+            >
+            <ButtonGeneric
+              :active="displayMode === 'incoming'"
+              :expand="false"
+              intent="tab"
+              @click="displayMode = 'incoming'"
+            >
+              Incoming edges ({{ endpointStore.getNodeToEdges(node.id).length }})</ButtonGeneric
+            >
           </div>
           <!-- <div
             class="absolute right-2"
