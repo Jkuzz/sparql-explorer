@@ -9,22 +9,6 @@ export function getClassesQuery(offset: number, count: number) {
     OFFSET ${offset}`
 }
 
-/*
-FILTER isLiteral(?object)
-BIND(datatype(?object) AS ?type)
-*/
-
-/*
-def _sanitize_lang_string(binding) -> str:
-    # https://www.w3.org/TR/sparql11-query/#func-datatype
-    # In SPARQL 1.0, the DATATYPE function was not defined for literals
-    # with a language tag.
-    if binding == {}:
-        return "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
-    else:
-        return binding["type"].value
-
-*/
 export function getAttributesQuery(classURI: string) {
   return `
     SELECT DISTINCT ?attribute ?type (COUNT(1) AS ?instanceCount)
@@ -59,38 +43,6 @@ export function getClassLinksQuery(class1URI: string, class2URI: string) {
     }
   `
 }
-
-// PREFIX se: <http://test.com/>
-// CONSTRUCT {
-// []
-//   a se:AttributeObservation ;
-//   se:describedAttribute <http://dbpedia.org/ontology/abstract> ;
-//   se:attributeSourceClass <http://dbpedia.org/ontology/Person> ;
-//   se:targetLiteral ?targetLiteral .
-// } WHERE {
-//   {
-//     SELECT ?targetLiteral
-//     WHERE {
-//       GRAPH ?g {
-//         ?instance
-//           a <http://dbpedia.org/ontology/Person> ;
-//           <http://dbpedia.org/ontology/abstract> ?targetLiteral .
-//         FILTER isLiteral(?targetLiteral)
-//       }
-//     }
-//   }
-// }
-
-// export function getClassLinksQuery() {
-//   return `
-//     SELECT DISTINCT ?property (COUNT(*) AS ?instanceCount)
-//     WHERE {
-//         ?class1 a <http://www.w3.org/ns/dqv#QualityMeasurement> .
-//         ?class2 a <http://www.w3.org/ns/dcat#Distribution> .
-//         ?class2 ?property ?class1 .
-//     }
-//     `
-// }
 
 /**
  * Query the SPARQL endpoint with the given query and handle results
