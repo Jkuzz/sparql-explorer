@@ -80,9 +80,11 @@
 <script setup lang="ts">
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import * as jsonImport from '@/importParser'
-import { importSchema } from '@/importSchema'
+import { importSchema, type SchemaType } from '@/importSchema'
 import { ref, computed } from 'vue'
+import { useEndpointStore } from '@/stores/endpoint'
 
+const endpointStore = useEndpointStore()
 const emits = defineEmits(['modal-close'])
 const inputText = ref('')
 const popupText = ref('')
@@ -99,7 +101,7 @@ function onCloseModal() {
   emits('modal-close')
 }
 
-type InputParser = (input: string) => void
+type InputParser = (input: string) => SchemaType
 type ImportDef = { parser: InputParser; schema: string }
 
 /**
@@ -125,7 +127,9 @@ function handleImportSchemaClick(importDef: ImportDef) {
 
 function handleImportButton(parse: InputParser) {
   try {
-    parse(inputText.value)
+    const parsedSchema = parse(inputText.value)
+    endpointStore.handleParsedImport(parsedSchema)
+
     popupClass.value = 'text-green-600'
     popupText.value = 'Imported ✅'
     window.setTimeout(() => {
