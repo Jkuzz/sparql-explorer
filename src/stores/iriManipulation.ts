@@ -33,6 +33,18 @@ export function removeNamespace(nameSpace: string, iri: string) {
 }
 
 /**
+ * Extracts the namespace
+ * optimistically hopes the namespace is separated by `/` or `#` from the object
+ * @param iri whose namespace to guess
+ * @returns the IRI namespace prefix
+ */
+export function getNamespace(iri: string) {
+  const slashPos = iri.lastIndexOf('/')
+  const hashPos = iri.lastIndexOf('#')
+  return iri.substring(0, Math.max(slashPos, hashPos) + 1)
+}
+
+/**
  * This loop goes through all the possible prefixes and tests if they are available
  * If none are, adds a number at the end and tests again
  * @param possiblePrefixes candidate prefixes

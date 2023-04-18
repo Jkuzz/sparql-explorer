@@ -1,7 +1,12 @@
 import * as ns from 'ldkit/namespaces'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
-import { tryGuessPrefix, removeNamespace, getAvailablePrefix } from '@/stores/iriManipulation'
+import {
+  tryGuessPrefix,
+  removeNamespace,
+  getAvailablePrefix,
+  getNamespace,
+} from '@/stores/iriManipulation'
 
 const endpointStore = useEndpointStore()
 
@@ -248,15 +253,12 @@ function registerNamespaceTerm(nameSpace: string, term: string) {
 }
 
 /**
- * Extracts the namespace
- * optimistically hopes the namespace is separated by `/` or `#` from the object
+ * Extract namespace from the iri and add it as a new known namespace
  * @param iri class whose namespace to create
  * @returns url of the namespace
  */
 function makeNewNamespace(iri: string) {
-  const slashPos = iri.lastIndexOf('/')
-  const hashPos = iri.lastIndexOf('#')
-  const newNs = iri.substring(0, Math.max(slashPos, hashPos) + 1)
+  const newNs = getNamespace(iri)
   let possiblePrefixes = tryGuessPrefix(newNs)
   if (!possiblePrefixes || possiblePrefixes.length === 0) {
     possiblePrefixes = ['prefix']

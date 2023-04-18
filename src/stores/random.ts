@@ -1,3 +1,9 @@
+/**
+ * Get a random value within bounds
+ * @param min inclusive minimum
+ * @param max exclusive maximum
+ * @returns random value
+ */
 export function getRandomInt(min: number, max: number) {
   min = Math.ceil(min)
   max = Math.floor(max)
