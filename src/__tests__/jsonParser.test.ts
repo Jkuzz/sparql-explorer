@@ -29,7 +29,7 @@ const correctInput = `{
     }
   ]
 }`
-
+//
 describe('JSON parser', () => {
   it('Throws on incorrect input', () => {
     expect(() => parseInput('')).toThrowError()
