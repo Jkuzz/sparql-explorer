@@ -8,8 +8,8 @@ export default defineConfig({
   build: {
     target: 'es2019',
   },
-  plugins: [vue()],
   base: '/sparql-explorer/',
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
