@@ -1,57 +1,55 @@
 <script setup lang="ts">
 import { useEndpointStore } from '@/stores/endpoint'
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
+import EndpointModal from '@/components/EndpointModal.vue'
 import { ref } from 'vue'
 
 const endpointStore = useEndpointStore()
-const newEndpoint = ref('')
-const changing = ref(false)
+const endpointModalOpen = ref(false)
 
-function handleChangeButtonClick() {
-  // Save the new endpoint url
-  if (changing.value) {
-    try {
-      const newEndpointUrl = new URL(newEndpoint.value)
-      console.log(newEndpointUrl.toString())
-      console.log(endpointStore.endpointURL)
-      if (newEndpointUrl.toString() !== endpointStore.endpointURL) {
-        endpointStore.changeEndpoint(newEndpointUrl)
-      }
-    } catch (_e) {
-      return
+/**
+ * Save the new endpoint url
+ */
+function handleEndpointChange(newEndpoint: string) {
+  try {
+    const newEndpointUrl = new URL(newEndpoint)
+    if (newEndpointUrl.toString() !== endpointStore.endpointURL) {
+      endpointStore.changeEndpoint(newEndpointUrl)
     }
-  } else {
-    // Enter the existing url into the input
-    newEndpoint.value = endpointStore.endpointURL.toString()
+  } catch (_e) {
+    return
   }
-  changing.value = !changing.value
+  endpointModalOpen.value = false
 }
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-y-2">
+  <div class="p-1 flex flex-row items-center gap-2">
     <div>
       {{ endpointStore.endpointURL }}
     </div>
-    <Transition
-      enter-from-class="opacity-0 translate-y-[-30%]"
-      enter-active-class="transition duration-300 ease-out"
-      leave-to-class="opacity-0 translate-y-[-30%]"
-      leave-active-class="transition duration-300 ease-out"
-    >
-      <input
-        class="text-black rounded p-2"
-        type="text"
-        v-model="newEndpoint"
-        v-if="changing"
-        @keydown.enter="handleChangeButtonClick"
-      />
-    </Transition>
     <ButtonGeneric
-      @click="handleChangeButtonClick"
+      @click="endpointModalOpen = true"
       class="transition-all"
     >
-      {{ changing ? 'Save' : 'Change Endpoint' }}
+      Change
     </ButtonGeneric>
   </div>
+  <Teleport to="body">
+    <Transition
+      enter-active-class="duration-300 ease-out"
+      leave-active-class="duration-200 ease-in"
+      enter-from-class="-translate-y-2 opacity-0"
+      enter-to-class="opacity-100"
+      leave-from-class="opacity-100"
+      leave-to-class="-translate-y-2 opacity-0"
+    >
+      <EndpointModal
+        :current-url="endpointStore.endpointURL"
+        @modal-close="endpointModalOpen = false"
+        @change-endpoint="handleEndpointChange"
+        v-if="endpointModalOpen"
+      />
+    </Transition>
+  </Teleport>
 </template>
