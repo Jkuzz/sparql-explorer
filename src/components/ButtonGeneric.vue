@@ -10,7 +10,7 @@
     <slot></slot>
     <span
       v-if="tooltip"
-      class="group-hover:opacity-100 hidden group-hover:block transition-opacity bg-gray-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 z-50 w-max max-w-xs"
+      class="group-hover:opacity-100 hidden group-hover:block transition-opacity bg-slate-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 z-50 w-max max-w-xs"
       :class="tooltipCva({ tooltipPosition })"
     >
       {{ tooltip }}
