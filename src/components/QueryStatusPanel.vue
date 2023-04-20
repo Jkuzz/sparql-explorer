@@ -41,7 +41,7 @@ function queryEventCallback(type: EmittedEvents, count: number) {
     class="bg-slate-700 p-2 w-[60%] rounded-md mx-auto flex flex-col items-center group relative"
   >
     <span
-      class="group-hover:opacity-100 transition-opacity bg-slate-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 -top-8 left-0 z-50 w-max max-w-xs"
+      class="group-hover:opacity-100 hidden group-hover:block transition-opacity bg-slate-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 -top-8 left-0 z-50 w-max max-w-xs"
     >
       Number of pending queries
     </span>
