@@ -12,7 +12,9 @@ function handleChangeButtonClick() {
   if (changing.value) {
     try {
       const newEndpointUrl = new URL(newEndpoint.value)
-      if (newEndpointUrl.hash != endpointStore.endpointURL.hash) {
+      console.log(newEndpointUrl.toString())
+      console.log(endpointStore.endpointURL)
+      if (newEndpointUrl.toString() !== endpointStore.endpointURL) {
         endpointStore.changeEndpoint(newEndpointUrl)
       }
     } catch (_e) {
@@ -42,6 +44,7 @@ function handleChangeButtonClick() {
         type="text"
         v-model="newEndpoint"
         v-if="changing"
+        @keydown.enter="handleChangeButtonClick"
       />
     </Transition>
     <ButtonGeneric
