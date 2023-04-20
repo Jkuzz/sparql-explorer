@@ -82,7 +82,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
    * @param doQueries whether to query for classes. Use false when manually importing
    */
   function changeEndpoint(newEndpoint: URL, doQueries = true) {
-    endpointURL.value = newEndpoint
+    endpointURL.value = newEndpoint.toString()
     queryQueue.changeEndpoint(newEndpoint)
     clearNodes()
     if (doQueries) {
