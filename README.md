@@ -1,6 +1,12 @@
 # sparql-schema
 
-This template should help get you started developing with Vue 3 in Vite.
+TypeSPARQ is a dynamic and user-friendly service that simplifies the process of exploring and extracting data from SPARQL endpoints. With TypeSPARQ, you can easily navigate and understand the schema of a SPARQL endpoint, thanks to its graphical interface that provides a visual representation of the endpoint's schema.
+
+TypeSPARQ integrates with [LDKit](https://ldkit.io/) to provide type-safe access to SPARQL endpoints, enabling you to quickly and easily query RDF data without worrying about manual parsing of SPARQL responses. TypeSPARQ makes it easy to integrate SPARQL schema exploration and extraction into your TypeScript codebase. Try TypeSPARQ today and see how it can take your TypeScript development to the next level!
+
+TypeSPARQ was created at the Faculty of Mathematics and Physics
+at Charles University as a part of my Bachelor thesis. You can find the thesis
+[here]() once it's done. This is an open source project and you can view the code, contribute or report any issues you find in this repository. This application has a live demo available on [GitHub Pages](https://jkuzz.github.io/sparql-explorer/).
 
 ## Recommended IDE Setup
 
@@ -43,22 +49,6 @@ npm run build
 
 ```sh
 npm run test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
 ```
 
 ### Lint with [ESLint](https://eslint.org/)

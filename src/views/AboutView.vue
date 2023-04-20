@@ -21,7 +21,12 @@
         <a
           class="text-blue-400 font-semibold"
           href=""
-          >Github page</a
+          >GitHub page</a
+        >. This application has a live demo available on
+        <a
+          class="text-blue-400 font-semibold"
+          href="https://jkuzz.github.io/sparql-explorer/"
+          >GitHub Pages</a
         >.
       </p>
     </div>
