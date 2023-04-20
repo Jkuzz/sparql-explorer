@@ -10,7 +10,8 @@
     <slot></slot>
     <span
       v-if="tooltip"
-      class="group-hover:opacity-100 transition-opacity bg-gray-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 -top-8 left-0 z-50 w-max max-w-xs"
+      class="group-hover:opacity-100 hidden group-hover:block transition-opacity bg-gray-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 z-50 w-max max-w-xs"
+      :class="tooltipCva({ tooltipPosition })"
     >
       {{ tooltip }}
     </span>
@@ -27,9 +28,23 @@ defineProps<{
   intent?: ButtonProps['intent']
   expand?: ButtonProps['expand']
   active?: ButtonProps['active']
+  tooltipPosition?: TooltipProps['tooltipPosition']
 }>()
 
 type ButtonProps = Required<VariantProps<typeof button>>
+type TooltipProps = Required<VariantProps<typeof tooltipCva>>
+
+const tooltipCva = cva('tooltip', {
+  variants: {
+    tooltipPosition: {
+      top: '-top-8 left-0 ',
+      bottom: '-bottom-8 right-0 origin-right',
+    },
+  },
+  defaultVariants: {
+    tooltipPosition: 'top',
+  },
+})
 
 const button = cva('button', {
   variants: {

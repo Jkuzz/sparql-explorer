@@ -4,7 +4,7 @@ import { useEndpointStore } from '@/stores/endpoint'
 import VisSidebar from '@/components/VisSidebar.vue'
 import CustomNode from '@/components/CustomNode.vue'
 import NodeModal from '@/components/NodeModal.vue'
-import { layoutNodes, availableLayouts } from '@/stores/layout'
+import { layoutNodes, availableLayouts, layoutTypes } from '@/stores/layout'
 import { ref } from 'vue'
 import type { StoreNode } from '@/stores/validators'
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
@@ -54,15 +54,17 @@ function showNodeModal(node: StoreNode) {
           Layout
         </span>
         <div
-          class="transition-all whitespace-nowrap overflow-clip ease-in-out duration-300"
+          class="transition-all whitespace-nowrap ease-in-out duration-300"
           :class="{ 'max-w-0': !isLayoutExtended, 'max-w-xs': isLayoutExtended }"
         >
           <ButtonGeneric
             v-for="(layout, i) in availableLayouts"
             :key="i"
             @click="layoutNodes(layout)"
+            :tooltip="layoutTypes[layout].tooltip"
+            tooltip-position="bottom"
           >
-            {{ layout }}
+            {{ layoutTypes[layout].label }}
           </ButtonGeneric>
         </div>
       </div>
