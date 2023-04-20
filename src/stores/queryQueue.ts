@@ -11,9 +11,18 @@ interface QueryRecord {
   endpointIndex: number
 }
 
-type EmittedEvents = 'Query' | 'Finished' | 'Failed' | 'Reset'
+export interface QueryProvider {
+  changeEndpoint: (endpoint: URL) => void
+  subscribe: (
+    events: EmittedEvents[],
+    eventCallback: (event: EmittedEvents, count: number) => void
+  ) => void
+  query: (query: string, callback: (data: any) => void, validator?: z.AnyZodObject) => void
+}
 
-export default class QueryQueue {
+export type EmittedEvents = 'Query' | 'Finished' | 'Failed' | 'Reset'
+
+export default class QueryQueue implements QueryProvider {
   private queue: Array<QueryRecord> = []
   private endpointURL
   private queriesRunning = false
@@ -29,16 +38,31 @@ export default class QueryQueue {
     failedQueries: 0,
   }
 
+  private countsToEventsDict: { [key: string]: EmittedEvents } = {
+    totalQueries: 'Query',
+    finishedQueries: 'Finished',
+    failedQueries: 'Failed',
+  }
+
   private resetQueryCounts() {
     let query: keyof typeof this.queryCounts
     for (query in this.queryCounts) {
       this.queryCounts[query] = 0
     }
+    this.signalSubscribers('Reset', 0)
   }
 
   private updateQueryCounts(kind: keyof typeof this.queryCounts, delta: number) {
     this.queryCounts[kind] += delta
-    // TODO signal
+    this.signalSubscribers(this.countsToEventsDict[kind], this.queryCounts[kind])
+  }
+
+  private signalSubscribers(event: EmittedEvents, count: number) {
+    this.subscribers
+      .filter((sub) => sub.event === event)
+      .forEach((sub) => {
+        sub.callback(event, count)
+      })
   }
 
   /**

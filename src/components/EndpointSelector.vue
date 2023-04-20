@@ -27,7 +27,7 @@ function handleChangeButtonClick() {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-y-4">
+  <div class="flex flex-col items-center gap-y-2">
     <div>
       {{ endpointStore.endpointURL }}
     </div>

@@ -2,6 +2,10 @@
 import EndpointSelector from '@/components/EndpointSelector.vue'
 import ShoppingCart from '@/components/ShoppingCart.vue'
 import SidebarControls from '@/components/SidebarControls.vue'
+import QueryStatusPanel from '@/components/QueryStatusPanel.vue'
+import { useEndpointStore } from '@/stores/endpoint'
+
+const endpointStore = useEndpointStore()
 </script>
 
 <template>
@@ -14,6 +18,7 @@ import SidebarControls from '@/components/SidebarControls.vue'
   >
     <div class="flex flex-col overflow-y-auto gap-y-4">
       <EndpointSelector />
+      <QueryStatusPanel :queryQueue="endpointStore.queryQueue" />
       <ShoppingCart />
     </div>
     <SidebarControls />

@@ -268,6 +268,7 @@ export const useEndpointStore = defineStore('endpoint', () => {
   }
 
   return {
+    queryQueue,
     nodes,
     edges,
     addNode,
