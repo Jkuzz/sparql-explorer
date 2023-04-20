@@ -11,6 +11,8 @@ interface QueryRecord {
   endpointIndex: number
 }
 
+type EmittedEvents = 'Query' | 'Finished' | 'Failed' | 'Reset'
+
 export default class QueryQueue {
   private queue: Array<QueryRecord> = []
   private endpointURL
@@ -20,6 +22,51 @@ export default class QueryQueue {
    * If the endpoint is changed, discard query results from previous endpoints.
    */
   private endpointIndex = 0
+
+  private queryCounts = {
+    totalQueries: 0,
+    finishedQueries: 0,
+    failedQueries: 0,
+  }
+
+  private resetQueryCounts() {
+    let query: keyof typeof this.queryCounts
+    for (query in this.queryCounts) {
+      this.queryCounts[query] = 0
+    }
+  }
+
+  private updateQueryCounts(kind: keyof typeof this.queryCounts, delta: number) {
+    this.queryCounts[kind] += delta
+    // TODO signal
+  }
+
+  /**
+   * Listeners subscribed to this event publisher.
+   * Leaving it as an array, there won't be many of these.
+   */
+  private subscribers: {
+    event: EmittedEvents
+    callback: (event: EmittedEvents, count: number) => void
+  }[] = []
+
+  /**
+   * Subscribe to the queryQueue to be notified of certain events.
+   * Supported events deal with changes to the number of running/finished/failed queries
+   * @param events Which events to listen to
+   * @param eventCallback Will be called when the event occurs
+   */
+  public subscribe(
+    events: EmittedEvents[],
+    eventCallback: (event: EmittedEvents, count: number) => void
+  ) {
+    events.forEach((e) => {
+      this.subscribers.push({
+        event: e,
+        callback: eventCallback,
+      })
+    })
+  }
 
   public constructor(endpointUrl: URL) {
     this.endpointURL = endpointUrl
@@ -34,6 +81,7 @@ export default class QueryQueue {
    */
   public query(query: string, callback: (data: any) => void, validator?: z.AnyZodObject) {
     this.queue.push({ query, callback, validator, endpointIndex: this.endpointIndex })
+    this.updateQueryCounts('totalQueries', 1)
     this.lockedQueryLoop()
   }
 
@@ -57,10 +105,17 @@ export default class QueryQueue {
     this.queue.splice(0, this.queue.length)
     this.endpointIndex += 1
     this.endpointURL = endpointUrl
+    this.resetQueryCounts()
   }
 
   private async executeQuery(queryToExecute: QueryRecord) {
-    const response = await queryEndpoint(this.endpointURL, queryToExecute.query)
+    let response: any
+    try {
+      response = await queryEndpoint(this.endpointURL, queryToExecute.query)
+    } catch (_e) {
+      this.updateQueryCounts('failedQueries', 1)
+      return
+    }
 
     // The query ran while the endpoint was changed, discard the response
     if (queryToExecute.endpointIndex != this.endpointIndex) return
@@ -70,6 +125,7 @@ export default class QueryQueue {
     } else {
       queryToExecute.callback(response)
     }
+    this.updateQueryCounts('finishedQueries', 1)
   }
 }
 
