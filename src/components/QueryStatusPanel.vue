@@ -53,14 +53,14 @@ function queryEventCallback(type: EmittedEvents, count: number) {
         >
           ✨
         </div>
-        <span> Pending: {{ totalQueries - (finishedQueries + failedQueries) }} </span>
+        <span>Pending: {{ totalQueries - (finishedQueries + failedQueries) }} </span>
       </div>
-      <div class="flex flex-row select-none">
-        <div>✔</div>
+      <div class="flex flex-row">
+        <div class="select-none">✔</div>
         <span>Finished: {{ finishedQueries }}</span>
       </div>
-      <div class="flex flex-row select-none">
-        <div>❌</div>
+      <div class="flex flex-row">
+        <div class="select-none">❌</div>
         <span>Failed: {{ failedQueries }}</span>
       </div>
     </div>
