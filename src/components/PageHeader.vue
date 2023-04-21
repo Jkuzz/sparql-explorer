@@ -21,7 +21,7 @@ const links = [
     <nav class="bg-blue-700 text-neutral-300 py-4 px-6 flex flex-row justify-between items-center">
       <RouterLink to="/">
         <span
-          class="font-novem text-xl"
+          class="font-novem text-xl hidden sm:block"
           v-if="router.currentRoute.value.path != '/'"
           >Type SPARQ✨</span
         >

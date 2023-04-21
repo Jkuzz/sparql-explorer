@@ -2,10 +2,11 @@
 import { useEndpointStore } from '@/stores/endpoint'
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import EndpointModal from '@/components/EndpointModal.vue'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const endpointStore = useEndpointStore()
 const endpointModalOpen = ref(false)
+const endpointEntered = computed(() => endpointStore.endpointURL === '')
 
 /**
  * Save the new endpoint url
@@ -24,7 +25,10 @@ function handleEndpointChange(newEndpoint: string) {
 </script>
 
 <template>
-  <div class="p-1 flex flex-row items-center gap-2">
+  <div
+    class="p-1 flex flex-row items-center gap-2"
+    :class="{ 'justify-center': endpointEntered, 'justify-between': !endpointEntered }"
+  >
     <div>
       {{ endpointStore.endpointURL }}
     </div>
@@ -32,7 +36,7 @@ function handleEndpointChange(newEndpoint: string) {
       @click="endpointModalOpen = true"
       class="transition-all"
     >
-      Change
+      {{ endpointEntered ? 'Select endpoint' : 'Change' }}
     </ButtonGeneric>
   </div>
   <Teleport to="body">

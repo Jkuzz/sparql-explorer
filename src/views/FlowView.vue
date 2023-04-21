@@ -31,6 +31,7 @@ function showNodeModal(node: StoreNode) {
     <div class="flex-grow flex flex-row relative overflow-clip">
       <div class="h-screen w-full">
         <VueFlow
+          v-if="endpointStore.endpointURL !== ''"
           v-model:nodes="endpointStore.nodes"
           v-model:edges="endpointStore.renderEdges"
           fit-view-on-init
@@ -42,6 +43,14 @@ function showNodeModal(node: StoreNode) {
             />
           </template>
         </VueFlow>
+        <div
+          v-else
+          class="flex items-center justify-center h-screen w-full"
+        >
+          <span class="text-center max-w-sm italic">
+            Select an endpoint in the sidebar to start extracting the schema.
+          </span>
+        </div>
       </div>
       <div
         class="p-1 flex flex-row items-center rounded-bl-md absolute bg-slate-700 cursor-pointer right-0"

@@ -24,7 +24,7 @@ export type EmittedEvents = 'Query' | 'Finished' | 'Failed' | 'Reset'
 
 export default class QueryQueue implements QueryProvider {
   private queue: Array<QueryRecord> = []
-  private endpointURL
+  private endpointURL: URL | undefined = undefined
   private queriesRunning = false
   /**
    * Index of the url on which the query was initiated.
@@ -92,10 +92,6 @@ export default class QueryQueue implements QueryProvider {
     })
   }
 
-  public constructor(endpointUrl: URL) {
-    this.endpointURL = endpointUrl
-  }
-
   /**
    * Performs the query and calls the provided callback function with the
    * query return data. If there are already queries being executed,
@@ -133,6 +129,7 @@ export default class QueryQueue implements QueryProvider {
   }
 
   private async executeQuery(queryToExecute: QueryRecord) {
+    if (!this.endpointURL) return
     let response: any
     try {
       response = await queryEndpoint(this.endpointURL, queryToExecute.query)
