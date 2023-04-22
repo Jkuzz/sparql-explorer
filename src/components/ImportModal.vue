@@ -38,7 +38,7 @@
             v-for="(option, i) in Object.keys(importOptions)"
             :key="i"
             class="rounded-md bg-orange-500 transition-all py-0 px-8 m-2 hover:py-2 hover:m-0 hover:px-10 flex"
-            @click="handleImportSchemaClick(importOptions[option])"
+            @click="handleImportOptionClick(importOptions[option])"
           >
             <span class="p-12 font-bold text-xl text-white">{{ option }}</span>
           </button>
@@ -62,14 +62,17 @@
           {{ schemaText }}
         </div>
         <div class="flex pt-2 justify-between">
-          <ButtonGeneric @click="toggleSchemaDisplay">Schema</ButtonGeneric>
-          <div v-if="displayMode === 'input'">
+          <div>
+            <ButtonGeneric @click="handleBackButton">Back</ButtonGeneric>
             <ButtonGeneric
-              v-for="parserName in Object.keys(importOptions)"
-              :key="parserName"
-              @click="handleImportButton(importOptions[parserName].parser)"
-              >Import {{ parserName }}</ButtonGeneric
+              v-if="displayMode === 'input'"
+              @click="toggleSchemaDisplay"
             >
+              Schema
+            </ButtonGeneric>
+          </div>
+          <div v-if="displayMode === 'input'">
+            <ButtonGeneric @click="handleImportButton()">Import</ButtonGeneric>
           </div>
         </div>
       </main>
@@ -90,7 +93,8 @@ const inputText = ref('')
 const popupText = ref('')
 const popupClass = ref('')
 const schemaText = ref('')
-const displayMode = ref<'input' | 'options' | 'schema'>('input')
+const selectedImport = ref<ImportDef | undefined>(undefined)
+const displayMode = ref<'input' | 'options' | 'schema'>('options')
 const headerText = computed(() => {
   if (displayMode.value === 'options') return 'Select input format'
   if (displayMode.value === 'schema') return "This is the selected import format's schema"
@@ -113,21 +117,30 @@ const importOptions: { [key: string]: ImportDef } = {
 } as const
 
 function toggleSchemaDisplay() {
-  if (displayMode.value === 'input') {
-    displayMode.value = 'options'
-  } else {
-    displayMode.value = 'input'
-  }
-}
-
-function handleImportSchemaClick(importDef: ImportDef) {
-  schemaText.value = importDef.schema
   displayMode.value = 'schema'
 }
 
-function handleImportButton(parse: InputParser) {
+function handleBackButton() {
+  if (displayMode.value === 'schema') {
+    displayMode.value = 'input'
+  } else if(displayMode.value === 'input') {
+    displayMode.value = 'options'
+  } else {
+    onCloseModal()
+  }
+}
+
+function handleImportOptionClick(importDef: ImportDef) {
+  schemaText.value = importDef.schema
+  selectedImport.value = importDef
+  displayMode.value = 'input'
+}
+
+function handleImportButton() {
+  if (!selectedImport.value) return
   try {
-    const parsedSchema = parse(inputText.value)
+    const parser = selectedImport.value?.parser
+    const parsedSchema = parser(inputText.value)
     endpointStore.handleParsedImport(parsedSchema)
 
     popupClass.value = 'text-green-600'
