@@ -45,7 +45,7 @@
         </div>
         <div
           v-if="displayMode === 'options'"
-          class="text-black pt-10 max-w-lg mx-auto italic"
+          class="text-black pt-10 max-w-lg mx-auto italic text-center"
         >
           Not enough import formats? You can help us by implementing a new import format at this
           project's
@@ -123,7 +123,7 @@ function toggleSchemaDisplay() {
 function handleBackButton() {
   if (displayMode.value === 'schema') {
     displayMode.value = 'input'
-  } else if(displayMode.value === 'input') {
+  } else if (displayMode.value === 'input') {
     displayMode.value = 'options'
   } else {
     onCloseModal()

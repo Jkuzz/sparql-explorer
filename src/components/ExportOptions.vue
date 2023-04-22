@@ -65,19 +65,21 @@ function handleExportClick(exp: ExportDef) {
 </script>
 
 <template>
-  <div>
-    <h4 class="pb-4 text-lg text-black font-bold">Choose your export format</h4>
-    <div class="flex flex-row flex-wrap max-h-[60vh] overflow-auto items-center justify-center">
-      <button
-        v-for="(exp, i) in registeredExports"
-        :key="i"
-        class="rounded-md bg-orange-500 transition-all py-0 px-8 m-2 hover:py-2 hover:m-0 hover:px-10 flex"
-        @click="handleExportClick(exp)"
-      >
-        <span class="p-12 font-bold text-xl">{{ exp.label }}</span>
-      </button>
+  <div class="flex flex-1 justify-between">
+    <div>
+      <h4 class="pb-4 text-lg text-black font-bold">Choose your export format</h4>
+      <div class="flex flex-row flex-wrap max-h-[60vh] overflow-auto items-center justify-center">
+        <button
+          v-for="(exp, i) in registeredExports"
+          :key="i"
+          class="rounded-md bg-orange-500 transition-all py-0 px-8 m-2 hover:py-2 hover:m-0 hover:px-10 flex"
+          @click="handleExportClick(exp)"
+        >
+          <span class="p-12 font-bold text-xl">{{ exp.label }}</span>
+        </button>
+      </div>
     </div>
-    <div class="text-black pt-10 max-w-lg mx-auto italic">
+    <div class="text-black pb-10 max-w-lg mx-auto italic text-center">
       Not enough export formats? You can help by implementing a new export format at this project's
       <a
         class="text-blue-900"

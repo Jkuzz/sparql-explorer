@@ -15,22 +15,19 @@
       >
         X
       </div>
-      <main class="flex-grow">
+      <main class="flex-grow flex justify-center">
         <pre
           v-if="exportText"
           class="rounded-md max-h-[80vh] overflow-y-auto"
         ><code :class="prismClass">{{ exportText }}</code></pre>
-        <div
-          class="text-center text-slate-300"
+        <ExportOptions
+          class="text-slate-300 flex flex-1 flex-col items-center"
           v-else
-        >
-          <ExportOptions
-            :nodes="visStateStore.selectedNodes"
-            :selected-attributes="visStateStore.selectedAttributes"
-            :selected-edges="visStateStore.selectedEdges"
-            @export="handleExport"
-          />
-        </div>
+          :nodes="visStateStore.selectedNodes"
+          :selected-attributes="visStateStore.selectedAttributes"
+          :selected-edges="visStateStore.selectedEdges"
+          @export="handleExport"
+        />
       </main>
       <aside
         v-if="exportText"
@@ -97,7 +94,7 @@ function downloadFile(data: string, filename: string, type: string) {
     document.body.removeChild(a)
     window.URL.revokeObjectURL(url)
   }, 0)
-} 
+}
 
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text)
