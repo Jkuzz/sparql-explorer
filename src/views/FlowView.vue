@@ -71,7 +71,7 @@ function showNodeModal(node: StoreNode) {
             :key="i"
             @click="layoutNodes(layout)"
             :tooltip="layoutTypes[layout].tooltip"
-            tooltip-position="bottom"
+            tooltip-vertical="bottom"
           >
             {{ layoutTypes[layout].label }}
           </ButtonGeneric>

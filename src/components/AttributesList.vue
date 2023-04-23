@@ -3,6 +3,7 @@ import type { z } from 'zod'
 import type { AttributeBinding } from '@/stores/validators'
 import { ref, computed } from 'vue'
 import SpinnerLoader from '@/components/SpinnerLoader.vue'
+import TooltipGeneric from '@/components/TooltipGeneric.vue'
 
 defineEmits<{
   (e: 'change', edge: string): void
@@ -41,14 +42,54 @@ function toggleAll(target: boolean) {}
 <template>
   <div
     v-if="attributes.length > 0"
-    class="flex max-h-[60vh] overflow-y-auto rounded-md"
+    class="flex max-h-[60vh] rounded-md overflow-y-auto"
   >
-    <table :class="['table-auto w-full']">
-      <tr class="">
-        <th>Attribute</th>
-        <th>Type</th>
-        <th>Occurence</th>
-        <th>Select</th>
+    <table class="table-auto w-full">
+      <tr>
+        <th>
+          <div class="group relative w-min mx-auto">
+            <TooltipGeneric
+              horizontal-position="right"
+              vertical-position="bottom"
+            >
+              IRI of the attribute
+            </TooltipGeneric>
+            <span>Attribute</span>
+          </div>
+        </th>
+        <th>
+          <div class="group relative w-min mx-auto">
+            <TooltipGeneric
+              horizontal-position="right"
+              vertical-position="bottom"
+            >
+              IRI of the attribute
+            </TooltipGeneric>
+            <span>Type</span>
+          </div>
+        </th>
+        <th>
+          <div class="group relative w-min mx-auto">
+            <TooltipGeneric
+              horizontal-position="left"
+              vertical-position="bottom"
+            >
+              How many instances of the attribute occur on average
+            </TooltipGeneric>
+            <span>Occurence</span>
+          </div>
+        </th>
+        <th>
+          <div class="group relative w-min mx-auto">
+            <TooltipGeneric
+              horizontal-position="left"
+              vertical-position="bottom"
+            >
+              Include this attribute in the exported schema
+            </TooltipGeneric>
+            <span>Select</span>
+          </div>
+        </th>
       </tr>
       <tr
         v-for="(attr, i) in filteredAttributes"

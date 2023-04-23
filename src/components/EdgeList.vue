@@ -4,6 +4,7 @@ import type { StoreEdge } from '@/stores/validators'
 import { useVisStateStore } from '@/stores/visState'
 import { ref } from 'vue'
 import SpinnerLoader from '@/components/SpinnerLoader.vue'
+import TooltipGeneric from '@/components/TooltipGeneric.vue'
 
 const visStateStore = useVisStateStore()
 defineEmits<{
@@ -57,16 +58,54 @@ function toggleAll(target: boolean) {}
     v-if="edges && edges.length > 0"
   >
     <table class="p-0 w-full rounded-b-md table-auto">
-      <thead class="">
-        <tr class="">
-          <th scope="col">{{ type === 'to' ? 'Source' : 'Target' }}</th>
-          <th scope="col">Property</th>
-          <th scope="col">Occurence</th>
-          <th
-            scope="col"
-            v-if="selectedEdges"
-          >
-            Select
+      <thead>
+        <tr>
+          <th scope="col">
+            <div class="group relative w-min mx-auto">
+              <TooltipGeneric
+                horizontal-position="right"
+                vertical-position="bottom"
+              >
+                IRI of the {{ type === 'to' ? 'source' : 'target' }} class
+              </TooltipGeneric>
+              <span>{{ type === 'to' ? 'Source' : 'Target' }}</span>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="group relative w-min mx-auto">
+              <TooltipGeneric
+                horizontal-position="right"
+                vertical-position="bottom"
+              >
+                IRI of the connecting edge
+              </TooltipGeneric>
+              <span>Property</span>
+            </div>
+          </th>
+          <th scope="col">
+            <div class="group relative w-min mx-auto">
+              <TooltipGeneric
+                horizontal-position="left"
+                vertical-position="bottom"
+              >
+                How many instances of the attribute occur on average
+              </TooltipGeneric>
+              <span>Occurence</span>
+            </div>
+          </th>
+          <th scope="col">
+            <div
+              class="group relative w-min mx-auto"
+              v-if="selectedEdges"
+            >
+              <TooltipGeneric
+                horizontal-position="left"
+                vertical-position="bottom"
+              >
+                Include this edge in the exported schema
+              </TooltipGeneric>
+              <span>Select</span>
+            </div>
           </th>
         </tr>
       </thead>

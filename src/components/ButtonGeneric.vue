@@ -10,7 +10,8 @@
     <slot></slot>
     <TooltipGeneric
       v-if="tooltip"
-      :tooltip-position="tooltipPosition"
+      :vertical-position="tooltipVertical"
+      :horizontal-position="tooltipHorizontal"
     >
       {{ tooltip }}
     </TooltipGeneric>
@@ -29,7 +30,8 @@ defineProps<{
   intent?: ButtonProps['intent']
   expand?: ButtonProps['expand']
   active?: ButtonProps['active']
-  tooltipPosition?: TooltipProps['tooltipPosition']
+  tooltipVertical?: TooltipProps['verticalPosition']
+  tooltipHorizontal?: TooltipProps['horizontalPosition']
 }>()
 
 type ButtonProps = Required<VariantProps<typeof button>>
