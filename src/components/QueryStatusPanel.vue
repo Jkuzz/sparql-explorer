@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TooltipGeneric from '@/components/TooltipGeneric.vue'
 import type { EmittedEvents, QueryProvider } from '@/stores/queryQueue'
 import { ref } from 'vue'
 
@@ -40,11 +41,7 @@ function queryEventCallback(type: EmittedEvents, count: number) {
   <div
     class="bg-slate-700 p-2 w-[60%] rounded-md mx-auto flex flex-col items-center group relative"
   >
-    <span
-      class="group-hover:opacity-100 hidden group-hover:block transition-opacity bg-slate-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 -top-8 left-0 z-50 w-max max-w-xs"
-    >
-      Number of pending queries
-    </span>
+    <TooltipGeneric>Number of pending queries</TooltipGeneric>
     <div>
       <div class="flex flex-row">
         <div

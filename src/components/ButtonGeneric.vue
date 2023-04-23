@@ -8,17 +8,18 @@
     @click="emits('click')"
   >
     <slot></slot>
-    <span
+    <TooltipGeneric
       v-if="tooltip"
-      class="group-hover:opacity-100 hidden group-hover:block transition-opacity bg-slate-600 text-sm text-gray-100 rounded-md absolute opacity-0 p-1 z-50 w-max max-w-xs"
-      :class="tooltipCva({ tooltipPosition })"
+      :tooltip-position="tooltipPosition"
     >
       {{ tooltip }}
-    </span>
+    </TooltipGeneric>
   </button>
 </template>
 
 <script setup lang="ts">
+import TooltipGeneric from '@/components/TooltipGeneric.vue'
+import type { TooltipProps } from '@/components/TooltipGeneric.vue'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 const emits = defineEmits(['click'])
@@ -32,19 +33,6 @@ defineProps<{
 }>()
 
 type ButtonProps = Required<VariantProps<typeof button>>
-type TooltipProps = Required<VariantProps<typeof tooltipCva>>
-
-const tooltipCva = cva('tooltip', {
-  variants: {
-    tooltipPosition: {
-      top: '-top-8 left-0 ',
-      bottom: '-bottom-8 right-0 origin-right',
-    },
-  },
-  defaultVariants: {
-    tooltipPosition: 'top',
-  },
-})
 
 const button = cva('button', {
   variants: {
