@@ -22,8 +22,8 @@ export const useEndpointStore = defineStore('endpoint', () => {
   const nodes = ref<Array<StoreNode>>([])
   const edges = ref<Array<StoreEdge>>([])
   const renderEdges = ref<Array<StoreEdge>>([])
-  // const endpointURL = ref('https://dbpedia.org/sparql')
-  const endpointURL = ref('')
+  const endpointURL = ref('https://dbpedia.org/sparql')
+  // const endpointURL = ref('')
   const queryQueue = new QueryQueue()
 
   queryClasses()

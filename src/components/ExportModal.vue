@@ -18,7 +18,7 @@
       <main class="flex-grow flex justify-center">
         <pre
           v-if="exportText"
-          class="rounded-md max-h-[80vh] overflow-y-auto"
+          class="rounded-md max-h-[80vh] overflow-y-auto min-w-max flex-grow"
         ><code :class="prismClass">{{ exportText }}</code></pre>
         <ExportOptions
           class="text-slate-300 flex flex-1 flex-col items-center"
@@ -48,6 +48,7 @@ import { ref } from 'vue'
 import { format } from 'prettier'
 import Prism from 'prismjs'
 import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-json'
 import 'prismjs/themes/prism-tomorrow.min.css'
 
 const visStateStore = useVisStateStore()

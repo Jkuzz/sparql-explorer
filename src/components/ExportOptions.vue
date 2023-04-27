@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import type { StoreNode, StoreEdge } from '@/stores/validators'
-import exportSchema from '@/stores/ldkitExport'
+import { default as exportLDKitSchema } from '@/stores/ldkitExport'
+import { default as exportJsonSchema } from '@/stores/jsonExport'
 import parserTypescript from 'prettier/parser-typescript.js'
+import babelParser from 'prettier/parser-babel.js'
 
 const emit = defineEmits<{
   (event: 'export', exportedSchema: string, prismClass: string, prettierConfig: Object): void
@@ -48,12 +50,21 @@ type ExportDef = {
 const registeredExports: ExportDef[] = [
   {
     label: 'LDKit',
-    exporter: exportSchema satisfies Exporter,
+    exporter: exportLDKitSchema satisfies Exporter,
     prismClass: 'language-ts',
     prettierConfig: {
       semi: false,
       parser: 'typescript',
       plugins: [parserTypescript],
+    },
+  },
+  {
+    label: 'JSON',
+    exporter: exportJsonSchema satisfies Exporter,
+    prismClass: 'language-json',
+    prettierConfig: {
+      parser: 'json',
+      plugins: [babelParser],
     },
   },
 ]
@@ -67,12 +78,12 @@ function handleExportClick(exp: ExportDef) {
 <template>
   <div class="flex flex-1 justify-between">
     <div>
-      <h4 class="pb-4 text-lg text-black font-bold">Choose your export format</h4>
+      <h4 class="pb-4 text-lg text-black text-center font-bold">Choose your export format</h4>
       <div class="flex flex-row flex-wrap max-h-[60vh] overflow-auto items-center justify-center">
         <button
           v-for="(exp, i) in registeredExports"
           :key="i"
-          class="rounded-md bg-orange-500 transition-all py-0 px-8 m-2 hover:py-2 hover:m-0 hover:px-10 flex"
+          class="rounded-md bg-orange-500 text-white transition-all py-0 px-8 m-2 hover:py-2 hover:m-0 hover:px-10 flex"
           @click="handleExportClick(exp)"
         >
           <span class="p-12 font-bold text-xl">{{ exp.label }}</span>
