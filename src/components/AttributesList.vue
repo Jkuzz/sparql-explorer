@@ -63,7 +63,7 @@ function toggleAll(target: boolean) {}
               horizontal-position="right"
               vertical-position="bottom"
             >
-              IRI of the attribute
+              IRI of type of the attribute
             </TooltipGeneric>
             <span>Type</span>
           </div>
