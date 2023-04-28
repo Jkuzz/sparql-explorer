@@ -29,7 +29,7 @@ export default function exportSchema(
 
   exportText += nodes.map((node) => exportNode(node, selectedAttributes[node.id])).join(',')
   exportText += '],\n"edges": ['
-  selectedEdges.map((edge) => exportEdge(edge)).join(',')
+  exportText += selectedEdges.map((edge) => exportEdge(edge)).join(',')
 
   return exportText + ']}'
 }
