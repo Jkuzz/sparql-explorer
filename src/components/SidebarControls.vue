@@ -5,6 +5,9 @@ import ExportModal from '@/components/ExportModal.vue'
 import ImportModal from '@/components/ImportModal.vue'
 import { useEndpointStore } from '@/stores/endpoint'
 import { ref } from 'vue'
+import { useNotification } from '@kyvg/vue3-notification'
+
+const notification = useNotification()
 
 const endpointStore = useEndpointStore()
 
@@ -27,6 +30,23 @@ function handleQueryClasses() {
 function classesQueryCallback() {
   classesQueryRunning.value = false
 }
+
+window.setInterval(() => {
+  notification.notify({
+    title: 'Test notification',
+    text: 'Hello world, I am a notification',
+  })
+  notification.notify({
+    title: 'Error',
+    text: 'Hello world, I am a notification',
+    type: 'error',
+  })
+  notification.notify({
+    title: 'Test notification',
+    text: 'Hello world, I am a notification',
+    type: 'success',
+  })
+}, 4000)
 </script>
 
 <template>
