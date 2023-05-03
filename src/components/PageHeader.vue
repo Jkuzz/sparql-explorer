@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import router from '@/router'
 const links = [
   {
@@ -14,6 +15,15 @@ const links = [
     title: 'About',
   },
 ]
+
+// Easter rat
+const titleSuffix = ref('✨')
+if (Math.random() > 0.98) {
+  titleSuffix.value = '🐀'
+  window.setTimeout(() => {
+    titleSuffix.value = '✨'
+  }, 8000)
+}
 </script>
 
 <template>
@@ -23,7 +33,7 @@ const links = [
         <span
           class="font-novem text-xl hidden sm:block"
           v-if="router.currentRoute.value.path != '/'"
-          >Type SPARQ✨</span
+          >TypeSPARQ{{ titleSuffix }}</span
         >
       </RouterLink>
       <div class="flex flex-row space-x-10">

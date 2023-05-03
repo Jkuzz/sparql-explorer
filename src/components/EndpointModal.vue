@@ -46,7 +46,7 @@
         </span>
       </main>
       <aside class="pt-2 flex flex-row justify-center">
-        <ButtonGeneric @click="handleEndpointSave">Save</ButtonGeneric>
+        <ButtonGeneric @click="handleEndpointSave">Extract</ButtonGeneric>
         <ButtonGeneric @click="onCloseModal">Cancel</ButtonGeneric>
       </aside>
     </div>
