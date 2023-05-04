@@ -37,6 +37,9 @@
         >
           {{ node.id }}
         </h2>
+        <div class="px-2">
+          [{{ (+node.data.node.instanceCount.value).toLocaleString(undefined, {}) }}×]
+        </div>
         <div
           class="flex flex-row group items-center bg-slate-700 p-1 rounded-md m-1 absolute right-0"
           v-if="['incoming', 'outgoing'].includes(displayMode)"
