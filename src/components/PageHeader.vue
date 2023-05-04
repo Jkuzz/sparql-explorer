@@ -16,13 +16,13 @@ const links = [
   },
 ]
 
-// Easter rat
 const titleSuffix = ref('✨')
+// Easter rat
 if (Math.random() > 0.98) {
-  titleSuffix.value = '🐀'
+  titleSuffix.value = '🐀' // his name is Alois
   window.setTimeout(() => {
     titleSuffix.value = '✨'
-  }, 8000)
+  }, 7000)
 }
 </script>
 

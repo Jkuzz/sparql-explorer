@@ -17,13 +17,19 @@
         X
       </div>
       <header class="flex flex-row justify-center items-center relative pb-2">
-        <div class="flex flex-row items-center bg-slate-700 p-1 rounded-md left-0 absolute">
+        <div class="flex flex-row group items-center bg-slate-700 p-1 rounded-md left-0 absolute">
           <span class="text-white pl-1">Selected</span>
           <SliderSwitch
             :isDefaultEnabled="isSelected"
             @update:checkbox="onToggleSelection"
             value="selected"
           />
+          <TooltipGeneric
+            vertical-position="bottom"
+            horizontal-position="right"
+          >
+            Include this class in the exported schema
+          </TooltipGeneric>
         </div>
         <h2
           class="text-lg font-bold text-center hover:underline cursor-pointer"
@@ -32,7 +38,7 @@
           {{ node.id }}
         </h2>
         <div
-          class="flex flex-row items-center bg-slate-700 p-1 rounded-md m-1 absolute right-0"
+          class="flex flex-row group items-center bg-slate-700 p-1 rounded-md m-1 absolute right-0"
           v-if="['incoming', 'outgoing'].includes(displayMode)"
         >
           <span class="text-white pl-1">Filter selected</span>
@@ -41,6 +47,13 @@
             @update:checkbox="filterSelected = !filterSelected"
             value="filterSelected"
           />
+          <TooltipGeneric
+            vertical-position="bottom"
+            horizontal-position="left"
+          >
+            Only include the edges that lead
+            {{ displayMode === 'incoming' ? 'from' : 'to' }} selected classes
+          </TooltipGeneric>
         </div>
       </header>
 
@@ -137,7 +150,8 @@
 import AttributesList from '@/components/AttributesList.vue'
 import ButtonGeneric from '@/components/ButtonGeneric.vue'
 import EdgeList from '@/components/EdgeList.vue'
-import SliderSwitch from './SliderSwitch.vue'
+import SliderSwitch from '@/components/SliderSwitch.vue'
+import TooltipGeneric from '@/components/TooltipGeneric.vue'
 import { ref } from 'vue'
 import type { StoreNode, StoreEdge } from '@/stores/validators'
 import { useEndpointStore } from '@/stores/endpoint'
