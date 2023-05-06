@@ -11,17 +11,36 @@ defineEmits<{
 
 defineExpose({ toggleAll })
 
+type AttrBindingT = z.infer<typeof AttributeBinding>
 const props = defineProps<{
   instanceCount: number
   nodeSelected: boolean
-  attributes: z.infer<typeof AttributeBinding>[]
+  attributes: AttrBindingT[]
   selectedAttributes?: string[]
   searchStr: string
 }>()
 
+const sortingCol = ref<'attribute' | 'occurence' | 'type'>('occurence')
+
 const filteredAttributes = computed(() => {
-  return props.attributes.filter((attr) => attr.attribute.value.includes(props.searchStr))
+  return props.attributes
+    .filter((attr) => attr.attribute.value.includes(props.searchStr))
+    .sort(attributeComparator)
 })
+
+function attributeComparator(a: AttrBindingT, b: AttrBindingT) {
+  switch (sortingCol.value) {
+    case 'occurence': {
+      return +b.instanceCount.value - +a.instanceCount.value
+    }
+    case 'attribute': {
+      return a.attribute.value.localeCompare(b.attribute.value)
+    }
+    case 'type': {
+      return a.type.value.localeCompare(b.type.value)
+    }
+  }
+}
 
 const inputs = ref<HTMLInputElement[]>([])
 
@@ -54,7 +73,11 @@ function toggleAll(target: boolean) {}
             >
               IRI of the attribute
             </TooltipGeneric>
-            <span>Attribute</span>
+            <span
+              class="cursor-pointer"
+              @click="sortingCol = 'attribute'"
+              >Attribute
+            </span>
           </div>
         </th>
         <th>
@@ -65,7 +88,11 @@ function toggleAll(target: boolean) {}
             >
               IRI of type of the attribute
             </TooltipGeneric>
-            <span>Type</span>
+            <span
+              class="cursor-pointer"
+              @click="sortingCol = 'type'"
+              >Type</span
+            >
           </div>
         </th>
         <th>
@@ -76,7 +103,10 @@ function toggleAll(target: boolean) {}
             >
               How many instances of the attribute occur on average
             </TooltipGeneric>
-            <span>Occurence</span>
+            <span
+              class="cursor-pointer"
+              @click="sortingCol = 'occurence'"
+              >Occurence</span>
           </div>
         </th>
         <th>

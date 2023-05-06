@@ -24,6 +24,7 @@ const props = defineProps<{
 defineExpose({ toggleAll })
 
 const inputs = ref<HTMLInputElement[]>([])
+const sortingCol = ref<'property' | 'occurence' | 'source'>('occurence')
 
 /**
  * Filter all the edges to only show those to selected nodes
@@ -36,7 +37,24 @@ const filteredEdges = computed(() => {
       return visStateStore.isSelected(edge.source)
     })
     .filter((edge) => edge.id.includes(props.searchStr))
+    .sort(edgeComparator)
 })
+
+function edgeComparator(a: StoreEdge, b: StoreEdge) {
+  switch (sortingCol.value) {
+    case 'occurence': {
+      return +b.data.instanceCount.type - +a.data.instanceCount.value
+    }
+    case 'property': {
+      return a.uri.localeCompare(b.uri)
+    }
+    case 'source': {
+      if (props.type == 'to') return a.source.localeCompare(b.source)
+      return a.target.localeCompare(b.target)
+    }
+  }
+  return 0
+}
 
 function handleUriClick(uri: string) {
   navigator.clipboard.writeText(uri)
@@ -68,7 +86,11 @@ function toggleAll(target: boolean) {}
               >
                 IRI of the {{ type === 'to' ? 'source' : 'target' }} class
               </TooltipGeneric>
-              <span>{{ type === 'to' ? 'Source' : 'Target' }}</span>
+              <span
+                class="cursor-pointer"
+                @click="sortingCol = 'source'"
+                >{{ type === 'to' ? 'Source' : 'Target' }}</span
+              >
             </div>
           </th>
           <th scope="col">
@@ -79,7 +101,11 @@ function toggleAll(target: boolean) {}
               >
                 IRI of the connecting edge
               </TooltipGeneric>
-              <span>Property</span>
+              <span
+                class="cursor-pointer"
+                @click="sortingCol = 'property'"
+                >Property</span
+              >
             </div>
           </th>
           <th scope="col">
@@ -90,7 +116,11 @@ function toggleAll(target: boolean) {}
               >
                 How many instances of the attribute occur on average
               </TooltipGeneric>
-              <span>Occurence</span>
+              <span
+                class="cursor-pointer"
+                @click="sortingCol = 'occurence'"
+                >Occurence</span
+              >
             </div>
           </th>
           <th scope="col">
