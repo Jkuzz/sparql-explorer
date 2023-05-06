@@ -134,6 +134,7 @@ function exportAttr(attrIri: string, attrType: string) {
       '@id': ${nsCodePrefix}${knownNamespaces[attrNamespace]}.${attrName},
       '@type': ${nsCodePrefix}${attrType},
       '@optional': true,
+      '@array': true,
     },`
 }
 
@@ -173,6 +174,7 @@ function exportEdge(edge: StoreEdge, existingNodeEdges: string[]) {
       '@id': ${nsCodePrefix}${knownNamespaces[targetNamespace]}.${targetName},
       '@type': ldkitns.xsd.anyURI,
       '@optional': true,
+      '@array': true,
     },`
 }
 
