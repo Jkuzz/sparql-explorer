@@ -171,7 +171,7 @@ function exportEdge(edge: StoreEdge, existingNodeEdges: string[]) {
 
   return `
     ${edgeName}${edgeNameSuffix}: {
-      '@id': ${nsCodePrefix}${knownNamespaces[targetNamespace]}.${targetName},
+      '@id': ${nsCodePrefix}${knownNamespaces[edgeNamespace]}.${edgeName},
       '@type': ldkitns.xsd.anyURI,
       '@optional': true,
       '@array': true,
