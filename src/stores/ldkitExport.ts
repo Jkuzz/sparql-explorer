@@ -85,13 +85,14 @@ function exportNode(node: StoreNode, selectedAttributes: string[], nodeEdges: St
 
   // The namespace will be in `ldkitns.` only if it is a default ns
   const nsCodePrefix = newNamespaces[nodeNamespaceIri] ? '' : 'ldkitns.'
+  const existingAttrs: string[] = []
 
   let nodeExport = `
     const ${nodeName}Schema = {
     '@type': ${nsCodePrefix}${knownNamespaces[nodeNamespaceIri]}.${nodeName},`
   selectedAttributes.forEach((attr) => {
     const attrType = node.data.attributes.find((a) => a.attribute.value === attr)
-    nodeExport += exportAttr(attr, getAttributeType(attrType?.type.value))
+    nodeExport += exportAttr(attr, getAttributeType(attrType?.type.value), existingAttrs)
   })
 
   const existingNodeEdges: string[] = []
@@ -122,17 +123,20 @@ function getAttributeType(typeUri: string | undefined) {
  * Create an export object for the exported attribute
  * @param attrIri iri of the exported attribute (predicate)
  * @param attrType type of the attribute
+ * @param existingAttrs names of attributes already exported for this class
  * @returns the LDKit schema entry for the schema object
  */
-function exportAttr(attrIri: string, attrType: string) {
+function exportAttr(attrIri: string, attrType: string, existingAttrs: string[]) {
   const attrNamespace = findNamespace(attrIri)
   const attrName = removeNamespace(attrNamespace, attrIri)
   registerNamespaceTerm(attrNamespace, attrName)
-  const nsCodePrefix = newNamespaces[attrNamespace] ? '' : 'ldkitns.'
+  const attrNumericSuffix = getNameNumericSuffix(attrName, existingAttrs)
+  const attrNsCodePrefix = newNamespaces[attrNamespace] ? '' : 'ldkitns.'
+  const typeNsCodePrefix = newNamespaces[attrType] ? '' : 'ldkitns.'
   return `
-    ${attrName}: {
-      '@id': ${nsCodePrefix}${knownNamespaces[attrNamespace]}.${attrName},
-      '@type': ${nsCodePrefix}${attrType},
+    ${attrName}${attrNumericSuffix}: {
+      '@id': ${attrNsCodePrefix}${knownNamespaces[attrNamespace]}.${attrName},
+      '@type': ${typeNsCodePrefix}${attrType},
       '@optional': true,
       '@array': true,
     },`
@@ -154,20 +158,7 @@ function exportEdge(edge: StoreEdge, existingNodeEdges: string[]) {
   registerNamespaceTerm(targetNamespace, targetName)
   const nsCodePrefix = newNamespaces[targetNamespace] ? '' : 'ldkitns.'
 
-  /**
-   * If the field already exists on the exported node, add a numeric suffix
-   */
-  const numberSuffixes = existingNodeEdges
-    .map((existingEdge) => {
-      if (!existingEdge.startsWith(edgeName)) return null
-      const numberSuffix = +existingEdge.substring(edgeName.length)
-      if (isNaN(numberSuffix)) return null // Not number suffix, ignore
-      return numberSuffix
-    })
-    .filter((x): x is number => x !== null) // filter out null values
-  const edgeNameSuffix =
-    numberSuffixes.length > 0 ? numberSuffixes.reduce((max, item) => Math.max(max, item)) + 1 : ''
-  existingNodeEdges.push(edgeName + edgeNameSuffix)
+  const edgeNameSuffix = getNameNumericSuffix(edgeName, existingNodeEdges)
 
   return `
     ${edgeName}${edgeNameSuffix}: {
@@ -176,6 +167,31 @@ function exportEdge(edge: StoreEdge, existingNodeEdges: string[]) {
       '@optional': true,
       '@array': true,
     },`
+}
+
+/**
+ * Checks the existing names for the new name. If the new name is present,
+ * try appending increasing numeric prefixes until a unique name is found.
+ * @param name whose numeric suffix to get
+ * @param existingNames names that already exist
+ * @returns the numeric suffix
+ */
+function getNameNumericSuffix(name: string, existingNames: string[]) {
+  /**
+   * If the field already exists on the exported node, add a numeric suffix
+   */
+  const numberSuffixes = existingNames
+    .map((existingName) => {
+      if (!existingName.startsWith(name)) return null
+      const numberSuffix = +existingName.substring(name.length)
+      if (isNaN(numberSuffix)) return null // Not number suffix, ignore
+      return numberSuffix
+    })
+    .filter((x): x is number => x !== null) // filter out null values
+  const numericSuffix =
+    numberSuffixes.length > 0 ? numberSuffixes.reduce((max, item) => Math.max(max, item)) + 1 : ''
+  existingNames.push(name + numericSuffix)
+  return numericSuffix
 }
 
 /**
