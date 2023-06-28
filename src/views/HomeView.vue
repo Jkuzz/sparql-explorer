@@ -26,11 +26,13 @@ const descriptionPoints = [
 <template>
   <main class="text-gray-200 flex flex-col items-stretch overflow-x-clip">
     <div class="bg-slate-900 flex flex-col items-center pt-20 pb-40 gap-y-20">
-      <h1 class="text-8xl font-novem tracking-widest flex flex-wrap justify-center">
+      <h1
+        class="max-w-screen text-5xl sm:text-8xl font-novem tracking-widest flex flex-wrap justify-center"
+      >
         <span> Type </span>
         <span> SPARQ✨ </span>
       </h1>
-      <h2 class="text-4xl font-squared max-w-md text-center">
+      <h2 class="text-2xl sm:text-4xl font-squared max-w-md text-center">
         Your type safe gateway to SPARQL endpoints
       </h2>
     </div>
